@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# parse args
+section="${1-Main}"
+file="${2-$HOME/.config/blezz/content}"
+pattern="^\s*$section\s*:$"
+shift 2
+
+# check args
+usage="Syntax: ${0##*/} [section] [config] [rofi args]"
+if [[ "$@" == *--help* ]]; then
+	echo "$usage" >&2
+	exit
+elif [[ ! -f "$file" ]]; then
+	echo "Can't find or read file: $file" >&2
+	exit 1
+elif ! grep -q "$pattern" "$file"; then
+	echo "Can't find section in $file: $section" >&2
+	exit 1
+fi
+
+# run rofi with blezz module and modified config
+rofi -show blezz -modi blezz -auto-select -matching normal -theme-str 'window {width:50%;} entry {placeholder:"Press hotkey";} * {columns:4;}' "$@" -blezz-config <(
+	sed -n "/$pattern/,$ p" "$file"
+	sed -n "/$pattern/!p; /$pattern/q" "$file"
+)
+

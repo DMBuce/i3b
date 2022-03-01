@@ -1,0 +1,772 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Getopt::Long qw(:config no_ignore_case);
+
+# default options
+my %options = (
+	margins   => [],
+	title     => 26,
+	border    => 3,
+	threshold => "33%%",
+	small     => "=",
+	large     => "3",
+	inside    => "w",
+	outside   => "-17px",
+	snap      => 1,
+	hide      => 1,
+	clamp     => 0,
+	passthru  => 1,
+	gen       => 0,
+	man       => 0,
+	help      => 0,
+);
+
+# read options from environment
+if ($ENV{I3MOVE_OPTIONS}) {
+	@ARGV = (split(/\s+/, $ENV{I3MOVE_OPTIONS}), @ARGV);
+}
+
+# read options from config
+my $configdir = $ENV{XDG_CONFIG_HOME} ? $ENV{XDG_CONFIG_HOME} : "$ENV{HOME}/.config";
+my $fh;
+for my $file (
+	"$configdir/i3move",
+	"$configdir/i3/move",
+	"$ENV{HOME}/.i3move",
+) {
+	open $fh, '<', $file or next;
+	my $config = do { local $/; <$fh> };
+	@ARGV = (split(/\s+/, $config), @ARGV);
+	last;
+}
+
+## debug
+#use Data::Dumper;
+##print Dumper( [split(/\s+/, $ENV{'I3MOVE_DEFAULTS'}), @ARGV] );
+#print Dumper( @ARGV );
+#exit;
+
+# parse options
+my $result = GetOptions(
+	"border|b=i"           => \$options{border},
+	"clamp|C!"             => \$options{clamp},
+	"gen|g"                => \$options{gen},
+	"hide|H!"              => \$options{hide},
+	"inside-distance|i=s"  => \$options{inside},
+	"large-distance|l=s"   => \$options{large},
+	"margins|m=i{1,4}"     => \@{$options{margins}},
+	"outside-distance|o=s" => \$options{outside},
+	"passthru|P!"          => \$options{passthru},
+	"small-distance|s=s"   => \$options{small},
+	"snap|S!"              => \$options{snap},
+	"title|t=i"            => \$options{title},
+	"threshold|T=s"        => \$options{threshold},
+	"man"                  => \$options{man},
+	"help|h|?"             => \$options{help},
+);
+if (not $result) {
+	require Pod::Usage;
+	Pod::Usage::pod2usage(-verbose => 0, -exitcode => 1, -noperldoc => 1);
+} elsif ($options{man}) {
+	require Pod::Usage;
+	Pod::Usage::pod2usage(-verbose => 2, -exitcode => 0, -noperldoc => 1);
+} elsif ($options{help}) {
+	require Pod::Usage;
+	Pod::Usage::pod2usage(-verbose => 1, -exitcode => 0, -noperldoc => 1);
+# generate config
+} elsif ($options{gen} or $options{generate}) {
+	# switch to temp workspace and launch a terminal
+	system("i3-msg workspace tmp.i3move >/dev/null");
+	system("i3-sensible-terminal >/dev/null &");
+	sleep 1;
+
+	# get dimensions of root window: width, height
+	my %root = ();
+	for my $line ( split /\n/ => `xwininfo -root -int` ) {
+		my ($key, $val) = ( $line =~ /(Width|Height):\s*(\S*)/ );
+		$root{lc $key} = $val if defined $key;
+	}
+
+	# make sure window is tiled and get its properties
+	system("i3-msg floating disable >/dev/null");
+	my %pos1 = ();
+	for my $line (
+		split /\n/ => `xdotool getactivewindow getwindowgeometry --shell`
+	) {
+		my ($key, $val) = ( $line =~ /([^=]*)=(.*)/ );
+		$key = "id" if $key eq "window";
+		$pos1{lc $key} = $val;
+	}
+
+	# make window floating and get properties of new position
+	system("i3-msg floating enable >/dev/null");
+	my %pos2 = ();
+	for my $line (
+		split /\n/ => `xdotool getactivewindow getwindowgeometry --shell`
+	) {
+		my ($key, $val) = ( $line =~ /([^=]*)=(.*)/ );
+		$key = "id" if $key eq "window";
+		$pos2{lc $key} = $val;
+	}
+
+	# move window and get properties of new position
+	system("i3-msg move position $pos2{x} $pos2{y} >/dev/null");
+	my %pos3 = ();
+	for my $line (
+		split /\n/ => `xdotool getactivewindow getwindowgeometry --shell`
+	) {
+		my ($key, $val) = ( $line =~ /([^=]*)=(.*)/ );
+		$key = "id" if $key eq "window";
+		$pos3{lc $key} = $val;
+	}
+
+	# kill window, return to previous workspace
+	system("i3-msg kill >/dev/null");
+	system("i3-msg workspace back_and_forth >/dev/null");
+
+	# compute the widths of the window borders, window title, and margins
+	my $b = $pos3{x} - $pos2{x};
+	my $t = $pos3{y} - $pos2{y};
+	my $m1 = $pos1{y} - $t;
+	my $m2 = $root{height} - $pos1{height} - $pos1{y};
+	my $m3 = $pos1{x};
+	my $m4 = $root{width} - $pos1{width} - $pos1{x};
+
+	# figure out what i3's hide_edge_borders config is set to
+	my $hide_edge_borders = "none";
+	for my $file (
+		"$configdir/i3/config",
+		"$ENV{HOME}/.i3/config",
+		"/etc/xdg/i3/config",
+		"/etc/i3/config",
+	) {
+		open $fh, '<', $file or next;
+		while (my $line = <$fh>) {
+			if ($line =~ /^\s*hide_edge_borders\s+(\S*)/) {
+				$hide_edge_borders = $1;
+			}
+		}
+		last;
+	}
+
+	# adjust margins based on hide_edge_borders setting
+	$m2 -= $b if $hide_edge_borders =~ /^(both|vertical)$/;
+	$m3 -= $b if $hide_edge_borders =~ /^(both|horizontal)$/;
+	$m4 -= $b if $hide_edge_borders =~ /^(both|horizontal)$/;
+
+	# figure out outside distance
+	my $o = ($m1 - $m2) / 2;
+	$o *= -1 if $o < 0;
+	$o += 1 if $o == 0;
+
+	# print dimensions plus default options and exit
+	print "--title $t\n";
+	print "--border $b\n";
+	print "--margins $m1";
+	print " $m2" if $m2 + $m3 + $m4;
+	print " $m3" if $m3 + $m4;
+	print " $m4" if $m4;
+	print "\n";
+	print "--inside-distance $options{inside}\n";
+	print "--outside-distance -${o}px\n";
+	print "--small-distance $options{small}\n";
+	print "--large-distance $options{large}\n";
+	print "--threshold $options{threshold}\n";
+	print $options{clamp} ? "--clamp\n" : "--no-clamp\n";
+	print $options{snap} ? "--snap\n" : "--no-snap\n";
+	print $options{hide} ? "--hide\n" : "--no-hide\n";
+	print $options{passthru} ? "--passthru\n" : "--no-passthru\n";
+	exit;
+}
+
+# check params
+if (not @ARGV == 1) {
+	require Pod::Usage;
+	Pod::Usage::pod2usage(-verbose => 0, -exitcode => 1, -noperldoc => 1);
+} elsif (not $ARGV[0] =~ /^(up|down|left|right)$/) {
+	require Pod::Usage;
+	Pod::Usage::pod2usage(
+		-msg => "Invalid direction: $ARGV[0]",
+		-verbose => 0, -exitcode => 1, -noperldoc => 1
+	);
+}
+
+# parse params
+my $direction = $ARGV[0];
+
+# figure out whether the active window is tiled or floating
+my $window_id = `xdotool getactivewindow`;
+chomp $window_id;
+if ( ! grep( /I3_FLOATING_WINDOW/, split( /[\r\n]+/, `xprop -id $window_id` ))) {
+	exit if not $options{passthru};
+	exec "i3-msg move $direction >/dev/null";
+}
+
+# get dimensions of root window: width, height
+my %root = ();
+for my $line ( split /\n/ => `xwininfo -root -int` ) {
+	my ($key, $val) = ( $line =~ /(Width|Height):\s*(\S*)/ );
+	$root{lc $key} = $val if defined $key;
+}
+
+# get properties of active window: id, x, y, width, height, screen
+my %window = ();
+for my $line ( split /\n/ => `xdotool getactivewindow getwindowgeometry --shell` ) {
+	my ($key, $val) = ( $line =~ /([^=]*)=(.*)/ );
+	$key = "id" if $key eq "window";
+	$window{lc $key} = $val;
+}
+
+# figure out which axis to use
+my ($z, $length, $LENGTH, $o, %margins);
+if ($direction eq "up" or $direction eq "down") {
+	$z = $window{y} - $options{title};
+	$length = $window{height} + $options{title} + $options{border};
+	$LENGTH = $root{height};
+	%margins = (
+		near => ($options{margins}[0] or 0),
+		far  => ($options{margins}[1] or 0),
+	);
+} else {
+	$z = $window{x} - $options{border};
+	$length = $window{width} + 2*$options{border};
+	$LENGTH = $root{width};
+	%margins = (
+		near => ($options{margins}[2] or 0),
+		far  => ($options{margins}[3] or 0),
+	);
+}
+
+# figure out threshold
+my $threshold;
+if ($options{threshold} =~ /^(\d+)(px)?$/) {
+	$threshold = $1;
+} elsif ($options{threshold} =~ /^(\d+)%%$/) {
+	$threshold = $1 / 100 * ( $LENGTH - $margins{near} - $margins{far} );
+} else {
+	require Pod::Usage;
+	Pod::Usage::pod2usage(
+		-msg => "Invalid threshold: $options{threshold}",
+		-verbose => 0, -exitcode => 1, -noperldoc => 1
+	);
+}
+
+# parse step size from distance options
+my %dist = ();
+for my $k ("small", "large", "inside", "outside") {
+	my $spec = $options{$k};
+	if ($spec =~ /^(<|>|=)$/) {
+		my $o = int(( $LENGTH - $length - $margins{near} - $margins{far} ) / $length );
+		$o += 1 if $spec eq "<";
+		$o += 1 if $spec eq "=" and not $o%2 == 0;
+		$o += 1 if $o == 0;
+		$dist{$k} = int(( $LENGTH - $length - $margins{near} - $margins{far} ) / $o ) + 1;
+	} elsif ($spec =~ /^(\d+)$/) {
+		$o = $1 - 1;
+		$o += 1 if $o == 0;
+		$dist{$k} = int(( $LENGTH - $length - $margins{near} - $margins{far} ) / $o ) + 1;
+	} elsif ($spec =~ /^(-?\d+)%$/) {
+		$dist{$k} = int( $1 / 100 * $length );
+		$dist{$k} += $length if $dist{$k} < 0;
+		$dist{$k} *= -1 if $dist{$k} < 0;
+	} elsif ($spec =~ /^(-?\d+)%%$/) {
+		$dist{$k} = int( $1 / 100 * $LENGTH );
+		$dist{$k} += $length if $dist{$k} < 0;
+		$dist{$k} *= -1 if $dist{$k} < 0;
+	} elsif ($spec =~ /^(-?\d+)px$/) {
+		$dist{$k} = int( $1 );
+		$dist{$k} += $length if $dist{$k} < 0;
+		$dist{$k} *= -1 if $dist{$k} < 0;
+	} elsif ($spec =~ /^(w)$/ and $k =~ /^(inside|outside)$/) {
+		$dist{$k} = "w";
+	} else {
+		require Pod::Usage;
+		Pod::Usage::pod2usage(
+			-msg => "Invalid $k distance: $spec",
+			-verbose => 0, -exitcode => 1, -noperldoc => 1
+		);
+	}
+}
+
+# resolve symbolic "w" distances
+for my $k ("inside", "outside") {
+	if ($dist{$k} eq "w") {
+		$dist{$k} = $length < $threshold ? $dist{small} : $dist{large};
+	}
+}
+
+# figure out move distance
+my $dz;
+# window is inside margins
+if ($z > $margins{near} and $z + $length < $LENGTH - $margins{far}) {
+	$dz = $dist{inside};
+
+	# snap or clamp move distance if necessary
+	if ($options{snap} or $options{clamp}) {
+		if ($direction eq "up" or $direction eq "left") {
+			if ($z - $dz < $margins{near}) {
+				$dz = $z - $margins{near};
+			}
+		} else {
+			if ($z + $length + $dz > $LENGTH - $margins{far}) {
+				$dz = $LENGTH - $margins{far} - ($z + $length);
+			}
+		}
+	}
+# window is at edge of near margin
+} elsif ($z == $margins{near}) {
+	if ($direction eq "down" or $direction eq "right") {
+		$dz = $dist{inside};
+	} elsif ($options{clamp}) {
+		$dz = 0;
+	} elsif ($options{hide}) {
+		$dz = $dist{outside} + $margins{near};
+	} else {
+		$dz = $dist{outside};
+	}
+# window is at edge of far margin
+} elsif ($z + $length == $LENGTH - $margins{far}) {
+	if ($direction eq "up" or $direction eq "left") {
+		$dz = $dist{inside};
+	} elsif ($options{clamp}) {
+		$dz = 0;
+	} elsif ($options{hide}) {
+		$dz = $dist{outside} + $margins{far};
+	} else {
+		$dz = $dist{outside};
+	}
+# window is overlapping margins
+} else {
+	if ($options{hide} and $z == -$dist{outside}) {
+		$dz = $dist{outside} + $margins{near};
+	} elsif ($options{hide} and $z + $length == $LENGTH + $dist{outside}) {
+		$dz = $dist{outside} + $margins{far};
+	} else {
+		$dz = $dist{outside};
+	}
+}
+
+# move in chosen direction
+exec "i3-msg move $direction $dz >/dev/null";
+
+__END__
+
+
+=head1 NAME
+
+i3move - Move a floating i3 window.
+
+
+=head1 USAGE
+
+i3move [options] <direction>
+
+options:
+
+=over 4
+
+S<[-t|--title E<lt>sizeE<gt>]>
+S<[-b|--border E<lt>sizeE<gt>]>
+S<[-m|--margins E<lt>topE<gt> [bottom] [left] [right]]>
+S<[-i|--inside-distance \E<lt>|\E<gt>|w|I<N>[px|%|%%]]>
+S<[-o|--outside-distance \E<lt>|\E<gt>|w|I<N>[px|%|%%]]>
+S<[-s|--small-distance \E<lt>|\E<gt>|I<N>[px|%|%%]]>
+S<[-l|--large-distance \E<lt>|\E<gt>|I<N>[px|%|%%]]>
+S<[-T|--threshold I<N>[px|%%]]>
+S<[-C|--clamp|--no-clamp]>
+S<[-S|--snap|--no-snap]>
+S<[-H|--hide|--no-hide]>
+S<[-P|--passthru|--no-passthru]>
+S<[-g|--gen]>
+S<[--man]>
+S<[--help]>
+
+=back
+
+direction: S<up|down|left|right>
+
+
+=head1 DESCRIPTION
+
+Move a floating i3 window up, down, left, or right.
+The distance moved is chosen based on
+the window's size and position.
+
+If the active window is tiled,
+i3move will move it with C<i3-msg move DIRECTION> instead.
+
+
+=head1 OPTIONS
+
+
+B<-t, --title> SIZE
+
+=over 4
+
+The size of i3's window title bars in pixels.
+
+Default: 26
+
+=back
+
+
+B<-b, --border> SIZE
+
+=over 4
+
+The size of i3's window borders in pixels.
+
+Default: 3
+
+=back
+
+
+B<-m, --margins> TOP [BOTTOM] [LEFT] [RIGHT]
+
+=over 4
+
+The width of margins along the top, bottom, left,
+and right sides of the screen.
+
+If the window is inside the margins,
+its movement is determined by B<--inside-distance>.
+Otherwise, its movement is determined by B<--outside-distance>.
+See the description of those options for details.
+
+The margins can also be used to prevent floating windows
+from overlapping i3bar and/or the gaps around the edge of the screen.
+See the description of the B<--snap> and B<--clamp> options for details.
+
+Default: 0 0 0 0
+
+=back
+
+
+B<-i, --inside-distance> DISTANCE
+
+=over 4
+
+The distance to move the window when it's inside the margins.
+DISTANCE can be one of the following.
+
+C<E<lt>>
+
+=over 4
+
+Choose a distance such that
+(1) a window on the edge of a margin will be aligned to the opposite margin
+after being moved several times by i3move, and
+(2) the distance chosen is smaller than the window's size
+while being as large as possible.
+
+=back
+
+C<E<gt>>
+
+=over 4
+
+Like C<E<lt>> except that the distance chosen is larger than the window's size
+while being as small as possible.
+
+=back
+
+C<=>
+
+=over 4
+
+A combination of C<E<lt>> and C<E<gt>>.
+If the distance given by C<E<lt>> is such that
+a window on the edge of a margin would be centered
+after being moved several times by i3move,
+that distance is used.
+Otherwise, the distance given by C<E<gt>> is used.
+
+=back
+
+I<N>[px|%|%%]
+
+=over 4
+
+I<N> must be an integer.
+
+An optional suffix may be provided.
+If a suffix of 'px' is used,
+I<N> is measured in pixels.
+If a suffix of '%' is used,
+I<N> is measured as a percentage of the window's size.
+If a suffix of '%%' is used,
+I<N> is measured as a percentage of the screen's size.
+
+With no suffix,
+the distance is chosen such that,
+when moved by successive i3move commands,
+a window at the edge of a margin will occupy I<N> equally spaced positions,
+and the final position will be aligned to the opposite margin.
+
+If the distance computed is negative,
+the difference between it and the window's size is used.
+
+=back
+
+C<w>
+
+=over 4
+
+Use the window's size to determine the distance to move.
+If the window is smaller than the size given by the B<--threshold> option,
+then use the B<--small-distance> option's value.
+Otherwise, use the B<--large-distance> option's value.
+
+=back
+
+=back
+
+
+B<-o, --outside-distance> DISTANCE
+
+=over 4
+
+The distance to move the window when it's overlapping the margins.
+The format for DISTANCE is the same as for B<--inside-distance>.
+See that option for details.
+
+=back
+
+
+B<-s, --small-distance> DISTANCE
+
+=over 4
+
+The distance to move small windows.
+A window is considered small if its size is less than
+the B<--threshold> option's value.
+
+This option has no effect unless
+B<--inside-distance> or B<--outside-distance> is C<w>.
+
+The format for DISTANCE is the same as for B<--inside-distance>,
+except that it can't be C<w>.
+See the description of that option for details.
+
+Default: =
+
+=back
+
+
+B<-l, --large-distance> DISTANCE
+
+=over 4
+
+The distance to move large windows.
+A window is considered large if its size is greater than or equal to
+the B<--threshold> option's value.
+
+This option has no effect unless
+B<--inside-distance> or B<--outside-distance> is C<w>.
+
+The format for DISTANCE is the same as for B<--inside-distance>,
+except that it can't be C<w>.
+See that option for details.
+
+Default: 3
+
+=back
+
+
+B<-T, --threshold> THRESHOLD
+
+=over 4
+
+The window size threshold.
+THRESHOLD must be an integer.
+An optional suffix of 'px' or '%%' may be used.
+With '%%', THRESHOLD is measured as a percentage of the window's size.
+Otherwise, it's measured in pixels.
+
+If the threshold computed is negative,
+the difference between it and the window's size is used.
+
+The threshold interacts with the B<--small-distance>, B<--large-distance>,
+B<--inside-distance>, and B<--outside-distance> options
+to determine the distance to move.
+See the description of those options for details.
+
+Default: 33%%
+
+=back
+
+
+B<-C, --clamp>
+
+=over 4
+
+Constrain the window's movement so that it does not overlap the margins.
+A window that already overlaps can be moved normally.
+
+=back
+
+
+B<--no-clamp>
+
+=over 4
+
+Disable B<--clamp>.
+This is the default behavior.
+
+=back
+
+
+B<-S, --snap>
+
+=over 4
+
+When the window encounters a margin, snap it to the margin's edge.
+Once snapped, a window can be moved past a margin normally.
+This is the default behavior.
+
+=back
+
+
+B<--no-snap>
+
+=over 4
+
+Disable B<--snap>.
+
+=back
+
+
+B<-H, --hide>
+
+=over 4
+
+When moved towards the edge of the screen
+while snapped to a margin,
+hide the window past the edge of the screen
+by a distance determined by B<--outside-distance>.
+This is the default behavior.
+Once hidden, a window moved towards the center of the screen
+will be snapped to the margin.
+
+=back
+
+
+B<--no-hide>
+
+=over 4
+
+Disable B<--hide>.
+
+=back
+
+
+B<-P, --passthru>
+
+=over 4
+
+If the active window is tiled, use C<i3-msg> to move it.
+This is the default behavior.
+
+=back
+
+
+B<--no-passthru>
+
+=over 4
+
+Disable B<--passthru>.
+
+=back
+
+
+B<--gen>
+
+=over 4
+
+Try to generate sane defaults for the
+B<--title>, B<--border>, and B<--margins> options,
+then exit.
+The output of this command can be set in
+C<$HOME/.config/i3move> or the C<$I3MOVE_OPTIONS> environment variable.
+
+i3move guesses the title, border, and margin sizes by reading the i3 config,
+opening a new workspace named C<tmp.i3move>,
+launching C<i3-sensible-terminal>,
+then manipulating the terminal in order to measure
+the window borders, window title, bar size, and gap sizes.
+
+
+=back
+
+
+B<--man>
+
+=over 4
+
+Print the manual and exit.
+
+=back
+
+
+B<--help>
+
+=over 4
+
+Print a help message and exit.
+
+=back
+
+
+=head1 CONFIGURATION
+
+In addition to being passed on the command line,
+options are read from the following locations,
+with later options overriding earlier ones.
+
+=over 4
+
+C<$XDG_CONFIG_HOME/i3move>
+
+C<$XDG_CONFIG_HOME/i3/move>
+
+C<$HOME/.i3move>
+
+C<$I3MOVE_OPTIONS> environment variable
+
+=back
+
+If C<$XDG_CONFIG_HOME> is not defined, it defaults to C<$HOME/.config> .
+
+
+=head1 EXAMPLES
+
+Create or reset i3move's config with sane defaults
+
+    i3move --gen > ~/.config/i3move
+
+Move a floating window left, down, up, and right.
+
+    i3move left
+    i3move down
+    i3move up
+    i3move right
+
+Bind the commands above in i3's config
+
+    bindsym $mod+Mod1+h $exec i3move left
+    bindsym $mod+Mod1+j $exec i3move down  
+    bindsym $mod+Mod1+k $exec i3move up    
+    bindsym $mod+Mod1+l $exec i3move right 
+
+After reloading i3 with the above config,
+you can move windows with i3move
+by holding down $mod+Alt and using vim keys (C<hjkl>).
+
+
+=head1 AUTHORS
+
+i3move was written by L<DMBuce|https://github.com/DMBuce> .
+
