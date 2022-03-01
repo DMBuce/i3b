@@ -1,7 +1,7 @@
 #SHELL = /bin/sh
 
 # root for installation
-prefix      = ${HOME}
+prefix      = /usr/local
 exec_prefix = ${prefix}
 
 ## executables
@@ -10,9 +10,9 @@ bindir     = ${exec_prefix}/bin
 #libexecdir = ${exec_prefix}/libexec
 #
 ## data
-#datarootdir    = ${prefix}/share
+datarootdir    = ${prefix}/share
 #datadir        = ${datarootdir}
-sysconfdir     = ${prefix}/.config
+sysconfdir     = ${prefix}/etc
 #sharedstatedir = ${prefix}/com
 #localstatedir  = ${prefix}/var
 #
@@ -23,8 +23,8 @@ sysconfdir     = ${prefix}/.config
 #infodir       = ${datarootdir}/info
 #libdir        = ${exec_prefix}/lib
 #localedir     = ${datarootdir}/locale
-#mandir        = ${datarootdir}/man
-#man1dir       = $(mandir)/man1
+mandir        = ${datarootdir}/man
+man1dir       = $(mandir)/man1
 #man2dir       = $(mandir)/man2
 #man3dir       = $(mandir)/man3
 #man4dir       = $(mandir)/man4
@@ -40,37 +40,35 @@ INSTALL         = /usr/bin/install -c
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_DATA    = ${INSTALL} -m 644
 
-PACKAGE   = wm
-PROG      = wm
+PACKAGE   = i3b
+PROG      = i3b
 #VERSION   = 0.0.0
-BUGREPORT = https://github.com/DMBuce/wm/issues
-URL       = https://github.com/DMBuce/wm
+BUGREPORT = https://github.com/DMBuce/i3b/issues
+URL       = https://github.com/DMBuce/i3b
 
-BINFILES         = $(wildcard bin/*)
-#ETCFILES         = $(shell find config/ -type f)
-BINFILES_INSTALL = $(BINFILES:bin/%=$(DESTDIR)$(bindir)/%)
-#ETCFILES_INSTALL = $(ETCFILES:config/%=$(DESTDIR)$(sysconfdir)/%)
-INSTALL_FILES    = $(BINFILES_INSTALL) $(ETCFILES_INSTALL)
-INSTALL_DIRS     = $(sort $(dir $(INSTALL_FILES)))
+BINFILES          = $(wildcard bin/*)
+#ETCFILES          = $(shell find config/ -type f)
+MAN1FILES         = doc/i3move.1
+HTMLFILES         = $(BINFILES:bin/%.1=doc/%.html)
+TEXTFILES         = $(BINFILES:bin/%.1=doc/%.txt)
+MANFILES          = $(MAN1FILES)
+DOCFILES          = $(MANFILES) $(HTMLFILES) $(TEXTFILES)
+BINFILES_INSTALL  = $(BINFILES:bin/%=$(DESTDIR)$(bindir)/%)
+MAN1FILES_INSTALL = $(MAN1FILES:doc/%=$(DESTDIR)$(man1dir)/%)
+MANFILES_INSTALL  = $(MAN1FILES)
+#ETCFILES_INSTALL  = $(ETCFILES:config/%=$(DESTDIR)$(sysconfdir)/%)
+INSTALL_FILES     = $(BINFILES_INSTALL) $(ETCFILES_INSTALL) $(MANFILES)
+INSTALL_DIRS      = $(sort $(dir $(INSTALL_FILES)))
 
 .PHONY: all
 all: doc
 
 .PHONY: doc
-doc: man html text
+doc: $(DOCFILES)
 
-.PHONY: man
-man: doc/i3move.1
-
-.PHONY: text
-text: doc/i3move.txt
-
-.PHONY: html
-html: doc/i3move.html
-
-doc/%.html: bin/%
+doc/%.1: bin/%
 	mkdir -p doc
-	pod2html $< > $@
+	pod2man $< > $@
 
 doc/%.txt: bin/%
 	mkdir -p doc
@@ -91,6 +89,9 @@ $(INSTALL_DIRS):
 
 $(DESTDIR)$(bindir)/%: bin/%
 	$(INSTALL_PROGRAM) $< $@
+
+$(DESTDIR)$(man1dir)/%: doc/%
+	$(INSTALL_DATA) $< $@
 
 $(DESTDIR)$(sysconfdir)/%: config/%
 	$(INSTALL_DATA) $< $@
