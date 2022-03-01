@@ -522,6 +522,8 @@ Otherwise, use the B<--large-distance> option's value.
 
 =back
 
+Default: w
+
 =back
 
 
@@ -532,6 +534,8 @@ B<-o, --outside-distance> DISTANCE
 The distance to move the window when it's overlapping the margins.
 The format for DISTANCE is the same as for B<--inside-distance>.
 See that option for details.
+
+Default: -17px
 
 =back
 

@@ -102,11 +102,15 @@ OPTIONS
             then use the --small-distance option's value. Otherwise, use the
             --large-distance option's value.
 
+        Default: w
+
     -o, --outside-distance DISTANCE
 
         The distance to move the window when it's overlapping the margins.
         The format for DISTANCE is the same as for --inside-distance. See
         that option for details.
+
+        Default: -17px
 
     -s, --small-distance DISTANCE
 
