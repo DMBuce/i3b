@@ -87,13 +87,13 @@ installdirs: $(INSTALL_DIRS)
 $(INSTALL_DIRS):
 	$(INSTALL) -d $@
 
-$(DESTDIR)$(bindir)/%: bin/%
+$(DESTDIR)$(bindir)/%: $(INSTALL_DIRS) bin/%
 	$(INSTALL_PROGRAM) $< $@
 
-$(DESTDIR)$(man1dir)/%: doc/%
+$(DESTDIR)$(man1dir)/%: $(INSTALL_DIRS) doc/%
 	$(INSTALL_DATA) $< $@
 
-$(DESTDIR)$(sysconfdir)/%: config/%
+$(DESTDIR)$(sysconfdir)/%: $(INSTALL_DIRS) config/%
 	$(INSTALL_DATA) $< $@
 
 # vim: set ft=make:
