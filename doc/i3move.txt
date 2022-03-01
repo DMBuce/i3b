@@ -1,0 +1,252 @@
+NAME
+    i3move - Move a floating i3 window.
+
+USAGE
+    i3move [options] <direction>
+
+    options:
+
+        [-t|--title <size>] [-b|--border <size>]
+        [-m|--margins <top> [bottom] [left] [right]]
+        [-i|--inside-distance \<|\>|w|*N*[px|%|%%]]
+        [-o|--outside-distance \<|\>|w|*N*[px|%|%%]]
+        [-s|--small-distance \<|\>|*N*[px|%|%%]]
+        [-l|--large-distance \<|\>|*N*[px|%|%%]] [-T|--threshold *N*[px|%%]]
+        [-C|--clamp|--no-clamp] [-S|--snap|--no-snap] [-H|--hide|--no-hide]
+        [-P|--passthru|--no-passthru] [-g|--gen] [--man] [--help]
+
+    direction: up|down|left|right
+
+DESCRIPTION
+    Move a floating i3 window up, down, left, or right. The distance moved
+    is chosen based on the window's size and position.
+
+    If the active window is tiled, i3move will move it with "i3-msg move
+    DIRECTION" instead.
+
+OPTIONS
+    -t, --title SIZE
+
+        The size of i3's window title bars in pixels.
+
+        Default: 26
+
+    -b, --border SIZE
+
+        The size of i3's window borders in pixels.
+
+        Default: 3
+
+    -m, --margins TOP [BOTTOM] [LEFT] [RIGHT]
+
+        The width of margins along the top, bottom, left, and right sides of
+        the screen.
+
+        If the window is inside the margins, its movement is determined by
+        --inside-distance. Otherwise, its movement is determined by
+        --outside-distance. See the description of those options for
+        details.
+
+        The margins can also be used to prevent floating windows from
+        overlapping i3bar and/or the gaps around the edge of the screen. See
+        the description of the --snap and --clamp options for details.
+
+        Default: 0 0 0 0
+
+    -i, --inside-distance DISTANCE
+
+        The distance to move the window when it's inside the margins.
+        DISTANCE can be one of the following.
+
+        "<"
+
+            Choose a distance such that (1) a window on the edge of a margin
+            will be aligned to the opposite margin after being moved several
+            times by i3move, and (2) the distance chosen is smaller than the
+            window's size while being as large as possible.
+
+        ">"
+
+            Like "<" except that the distance chosen is larger than the
+            window's size while being as small as possible.
+
+        "="
+
+            A combination of "<" and ">". If the distance given by "<" is
+            such that a window on the edge of a margin would be centered
+            after being moved several times by i3move, that distance is
+            used. Otherwise, the distance given by ">" is used.
+
+        *N*[px|%|%%]
+
+            *N* must be an integer.
+
+            An optional suffix may be provided. If a suffix of 'px' is used,
+            *N* is measured in pixels. If a suffix of '%' is used, *N* is
+            measured as a percentage of the window's size. If a suffix of
+            '%%' is used, *N* is measured as a percentage of the screen's
+            size.
+
+            With no suffix, the distance is chosen such that, when moved by
+            successive i3move commands, a window at the edge of a margin
+            will occupy *N* equally spaced positions, and the final position
+            will be aligned to the opposite margin.
+
+            If the distance computed is negative, the difference between it
+            and the window's size is used.
+
+        "w"
+
+            Use the window's size to determine the distance to move. If the
+            window is smaller than the size given by the --threshold option,
+            then use the --small-distance option's value. Otherwise, use the
+            --large-distance option's value.
+
+    -o, --outside-distance DISTANCE
+
+        The distance to move the window when it's overlapping the margins.
+        The format for DISTANCE is the same as for --inside-distance. See
+        that option for details.
+
+    -s, --small-distance DISTANCE
+
+        The distance to move small windows. A window is considered small if
+        its size is less than the --threshold option's value.
+
+        This option has no effect unless --inside-distance or
+        --outside-distance is "w".
+
+        The format for DISTANCE is the same as for --inside-distance, except
+        that it can't be "w". See the description of that option for
+        details.
+
+        Default: =
+
+    -l, --large-distance DISTANCE
+
+        The distance to move large windows. A window is considered large if
+        its size is greater than or equal to the --threshold option's value.
+
+        This option has no effect unless --inside-distance or
+        --outside-distance is "w".
+
+        The format for DISTANCE is the same as for --inside-distance, except
+        that it can't be "w". See that option for details.
+
+        Default: 3
+
+    -T, --threshold THRESHOLD
+
+        The window size threshold. THRESHOLD must be an integer. An optional
+        suffix of 'px' or '%%' may be used. With '%%', THRESHOLD is measured
+        as a percentage of the window's size. Otherwise, it's measured in
+        pixels.
+
+        If the threshold computed is negative, the difference between it and
+        the window's size is used.
+
+        The threshold interacts with the --small-distance, --large-distance,
+        --inside-distance, and --outside-distance options to determine the
+        distance to move. See the description of those options for details.
+
+        Default: 33%%
+
+    -C, --clamp
+
+        Constrain the window's movement so that it does not overlap the
+        margins. A window that already overlaps can be moved normally.
+
+    --no-clamp
+
+        Disable --clamp. This is the default behavior.
+
+    -S, --snap
+
+        When the window encounters a margin, snap it to the margin's edge.
+        Once snapped, a window can be moved past a margin normally. This is
+        the default behavior.
+
+    --no-snap
+
+        Disable --snap.
+
+    -H, --hide
+
+        When moved towards the edge of the screen while snapped to a margin,
+        hide the window past the edge of the screen by a distance determined
+        by --outside-distance. This is the default behavior. Once hidden, a
+        window moved towards the center of the screen will be snapped to the
+        margin.
+
+    --no-hide
+
+        Disable --hide.
+
+    -P, --passthru
+
+        If the active window is tiled, use "i3-msg" to move it. This is the
+        default behavior.
+
+    --no-passthru
+
+        Disable --passthru.
+
+    --gen
+
+        Try to generate sane defaults for the --title, --border, and
+        --margins options, then exit. The output of this command can be set
+        in "$HOME/.config/i3move" or the $I3MOVE_OPTIONS environment
+        variable.
+
+        i3move guesses the title, border, and margin sizes by reading the i3
+        config, opening a new workspace named "tmp.i3move", launching
+        "i3-sensible-terminal", then manipulating the terminal in order to
+        measure the window borders, window title, bar size, and gap sizes.
+
+    --man
+
+        Print the manual and exit.
+
+    --help
+
+        Print a help message and exit.
+
+CONFIGURATION
+    In addition to being passed on the command line, options are read from
+    the following locations, with later options overriding earlier ones.
+
+        "$XDG_CONFIG_HOME/i3move"
+
+        "$XDG_CONFIG_HOME/i3/move"
+
+        "$HOME/.i3move"
+
+        $I3MOVE_OPTIONS environment variable
+
+    If $XDG_CONFIG_HOME is not defined, it defaults to "$HOME/.config" .
+
+EXAMPLES
+    Create or reset i3move's config with sane defaults
+
+        i3move --gen > ~/.config/i3move
+
+    Move a floating window left, down, up, and right.
+
+        i3move left
+        i3move down
+        i3move up
+        i3move right
+
+    Bind the commands above in i3's config
+
+        bindsym $mod+Mod1+h $exec i3move left
+        bindsym $mod+Mod1+j $exec i3move down  
+        bindsym $mod+Mod1+k $exec i3move up    
+        bindsym $mod+Mod1+l $exec i3move right
+
+    After reloading i3 with the above config, you can move windows with
+    i3move by holding down $mod+Alt and using vim keys ("hjkl").
+
+AUTHORS
+    i3move was written by DMBuce <https://github.com/DMBuce> .
+

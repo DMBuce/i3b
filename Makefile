@@ -57,11 +57,14 @@ INSTALL_DIRS     = $(sort $(dir $(INSTALL_FILES)))
 all: doc
 
 .PHONY: doc
-doc: man html
+doc: man html text
 
 .PHONY: man
 man: doc/i3move.1
-	
+
+.PHONY: text
+text: doc/i3move.txt
+
 .PHONY: html
 html: doc/i3move.html
 
@@ -69,9 +72,13 @@ doc/%.html: bin/%
 	mkdir -p doc
 	pod2html $< > $@
 
-doc/%.1: bin/%
+doc/%.txt: bin/%
 	mkdir -p doc
-	pod2man $< > $@
+	pod2text $< > $@
+
+doc/%.html: bin/%
+	mkdir -p doc
+	pod2html $< > $@
 
 .PHONY: install
 install: all installdirs $(INSTALL_FILES)
