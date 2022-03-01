@@ -1,0 +1,7 @@
+#!/bin/bash
+# update docs every commit
+
+# update man pages
+make doc
+git add doc/i3move.{1,html}
+
