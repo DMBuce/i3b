@@ -158,7 +158,7 @@ if (not $result) {
 	$m4 -= $b if $hide_edge_borders =~ /^(both|horizontal)$/;
 
 	# figure out outside distance
-	my $o = ($m1 - $m2) / 2;
+	my $o = int( ($m1 - $m2) / 2 );
 	$o *= -1 if $o < 0;
 	$o += 1 if $o == 0;
 
