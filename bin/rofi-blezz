@@ -8,7 +8,7 @@ shift 2
 
 # check args
 usage="Syntax: ${0##*/} [section] [config] [rofi args]"
-if [[ "$@" == *--help* ]]; then
+if [[ "$section $file $*" == *--help* ]]; then
 	echo "$usage" >&2
 	exit
 elif [[ ! -f "$file" ]]; then
