@@ -20,7 +20,8 @@ Features:
 
 Requirements: perl, xwininfo, xdotool, xprop
 
-See `pod2man $(which i3move) | man -l -` for extensive documentation.
+See [the man page](https://dmbuce.github.io/i3b/i3move.html)
+for extensive documentation.
 
 ## rofi-blezz
 

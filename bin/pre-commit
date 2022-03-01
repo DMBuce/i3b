@@ -3,5 +3,5 @@
 
 # update man pages
 make doc
-git add doc/i3move.{1,html}
+git add doc/*
 
