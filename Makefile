@@ -36,7 +36,7 @@ man1dir       = $(mandir)/man1
 #manext        = .1
 #srcdir        = .
 
-INSTALL         = /usr/bin/install -c
+INSTALL         = /usr/bin/install -c -D
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_DATA    = ${INSTALL} -m 644
 
@@ -87,13 +87,13 @@ installdirs: $(INSTALL_DIRS)
 $(INSTALL_DIRS):
 	$(INSTALL) -d $@
 
-$(DESTDIR)$(bindir)/%: $(INSTALL_DIRS) bin/%
+$(DESTDIR)$(bindir)/%: bin/%
 	$(INSTALL_PROGRAM) $< $@
 
-$(DESTDIR)$(man1dir)/%: $(INSTALL_DIRS) doc/%
+$(DESTDIR)$(man1dir)/%: doc/%
 	$(INSTALL_DATA) $< $@
 
-$(DESTDIR)$(sysconfdir)/%: $(INSTALL_DIRS) config/%
+$(DESTDIR)$(sysconfdir)/%: config/%
 	$(INSTALL_DATA) $< $@
 
 # vim: set ft=make:
