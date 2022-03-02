@@ -15,7 +15,6 @@ url="https://github.com/DMBuce/i3b"
 license=('GPL3')
 groups=()
 depends=(
-  i3
   perl
   xwininfo
   xdotool
