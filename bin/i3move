@@ -774,3 +774,10 @@ by holding down $mod+Alt and using vim keys (C<hjkl>).
 
 i3move was written by L<DMBuce|https://github.com/DMBuce> .
 
+
+=head1 DISTRIBUTION
+
+i3move is part of the i3b project.
+The latest version can be downloaded from
+L<DMBuce|https://github.com/DMBuce/i3b> .
+
