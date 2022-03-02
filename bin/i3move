@@ -751,6 +751,15 @@ Create or reset i3move's config with sane defaults
 
     i3move --gen > ~/.config/i3move
 
+If i3move does not snap windows to the bar or gaps correctly,
+try tweaking the B<--title>, B<--border>, and/or B<--margins>
+options in the config.
+See the description of those options for details.
+
+For best results,
+open a screenshot with an image editor such as kolourpaint
+to determine the correct values for these options.
+
 Move a floating window left, down, up, and right.
 
     i3move left
@@ -760,10 +769,10 @@ Move a floating window left, down, up, and right.
 
 Bind the commands above in i3's config
 
-    bindsym $mod+Mod1+h $exec i3move left
-    bindsym $mod+Mod1+j $exec i3move down  
-    bindsym $mod+Mod1+k $exec i3move up    
-    bindsym $mod+Mod1+l $exec i3move right 
+    bindsym $mod+Mod1+h exec i3move left
+    bindsym $mod+Mod1+j exec i3move down
+    bindsym $mod+Mod1+k exec i3move up
+    bindsym $mod+Mod1+l exec i3move right
 
 After reloading i3 with the above config,
 you can move windows with i3move
