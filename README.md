@@ -18,7 +18,7 @@ Features:
 * Prevent window from moving beyond screen edges, bar, gaps
 * All behavior highly configurable
 
-Requirements: perl, xwininfo, xdotool, xprop
+Requirements: perl, xrandr, xdotool, xprop
 
 See [the man page](https://dmbuce.github.io/i3b/i3move.html)
 for extensive documentation.
