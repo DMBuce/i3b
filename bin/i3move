@@ -77,18 +77,18 @@ if (not $result) {
 	require Pod::Usage;
 	Pod::Usage::pod2usage(-verbose => 1, -exitcode => 0, -noperldoc => 1);
 # generate config
-} elsif ($options{gen} or $options{generate}) {
+} elsif ($options{gen}) {
 	# switch to temp workspace and launch a terminal
 	system("i3-msg workspace tmp.i3move >/dev/null");
 	system("i3-sensible-terminal >/dev/null &");
 	sleep 1;
 
-	# get dimensions of root window: width, height
-	my %root = ();
-	for my $line ( split /\n/ => `xwininfo -root -int` ) {
-		my ($key, $val) = ( $line =~ /(Width|Height):\s*(\S*)/ );
-		$root{lc $key} = $val if defined $key;
-	}
+	## get dimensions of root window: width, height
+	#my %root = ();
+	#for my $line ( split /\n/ => `xwininfo -root -int` ) {
+	#	my ($key, $val) = ( $line =~ /(Width|Height):\s*(\S*)/ );
+	#	$root{lc $key} = $val if defined $key;
+	#}
 
 	# make sure window is tiled and get its properties
 	system("i3-msg floating disable >/dev/null");
@@ -99,6 +99,34 @@ if (not $result) {
 		my ($key, $val) = ( $line =~ /([^=]*)=(.*)/ );
 		$key = "id" if $key eq "window";
 		$pos1{lc $key} = $val;
+	}
+
+	# figure out dimensions of screen
+	my %root = ();
+	my %vroot = ( width => 0, height => 0 );
+	my ($x, $y) = ($pos1{x} + $pos1{width}/2, $pos1{y} + $pos1{height}/2);
+	for my $line ( split /\n/ => `xrandr` ) {
+		if ($line =~ /\sconnected.*?(\d+)x(\d+)\+(\d+)\+(\d+)/) {
+			# $1: display width
+			# $2: display height
+			# $3: x offset
+			# $4: y offset
+			if ($x >= $3 and $x < $3 + $1 and $y >= $4 and $y < $4 + $2) {
+				# active window is on this display
+				$vroot{width} += $1;
+				$vroot{height} += $2;
+				$root{width} = $1;
+				$root{height} = $2;
+				$root{x_offset} = $3;
+				$root{y_offset} = $4;
+			} elsif ($x >= $3 and $x < $3 + $1) {
+				# display is above or below active window
+				$vroot{height} += $2;
+			} elsif ($y >= $4 and $y < $4 + $2) {
+				# display is left or right of active window
+				$vroot{width} += $1;
+			}
+		}
 	}
 
 	# make window floating and get properties of new position
@@ -131,8 +159,10 @@ if (not $result) {
 	my $b = $pos3{x} - $pos2{x};
 	my $t = $pos3{y} - $pos2{y};
 	my $m1 = $pos1{y} - $t;
+	# TODO: adjust for multimon
 	my $m2 = $root{height} - $pos1{height} - $pos1{y};
 	my $m3 = $pos1{x};
+	# TODO: adjust for multimon
 	my $m4 = $root{width} - $pos1{width} - $pos1{x};
 
 	# figure out what i3's hide_edge_borders config is set to
@@ -205,12 +235,13 @@ if ( ! grep( /I3_FLOATING_WINDOW/, split( /[\r\n]+/, `xprop -id $window_id` ))) 
 	exec "i3-msg move $direction >/dev/null";
 }
 
-# get dimensions of root window: width, height
-my %root = ();
-for my $line ( split /\n/ => `xwininfo -root -int` ) {
-	my ($key, $val) = ( $line =~ /(Width|Height):\s*(\S*)/ );
-	$root{lc $key} = $val if defined $key;
-}
+## get dimensions of root window: width, height
+## TODO: adjust for multimon
+#my %root = ();
+#for my $line ( split /\n/ => `xwininfo -root -int` ) {
+#	my ($key, $val) = ( $line =~ /(Width|Height):\s*(\S*)/ );
+#	$root{lc $key} = $val if defined $key;
+#}
 
 # get properties of active window: id, x, y, width, height, screen
 my %window = ();
@@ -220,12 +251,41 @@ for my $line ( split /\n/ => `xdotool getactivewindow getwindowgeometry --shell`
 	$window{lc $key} = $val;
 }
 
+# figure out dimensions of screen
+my %root = ();
+my %vroot = ( width => 0, height => 0 );
+my ($x, $y) = ($window{x} + $window{width}/2, $window{y} + $window{height}/2);
+for my $line ( split /\n/ => `xrandr` ) {
+	if ($line =~ /\sconnected.*?(\d+)x(\d+)\+(\d+)\+(\d+)/) {
+		# $1: display width
+		# $2: display height
+		# $3: x offset
+		# $4: y offset
+		if ($x >= $3 and $x < $3 + $1 and $y >= $4 and $y < $4 + $2) {
+			# active window is on this display
+			$vroot{width} += $1;
+			$vroot{height} += $2;
+			$root{width} = $1;
+			$root{height} = $2;
+			$root{x_offset} = $3;
+			$root{y_offset} = $4;
+		} elsif ($x >= $3 and $x < $3 + $1) {
+			# display is above or below active window
+			$vroot{height} += $2;
+		} elsif ($y >= $4 and $y < $4 + $2) {
+			# display is left or right of active window
+			$vroot{width} += $1;
+		}
+	}
+}
+
 # figure out which axis to use
 my ($z, $length, $LENGTH, $o, %margins);
 if ($direction eq "up" or $direction eq "down") {
 	$z = $window{y} - $options{title};
 	$length = $window{height} + $options{title} + $options{border};
-	$LENGTH = $root{height};
+	# TODO: adjust for multimon
+	$LENGTH = $vroot{height};
 	%margins = (
 		near => ($options{margins}[0] or 0),
 		far  => ($options{margins}[1] or 0),
@@ -233,7 +293,8 @@ if ($direction eq "up" or $direction eq "down") {
 } else {
 	$z = $window{x} - $options{border};
 	$length = $window{width} + 2*$options{border};
-	$LENGTH = $root{width};
+	# TODO: adjust for multimon
+	$LENGTH = $vroot{width};
 	%margins = (
 		near => ($options{margins}[2] or 0),
 		far  => ($options{margins}[3] or 0),
