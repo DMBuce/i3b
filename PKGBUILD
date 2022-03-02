@@ -13,13 +13,13 @@ pkgdesc="Window manager scripts and configs"
 arch=(any)
 url="https://github.com/DMBuce/i3b"
 license=('GPL3')
-groups=(
+groups=()
+depends=(
+  i3
   perl
   xwininfo
   xdotool
   xprop
-)
-depends=(
 )
 makedepends=('git')
 provides=()
