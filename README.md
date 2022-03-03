@@ -3,6 +3,13 @@
 
 Buce's window manager scripts and configs.
 
+## Install
+
+There's an [AUR package](https://aur.archlinux.org/packages/i3b) for Arch Linux
+and a Makefile for other distros.
+In addition, many of the scripts can be installed standalone
+by dropping them in your $PATH and making them executable.
+
 ## i3move
 
 Move a floating i3 window.
