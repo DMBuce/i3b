@@ -5,6 +5,98 @@ use warnings;
 
 use Getopt::Long qw(:config no_ignore_case);
 
+# get X11 properties of active window
+#
+# returns hash with integer keys: id, x, y, width, height, screen
+sub activewindow {
+	my %window = ();
+	for my $line (
+		split /\n/ => `xdotool getactivewindow getwindowgeometry --shell`
+	) {
+		my ($key, $val) = ( $line =~ /([^=]*)=(.*)/ );
+		$key = "id" if $key eq "window";
+		$window{lc $key} = $val;
+	}
+	return %window;
+}
+
+# get properties of monitors that neighbor a window
+#
+# param 1: hash of window properties with keys: x, y, width, height
+# returns hash: {
+# 	up      => 0 or $window
+# 	down    => 0 or $window
+# 	left    => 0 or $window
+# 	right   => 0 or $window
+# 	here    => 0 or $window
+# 	nearest => $window
+# 	all     => $window
+# }
+# where $window is a hash of monitor properties with keys: x_offset, y_offset, width, height
+sub getmonitors {
+	my (%window) = @_;
+	my %monitors = ( up => 0, down => 0, left => 0, right => 0, here => 0, all => 0 );
+	my ($x, $y) = ($window{x} + $window{width}/2, $window{y} + $window{height}/2);
+	for my $line ( split /\n/ => `xrandr -q` ) {
+		if ($line =~ /^Screen 0.*current (\d+) x (\d+)/) {
+			$monitors{all}
+				= { width => $1, height => $2, x_offset => 0, y_offset => 0 };
+		} elsif ($line =~ /^(Screen \d+)/) {
+			print STDERR "Multiple graphics cards not supported\n";
+			print STDERR "Trying anyway...\n";
+			last;
+		} elsif ($line =~ /\sconnected.*?(\d+)x(\d+)\+(\d+)\+(\d+)/) {
+			# $1: monitor width
+			# $2: monitor height
+			# $3: x offset
+			# $4: y offset
+			if ($x >= $3 and $x < $3 + $1 and $y >= $4 and $y < $4 + $2) {
+				# active window is on this monitor
+				$monitors{here}
+					= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
+			} elsif ($x >= $3 and $x < $3 + $1 and $y >= $4) {
+				# monitor is somewhere above active window
+				if (not $monitors{up} or $4 > $monitors{up}{y_offset}) {
+					# monitor is nearer than others we've seen, so save it
+					$monitors{up}
+						= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
+				}
+			} elsif ($x >= $3 and $x < $3 + $1 and $y < $4 + $2) {
+				# monitor is somewhere below active window
+				if (not $monitors{down} or $4 < $monitors{down}{y_offset}) {
+					# monitor is nearer than others we've seen, so save it
+					$monitors{down}
+						= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
+				}
+			} elsif ($y >= $4 and $y < $4 + $2 and $x >= $3) {
+				# monitor is somewhere left of active window
+				if (not $monitors{left} or $3 > $monitors{left}{x_offset}) {
+					# monitor is nearer than others we've seen, so save it
+					$monitors{left}
+						= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
+				}
+			} elsif ($y >= $4 and $y < $4 + $2 and $x < $3 + $1) {
+				# monitor is somewhere right of active window
+				if (not $monitors{right} or $3 < $monitors{right}{x_offset}) {
+					# monitor is nearer than others we've seen, so save it
+					$monitors{right}
+						= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
+				}
+			}
+		}
+	}
+
+	# find monitor nearest to active window
+	for my $k ("here", "up", "down", "left", "right") {
+		if ($monitors{$k}) {
+			$monitors{nearest} = $monitors{$k};
+			last;
+		}
+	}
+
+	return %monitors
+}
+
 # default options
 my %options = (
 	margins   => [],
@@ -81,64 +173,66 @@ if (not $result) {
 
 	# make sure window is tiled and get its properties
 	system("i3-msg floating disable >/dev/null");
-	my %pos1 = ();
-	for my $line (
-		split /\n/ => `xdotool getactivewindow getwindowgeometry --shell`
-	) {
-		my ($key, $val) = ( $line =~ /([^=]*)=(.*)/ );
-		$key = "id" if $key eq "window";
-		$pos1{lc $key} = $val;
-	}
+	my %pos1 = activewindow();
+	#for my $line (
+	#	split /\n/ => `xdotool getactivewindow getwindowgeometry --shell`
+	#) {
+	#	my ($key, $val) = ( $line =~ /([^=]*)=(.*)/ );
+	#	$key = "id" if $key eq "window";
+	#	$pos1{lc $key} = $val;
+	#}
 
-	# figure out dimensions of screen
-	my %root = ();
-	my %vroot = ( width => 0, height => 0 );
-	my ($x, $y) = ($pos1{x} + $pos1{width}/2, $pos1{y} + $pos1{height}/2);
-	for my $line ( split /\n/ => `xrandr -q` ) {
-		if ($line =~ /\sconnected.*?(\d+)x(\d+)\+(\d+)\+(\d+)/) {
-			# $1: display width
-			# $2: display height
-			# $3: x offset
-			# $4: y offset
-			if ($x >= $3 and $x < $3 + $1 and $y >= $4 and $y < $4 + $2) {
-				# active window is on this display
-				$vroot{width} += $1;
-				$vroot{height} += $2;
-				$root{width} = $1;
-				$root{height} = $2;
-				$root{x_offset} = $3;
-				$root{y_offset} = $4;
-			} elsif ($x >= $3 and $x < $3 + $1) {
-				# display is above or below active window
-				$vroot{height} += $2;
-			} elsif ($y >= $4 and $y < $4 + $2) {
-				# display is left or right of active window
-				$vroot{width} += $1;
-			}
-		}
-	}
+	# find monitors
+	my %monitors = getmonitors(%pos1);
+	## figure out dimensions of screen
+	#my %root = ();
+	#my %vroot = ( width => 0, height => 0 );
+	#my ($x, $y) = ($pos1{x} + $pos1{width}/2, $pos1{y} + $pos1{height}/2);
+	#for my $line ( split /\n/ => `xrandr -q` ) {
+	#	if ($line =~ /\sconnected.*?(\d+)x(\d+)\+(\d+)\+(\d+)/) {
+	#		# $1: display width
+	#		# $2: display height
+	#		# $3: x offset
+	#		# $4: y offset
+	#		if ($x >= $3 and $x < $3 + $1 and $y >= $4 and $y < $4 + $2) {
+	#			# active window is on this display
+	#			$vroot{width} += $1;
+	#			$vroot{height} += $2;
+	#			$root{width} = $1;
+	#			$root{height} = $2;
+	#			$root{x_offset} = $3;
+	#			$root{y_offset} = $4;
+	#		} elsif ($x >= $3 and $x < $3 + $1) {
+	#			# display is above or below active window
+	#			$vroot{height} += $2;
+	#		} elsif ($y >= $4 and $y < $4 + $2) {
+	#			# display is left or right of active window
+	#			$vroot{width} += $1;
+	#		}
+	#	}
+	#}
 
 	# make window floating and get properties of new position
 	system("i3-msg floating enable >/dev/null");
-	my %pos2 = ();
-	for my $line (
-		split /\n/ => `xdotool getactivewindow getwindowgeometry --shell`
-	) {
-		my ($key, $val) = ( $line =~ /([^=]*)=(.*)/ );
-		$key = "id" if $key eq "window";
-		$pos2{lc $key} = $val;
-	}
+	my %pos2 = activewindow();
+	#for my $line (
+	#	split /\n/ => `xdotool getactivewindow getwindowgeometry --shell`
+	#) {
+	#	my ($key, $val) = ( $line =~ /([^=]*)=(.*)/ );
+	#	$key = "id" if $key eq "window";
+	#	$pos2{lc $key} = $val;
+	#}
 
 	# move window and get properties of new position
 	system("i3-msg move position $pos2{x} $pos2{y} >/dev/null");
-	my %pos3 = ();
-	for my $line (
-		split /\n/ => `xdotool getactivewindow getwindowgeometry --shell`
-	) {
-		my ($key, $val) = ( $line =~ /([^=]*)=(.*)/ );
-		$key = "id" if $key eq "window";
-		$pos3{lc $key} = $val;
-	}
+	my %pos3 = activewindow();
+	#for my $line (
+	#	split /\n/ => `xdotool getactivewindow getwindowgeometry --shell`
+	#) {
+	#	my ($key, $val) = ( $line =~ /([^=]*)=(.*)/ );
+	#	$key = "id" if $key eq "window";
+	#	$pos3{lc $key} = $val;
+	#}
 
 	# kill window, return to previous workspace
 	system("i3-msg kill >/dev/null");
@@ -148,9 +242,9 @@ if (not $result) {
 	my $b = $pos3{x} - $pos2{x};
 	my $t = $pos3{y} - $pos2{y};
 	my $m1 = $pos1{y} - $t;
-	my $m2 = $root{height} - $pos1{height} - $pos1{y};
+	my $m2 = $monitors{here}{height} - $pos1{height} - $pos1{y};
 	my $m3 = $pos1{x};
-	my $m4 = $root{width} - $pos1{width} - $pos1{x};
+	my $m4 = $monitors{here}{width} - $pos1{width} - $pos1{x};
 
 	# figure out what i3's hide_edge_borders config is set to
 	my $hide_edge_borders = "none";
@@ -223,12 +317,12 @@ if ( ! grep( /I3_FLOATING_WINDOW/, split( /[\r\n]+/, `xprop -id $window_id` ))) 
 }
 
 # get properties of active window: id, x, y, width, height, screen
-my %window = ();
-for my $line ( split /\n/ => `xdotool getactivewindow getwindowgeometry --shell` ) {
-	my ($key, $val) = ( $line =~ /([^=]*)=(.*)/ );
-	$key = "id" if $key eq "window";
-	$window{lc $key} = $val;
-}
+my %window = activewindow();
+#for my $line ( split /\n/ => `xdotool getactivewindow getwindowgeometry --shell` ) {
+#	my ($key, $val) = ( $line =~ /([^=]*)=(.*)/ );
+#	$key = "id" if $key eq "window";
+#	$window{lc $key} = $val;
+#}
 
 # convert X11 numbers to i3 numbers
 $window{x} -= $options{border};
@@ -237,56 +331,57 @@ $window{width} += 2*$options{border};
 $window{height} += $options{title} + $options{border};
 
 # find monitors
-my %monitors = ( all => 0, here => 0, up => 0, down => 0, left => 0, right => 0 );
-my ($x, $y) = ($window{x} + $window{width}/2, $window{y} + $window{height}/2);
-for my $line ( split /\n/ => `xrandr -q` ) {
-	if ($line =~ /^Screen 0.*current (\d+) x (\d+)/) {
-		$monitors{all}
-			= { width => $1, height => $2, x_offset => 0, y_offset => 0 };
-	} elsif ($line =~ /^(Screen \d+)/) {
-		print STDERR "Multiple graphics cards not supported\n";
-		print STDERR "Trying anyway...\n";
-		last;
-	} elsif ($line =~ /\sconnected.*?(\d+)x(\d+)\+(\d+)\+(\d+)/) {
-		# $1: monitor width
-		# $2: monitor height
-		# $3: x offset
-		# $4: y offset
-		if ($x >= $3 and $x < $3 + $1 and $y >= $4 and $y < $4 + $2) {
-			# active window is on this monitor
-			$monitors{here}
-				= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
-		} elsif ($x >= $3 and $x < $3 + $1 and $y >= $4) {
-			# monitor is somewhere above active window
-			if (not $monitors{up} or $4 > $monitors{up}{y_offset}) {
-				# monitor is nearer than others we've seen, so save it
-				$monitors{up}
-					= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
-			}
-		} elsif ($x >= $3 and $x < $3 + $1 and $y < $4 + $2) {
-			# monitor is somewhere below active window
-			if (not $monitors{down} or $4 < $monitors{down}{y_offset}) {
-				# monitor is nearer than others we've seen, so save it
-				$monitors{down}
-					= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
-			}
-		} elsif ($y >= $4 and $y < $4 + $2 and $x >= $3) {
-			# monitor is somewhere left of active window
-			if (not $monitors{left} or $3 > $monitors{left}{x_offset}) {
-				# monitor is nearer than others we've seen, so save it
-				$monitors{left}
-					= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
-			}
-		} elsif ($y >= $4 and $y < $4 + $2 and $x < $3 + $1) {
-			# monitor is somewhere right of active window
-			if (not $monitors{right} or $3 < $monitors{right}{x_offset}) {
-				# monitor is nearer than others we've seen, so save it
-				$monitors{right}
-					= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
-			}
-		}
-	}
-}
+my %monitors = getmonitors(%window);
+#my %monitors = ( all => 0, here => 0, up => 0, down => 0, left => 0, right => 0 );
+#my ($x, $y) = ($window{x} + $window{width}/2, $window{y} + $window{height}/2);
+#for my $line ( split /\n/ => `xrandr -q` ) {
+#	if ($line =~ /^Screen 0.*current (\d+) x (\d+)/) {
+#		$monitors{all}
+#			= { width => $1, height => $2, x_offset => 0, y_offset => 0 };
+#	} elsif ($line =~ /^(Screen \d+)/) {
+#		print STDERR "Multiple graphics cards not supported\n";
+#		print STDERR "Trying anyway...\n";
+#		last;
+#	} elsif ($line =~ /\sconnected.*?(\d+)x(\d+)\+(\d+)\+(\d+)/) {
+#		# $1: monitor width
+#		# $2: monitor height
+#		# $3: x offset
+#		# $4: y offset
+#		if ($x >= $3 and $x < $3 + $1 and $y >= $4 and $y < $4 + $2) {
+#			# active window is on this monitor
+#			$monitors{here}
+#				= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
+#		} elsif ($x >= $3 and $x < $3 + $1 and $y >= $4) {
+#			# monitor is somewhere above active window
+#			if (not $monitors{up} or $4 > $monitors{up}{y_offset}) {
+#				# monitor is nearer than others we've seen, so save it
+#				$monitors{up}
+#					= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
+#			}
+#		} elsif ($x >= $3 and $x < $3 + $1 and $y < $4 + $2) {
+#			# monitor is somewhere below active window
+#			if (not $monitors{down} or $4 < $monitors{down}{y_offset}) {
+#				# monitor is nearer than others we've seen, so save it
+#				$monitors{down}
+#					= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
+#			}
+#		} elsif ($y >= $4 and $y < $4 + $2 and $x >= $3) {
+#			# monitor is somewhere left of active window
+#			if (not $monitors{left} or $3 > $monitors{left}{x_offset}) {
+#				# monitor is nearer than others we've seen, so save it
+#				$monitors{left}
+#					= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
+#			}
+#		} elsif ($y >= $4 and $y < $4 + $2 and $x < $3 + $1) {
+#			# monitor is somewhere right of active window
+#			if (not $monitors{right} or $3 < $monitors{right}{x_offset}) {
+#				# monitor is nearer than others we've seen, so save it
+#				$monitors{right}
+#					= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
+#			}
+#		}
+#	}
+#}
 
 # find monitor nearest to active window
 if ($monitors{here}) {
