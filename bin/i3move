@@ -18,7 +18,7 @@ my %options = (
 	snap      => 1,
 	hide      => 1,
 	clamp     => 0,
-	multi     => 1,
+	compound  => 1,
 	passthru  => 1,
 	gen       => 0,
 	man       => 0,
@@ -53,6 +53,7 @@ my $result = GetOptions(
 	"inside-distance|i=s"  => \$options{inside},
 	"large-distance|l=s"   => \$options{large},
 	"margins|m=i{1,4}"     => \@{$options{margins}},
+	"compound-display|M!"  => \$options{compound},
 	"outside-distance|o=s" => \$options{outside},
 	"passthru|P!"          => \$options{passthru},
 	"small-distance|s=s"   => \$options{small},
@@ -319,19 +320,19 @@ for my $line ( split /\n/ => `xrandr` ) {
 # figure out which axis to use
 my ($z, $length, $LENGTH, %margins);
 if ($direction eq "up" or $direction eq "down") {
-	$z = $options{multi} ? $window{y} - $root{y_offset} : $window{y};
+	$z = $options{compound} ? $window{y} - $root{y_offset} : $window{y};
 	$length = $window{height};
 	# TODO: adjust for multimon
-	$LENGTH = $options{multi} ? $root{height} : $vroot{height};
+	$LENGTH = $options{compound} ? $root{height} : $vroot{height};
 	%margins = (
 		near => ($options{margins}[0] or 0),
 		far  => ($options{margins}[1] or 0),
 	);
 } else {
-	$z = $options{multi} ? $window{x} - $root{x_offset} : $window{x};
+	$z = $options{compound} ? $window{x} - $root{x_offset} : $window{x};
 	$length = $window{width};
 	# TODO: adjust for multimon
-	$LENGTH = $options{multi} ? $root{width} : $vroot{width};
+	$LENGTH = $options{compound} ? $root{width} : $vroot{width};
 	%margins = (
 		near => ($options{margins}[2] or 0),
 		far  => ($options{margins}[3] or 0),
@@ -421,7 +422,7 @@ if ($z > $margins{near} and $z + $length < $LENGTH - $margins{far}) {
 	#print("near margin edge\n");
 	if ($direction eq "down" or $direction eq "right") {
 		$dz = $dist{inside};
-	} elsif ($options{multi} and $monitors{$direction}) {
+	} elsif ($options{compound} and $monitors{$direction}) {
 		$dz = 2*$margins{near} + $length;
 	} elsif ($options{clamp}) {
 		$dz = 0;
@@ -435,7 +436,7 @@ if ($z > $margins{near} and $z + $length < $LENGTH - $margins{far}) {
 	#print("far margin edge\n");
 	if ($direction eq "up" or $direction eq "left") {
 		$dz = $dist{inside};
-	} elsif ($options{multi} and $monitors{$direction}) {
+	} elsif ($options{compound} and $monitors{$direction}) {
 		$dz = 2*$margins{far} + $length;
 	} elsif ($options{clamp}) {
 		$dz = 0;
@@ -447,7 +448,7 @@ if ($z > $margins{near} and $z + $length < $LENGTH - $margins{far}) {
 # window is overlapping margins
 } else {
 	#print("overlapping margins\n");
-	if ($options{multi} and $monitors{$direction} and $monitors{here}) {
+	if ($options{compound} and $monitors{$direction} and $monitors{here}) {
 		$dz = $dist{inside};
 	} elsif ($options{hide} and $z == -$dist{outside}) {
 		$dz = $dist{outside} + $margins{near};
@@ -772,6 +773,32 @@ B<--no-hide>
 =over 4
 
 Disable B<--hide>.
+
+=back
+
+
+B<-M, --compound-display>
+
+=over 4
+
+Treat each monitor separately.
+Compute distances and positions with respect to
+the monitor that contains the active window.
+With B<--snap> enabled,
+a window that is snapped to a margin
+will snap to the adjacent margin when moved across monitors.
+
+This is the default behavior.
+
+=back
+
+
+B<--no-compound-display>
+
+=over 4
+
+Disable B<--compound-display>
+and treat multiple monitors as one big monitor.
 
 =back
 
