@@ -246,6 +246,12 @@ for my $line ( split /\n/ => `xdotool getactivewindow getwindowgeometry --shell`
 	$window{lc $key} = $val;
 }
 
+# convert X11 numbers to i3 numbers
+$window{x} -= $options{border};
+$window{y} -= $options{title};
+$window{width} += 2*$options{border};
+$window{height} += $options{title} + $options{border};
+
 # figure out dimensions of screen
 my %root = ();
 my %vroot = ( width => 0, height => 0 );
@@ -270,24 +276,38 @@ for my $line ( split /\n/ => `xrandr` ) {
 			# display is above or below active window
 			$vroot{height} += $2;
 			$monitors{$y > $4 ? "up" : "down"} = 1;
+
+			# if window is not on a display but is touching this one,
+			# use its dimensions for %root
+			if (not %root and
+				$window{y} < $4+$2 and
+				$window{y}+$window{height} > $4 and
+				$window{x} < $3+$1 and
+				$window{x}+$window{width} > $3
+			) {
+				$root{width} = $1;
+				$root{height} = $2;
+				$root{x_offset} = $3;
+				$root{y_offset} = $4;
+			}
 		} elsif ($y >= $4 and $y < $4 + $2) {
 			# display is left or right of active window
 			$vroot{width} += $1;
 			$monitors{$x > $3 ? "left" : "right"} = 1;
-		}
 
-		# if window is not on a display but is touching this one,
-		# use its dimensions for %root
-		if (not %root and
-			$window{y} < $4+$2 and
-			$window{y}+$window{height} > $4 and
-			$window{x} < $3+$1 and
-			$window{x}+$window{width} > $3
-		) {
-			$root{width} = $1;
-			$root{height} = $2;
-			$root{x_offset} = $3;
-			$root{y_offset} = $4;
+			# if window is not on a display but is touching this one,
+			# use its dimensions for %root
+			if (not %root and
+				$window{y} < $4+$2 and
+				$window{y}+$window{height} > $4 and
+				$window{x} < $3+$1 and
+				$window{x}+$window{width} > $3
+			) {
+				$root{width} = $1;
+				$root{height} = $2;
+				$root{x_offset} = $3;
+				$root{y_offset} = $4;
+			}
 		}
 	}
 }
@@ -299,14 +319,14 @@ $vroot{height} = $root{height} if ($vroot{height} == 0);
 
 ## debug
 #use Data::Dumper;
-#print Dumper( \%monitors );
-#exit;
+#print Dumper( \%root );
+##exit;
 
 # figure out which axis to use
 my ($z, $length, $LENGTH, %margins);
 if ($direction eq "up" or $direction eq "down") {
-	$z = $options{multi} ? $window{y} - $options{title} - $root{y_offset} : $window{y} - $options{title};
-	$length = $window{height} + $options{title} + $options{border};
+	$z = $options{multi} ? $window{y} - $root{y_offset} : $window{y};
+	$length = $window{height};
 	# TODO: adjust for multimon
 	$LENGTH = $options{multi} ? $root{height} : $vroot{height};
 	%margins = (
@@ -314,8 +334,8 @@ if ($direction eq "up" or $direction eq "down") {
 		far  => ($options{margins}[1] or 0),
 	);
 } else {
-	$z = $options{multi} ? $window{x} - $options{border} - $root{x_offset} : $window{x} - $options{border};
-	$length = $window{width} + 2*$options{border};
+	$z = $options{multi} ? $window{x} - $root{x_offset} : $window{x};
+	$length = $window{width};
 	# TODO: adjust for multimon
 	$LENGTH = $options{multi} ? $root{width} : $vroot{width};
 	%margins = (
