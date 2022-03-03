@@ -254,19 +254,20 @@ $window{height} += $options{title} + $options{border};
 
 # figure out dimensions of screen
 my %root = ();
-my %vroot = ( width => 0, height => 0 );
+my %vroot = ();
 my %monitors = ( here => 0, up => 0, down => 0, left => 0, right => 0 );
 my ($x, $y) = ($window{x} + $window{width}/2, $window{y} + $window{height}/2);
 for my $line ( split /\n/ => `xrandr` ) {
-	if ($line =~ /\sconnected.*?(\d+)x(\d+)\+(\d+)\+(\d+)/) {
+	if ($line =~ /^Screen.*current (\d+) x (\d+)/) {
+		$vroot{width} = $1;
+		$vroot{height} = $2;
+	} elsif ($line =~ /\sconnected.*?(\d+)x(\d+)\+(\d+)\+(\d+)/) {
 		# $1: display width
 		# $2: display height
 		# $3: x offset
 		# $4: y offset
 		if ($x >= $3 and $x < $3 + $1 and $y >= $4 and $y < $4 + $2) {
 			# active window is on this display
-			$vroot{width} += $1;
-			$vroot{height} += $2;
 			$root{width} = $1;
 			$root{height} = $2;
 			$root{x_offset} = $3;
@@ -274,7 +275,6 @@ for my $line ( split /\n/ => `xrandr` ) {
 			$monitors{here} = 1;
 		} elsif ($x >= $3 and $x < $3 + $1) {
 			# display is above or below active window
-			$vroot{height} += $2;
 			$monitors{$y > $4 ? "up" : "down"} = 1;
 
 			# if window is not on a display but is touching this one,
@@ -292,7 +292,6 @@ for my $line ( split /\n/ => `xrandr` ) {
 			}
 		} elsif ($y >= $4 and $y < $4 + $2) {
 			# display is left or right of active window
-			$vroot{width} += $1;
 			$monitors{$x > $3 ? "left" : "right"} = 1;
 
 			# if window is not on a display but is touching this one,
@@ -312,14 +311,9 @@ for my $line ( split /\n/ => `xrandr` ) {
 	}
 }
 
-# if there are no displays horizontally or vertically aligned with window,
-# use root dimension for missing vroot dimension
-$vroot{width} = $root{width} if ($vroot{width} == 0);
-$vroot{height} = $root{height} if ($vroot{height} == 0);
-
 ## debug
 #use Data::Dumper;
-#print Dumper( \%root );
+#print Dumper( \%vroot );
 ##exit;
 
 # figure out which axis to use
