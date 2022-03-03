@@ -278,12 +278,12 @@ for my $line ( split /\n/ => `xrandr` ) {
 
 		# if window is not on a display but is touching this one,
 		# use its dimensions for %root
-		if (not %root and (
-			($window{x} >= $3 and $window{x} < $3 + $1) or
-			($window{x}+$window{width} >= $3 and $window{x}+$window{width} < $3+$1) or
-			($window{y} >= $4 and $window{y} < $4 + $2) or
-			($window{y}+$window{height} >= $4 and $window{y}+$window{height} < $4+$2)
-		)) {
+		if (not %root and
+			$window{y} < $4+$2 and
+			$window{y}+$window{height} > $4 and
+			$window{x} < $3+$1 and
+			$window{x}+$window{width} > $3
+		) {
 			$root{width} = $1;
 			$root{height} = $2;
 			$root{x_offset} = $3;
