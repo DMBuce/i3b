@@ -32,15 +32,15 @@ sub activewindow {
 # 	nearest => $window
 # 	all     => $window
 # }
-# where $window is a hash of monitor properties with keys: x_offset, y_offset, width, height
+# where $window is a hash of monitor properties with keys: x, y, width, height
 sub getmonitors {
 	my (%window) = @_;
-	my %monitors = ( up => 0, down => 0, left => 0, right => 0, here => 0, all => 0 );
+	my %monitors = ( up => 0, down => 0, left => 0, right => 0, here => 0 );
 	my ($x, $y) = ($window{x} + $window{width}/2, $window{y} + $window{height}/2);
 	for my $line ( split /\n/ => `xrandr -q` ) {
 		if ($line =~ /^Screen 0.*current (\d+) x (\d+)/) {
 			$monitors{all}
-				= { width => $1, height => $2, x_offset => 0, y_offset => 0 };
+				= { width => $1, height => $2, x => 0, y => 0 };
 		} elsif ($line =~ /^(Screen \d+)/) {
 			print STDERR "Multiple graphics cards not supported\n";
 			print STDERR "Trying anyway...\n";
@@ -53,34 +53,34 @@ sub getmonitors {
 			if ($x >= $3 and $x < $3 + $1 and $y >= $4 and $y < $4 + $2) {
 				# active window is on this monitor
 				$monitors{here}
-					= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
+					= { width => $1, height => $2, x => $3, y => $4 };
 			} elsif ($x >= $3 and $x < $3 + $1 and $y >= $4) {
 				# monitor is somewhere above active window
-				if (not $monitors{up} or $4 > $monitors{up}{y_offset}) {
+				if (not $monitors{up} or $4 > $monitors{up}{y}) {
 					# monitor is nearer than others we've seen, so save it
 					$monitors{up}
-						= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
+						= { width => $1, height => $2, x => $3, y => $4 };
 				}
 			} elsif ($x >= $3 and $x < $3 + $1 and $y < $4 + $2) {
 				# monitor is somewhere below active window
-				if (not $monitors{down} or $4 < $monitors{down}{y_offset}) {
+				if (not $monitors{down} or $4 < $monitors{down}{y}) {
 					# monitor is nearer than others we've seen, so save it
 					$monitors{down}
-						= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
+						= { width => $1, height => $2, x => $3, y => $4 };
 				}
 			} elsif ($y >= $4 and $y < $4 + $2 and $x >= $3) {
 				# monitor is somewhere left of active window
-				if (not $monitors{left} or $3 > $monitors{left}{x_offset}) {
+				if (not $monitors{left} or $3 > $monitors{left}{x}) {
 					# monitor is nearer than others we've seen, so save it
 					$monitors{left}
-						= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
+						= { width => $1, height => $2, x => $3, y => $4 };
 				}
 			} elsif ($y >= $4 and $y < $4 + $2 and $x < $3 + $1) {
 				# monitor is somewhere right of active window
-				if (not $monitors{right} or $3 < $monitors{right}{x_offset}) {
+				if (not $monitors{right} or $3 < $monitors{right}{x}) {
 					# monitor is nearer than others we've seen, so save it
 					$monitors{right}
-						= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
+						= { width => $1, height => $2, x => $3, y => $4 };
 				}
 			}
 		}
@@ -200,8 +200,8 @@ if (not $result) {
 	#			$vroot{height} += $2;
 	#			$root{width} = $1;
 	#			$root{height} = $2;
-	#			$root{x_offset} = $3;
-	#			$root{y_offset} = $4;
+	#			$root{x} = $3;
+	#			$root{y} = $4;
 	#		} elsif ($x >= $3 and $x < $3 + $1) {
 	#			# display is above or below active window
 	#			$vroot{height} += $2;
@@ -241,10 +241,12 @@ if (not $result) {
 	# compute the widths of the window borders, window title, and margins
 	my $b = $pos3{x} - $pos2{x};
 	my $t = $pos3{y} - $pos2{y};
-	my $m1 = $pos1{y} - $t;
-	my $m2 = $monitors{here}{height} - $pos1{height} - $pos1{y};
-	my $m3 = $pos1{x};
-	my $m4 = $monitors{here}{width} - $pos1{width} - $pos1{x};
+	my %m = (
+		top    => $pos1{y} - $t,
+		bottom => $monitors{here}{height} - $pos1{height} - $pos1{y},
+		left   => $pos1{x},
+		right  => $monitors{here}{width} - $pos1{width} - $pos1{x},
+	);
 
 	# figure out what i3's hide_edge_borders config is set to
 	my $hide_edge_borders = "none";
@@ -264,23 +266,19 @@ if (not $result) {
 	}
 
 	# adjust margins based on hide_edge_borders setting
-	$m2 -= $b if $hide_edge_borders =~ /^(both|vertical)$/;
-	$m3 -= $b if $hide_edge_borders =~ /^(both|horizontal)$/;
-	$m4 -= $b if $hide_edge_borders =~ /^(both|horizontal)$/;
+	$m{bottom} -= $b if $hide_edge_borders =~ /^(both|vertical)$/;
+	$m{left}   -= $b if $hide_edge_borders =~ /^(both|horizontal)$/;
+	$m{right}  -= $b if $hide_edge_borders =~ /^(both|horizontal)$/;
 
 	# figure out outside distance
-	my $o = int( ($m1 - $m2) / 2 );
+	my $o = int( ($m{top} - $m{bottom}) / 2 );
 	$o *= -1 if $o < 0;
 	$o += 1 if $o == 0;
 
 	# print dimensions plus default options and exit
 	print "--title $t\n";
 	print "--border $b\n";
-	print "--margins $m1";
-	print " $m2" if $m2 + $m3 + $m4;
-	print " $m3" if $m3 + $m4;
-	print " $m4" if $m4;
-	print "\n";
+	print "--margins $m{top} $m{bottom} $m{left} $m{right}\n";
 	print "--inside-distance $options{inside}\n";
 	print "--outside-distance -${o}px\n";
 	print "--small-distance $options{small}\n";
@@ -337,7 +335,7 @@ my %monitors = getmonitors(%window);
 #for my $line ( split /\n/ => `xrandr -q` ) {
 #	if ($line =~ /^Screen 0.*current (\d+) x (\d+)/) {
 #		$monitors{all}
-#			= { width => $1, height => $2, x_offset => 0, y_offset => 0 };
+#			= { width => $1, height => $2, x => 0, y_offset => 0 };
 #	} elsif ($line =~ /^(Screen \d+)/) {
 #		print STDERR "Multiple graphics cards not supported\n";
 #		print STDERR "Trying anyway...\n";
@@ -350,50 +348,50 @@ my %monitors = getmonitors(%window);
 #		if ($x >= $3 and $x < $3 + $1 and $y >= $4 and $y < $4 + $2) {
 #			# active window is on this monitor
 #			$monitors{here}
-#				= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
+#				= { width => $1, height => $2, x => $3, y_offset => $4 };
 #		} elsif ($x >= $3 and $x < $3 + $1 and $y >= $4) {
 #			# monitor is somewhere above active window
-#			if (not $monitors{up} or $4 > $monitors{up}{y_offset}) {
+#			if (not $monitors{up} or $4 > $monitors{up}{y}) {
 #				# monitor is nearer than others we've seen, so save it
 #				$monitors{up}
-#					= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
+#					= { width => $1, height => $2, x => $3, y_offset => $4 };
 #			}
 #		} elsif ($x >= $3 and $x < $3 + $1 and $y < $4 + $2) {
 #			# monitor is somewhere below active window
-#			if (not $monitors{down} or $4 < $monitors{down}{y_offset}) {
+#			if (not $monitors{down} or $4 < $monitors{down}{y}) {
 #				# monitor is nearer than others we've seen, so save it
 #				$monitors{down}
-#					= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
+#					= { width => $1, height => $2, x => $3, y_offset => $4 };
 #			}
 #		} elsif ($y >= $4 and $y < $4 + $2 and $x >= $3) {
 #			# monitor is somewhere left of active window
-#			if (not $monitors{left} or $3 > $monitors{left}{x_offset}) {
+#			if (not $monitors{left} or $3 > $monitors{left}{x}) {
 #				# monitor is nearer than others we've seen, so save it
 #				$monitors{left}
-#					= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
+#					= { width => $1, height => $2, x => $3, y_offset => $4 };
 #			}
 #		} elsif ($y >= $4 and $y < $4 + $2 and $x < $3 + $1) {
 #			# monitor is somewhere right of active window
-#			if (not $monitors{right} or $3 < $monitors{right}{x_offset}) {
+#			if (not $monitors{right} or $3 < $monitors{right}{x}) {
 #				# monitor is nearer than others we've seen, so save it
 #				$monitors{right}
-#					= { width => $1, height => $2, x_offset => $3, y_offset => $4 };
+#					= { width => $1, height => $2, x => $3, y_offset => $4 };
 #			}
 #		}
 #	}
 #}
-
-# find monitor nearest to active window
-if ($monitors{here}) {
-	$monitors{nearest} = $monitors{here};
-} else {
-	for my $k ("up", "down", "left", "right") {
-		if ($monitors{$k}) {
-			$monitors{nearest} = $monitors{$k};
-			last;
-		}
-	}
-}
+#
+## find monitor nearest to active window
+#if ($monitors{here}) {
+#	$monitors{nearest} = $monitors{here};
+#} else {
+#	for my $k ("up", "down", "left", "right") {
+#		if ($monitors{$k}) {
+#			$monitors{nearest} = $monitors{$k};
+#			last;
+#		}
+#	}
+#}
 
 ## debug
 #use Data::Dumper;
@@ -403,7 +401,7 @@ if ($monitors{here}) {
 # figure out which axis to use
 my ($z, $length, $LENGTH, %margins);
 if ($direction eq "up" or $direction eq "down") {
-	$z = $options{compound} ? $window{y} - $monitors{nearest}{y_offset} : $window{y};
+	$z = $options{compound} ? $window{y} - $monitors{nearest}{y} : $window{y};
 	$length = $window{height};
 	$LENGTH = $options{compound} ? $monitors{nearest}{height} : $monitors{all}{height};
 	%margins = (
@@ -411,7 +409,7 @@ if ($direction eq "up" or $direction eq "down") {
 		far  => ($options{margins}[1] or 0),
 	);
 } else {
-	$z = $options{compound} ? $window{x} - $monitors{nearest}{x_offset} : $window{x};
+	$z = $options{compound} ? $window{x} - $monitors{nearest}{x} : $window{x};
 	$length = $window{width};
 	$LENGTH = $options{compound} ? $monitors{nearest}{width} : $monitors{all}{width};
 	%margins = (
