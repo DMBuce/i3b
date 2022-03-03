@@ -280,7 +280,7 @@ for my $line ( split /\n/ => `xrandr` ) {
 }
 
 # figure out which axis to use
-my ($z, $length, $LENGTH, $o, %margins);
+my ($z, $length, $LENGTH, %margins);
 if ($direction eq "up" or $direction eq "down") {
 	$z = $window{y} - $options{title};
 	$length = $window{height} + $options{title} + $options{border};
@@ -316,19 +316,20 @@ if ($options{threshold} =~ /^(\d+)(px)?$/) {
 }
 
 # parse step size from distance options
+my $n;
 my %dist = ();
 for my $k ("small", "large", "inside", "outside") {
 	my $spec = $options{$k};
 	if ($spec =~ /^(<|>|=)$/) {
-		my $o = int(( $LENGTH - $length - $margins{near} - $margins{far} ) / $length );
-		$o += 1 if $spec eq "<";
-		$o += 1 if $spec eq "=" and not $o%2 == 0;
-		$o += 1 if $o == 0;
-		$dist{$k} = int(( $LENGTH - $length - $margins{near} - $margins{far} ) / $o ) + 1;
+		$n = int(( $LENGTH - $length - $margins{near} - $margins{far} ) / $length );
+		$n += 1 if $spec eq "<";
+		$n += 1 if $spec eq "=" and not $n%2 == 0;
+		$n += 1 if $n == 0;
+		$dist{$k} = int(( $LENGTH - $length - $margins{near} - $margins{far} ) / $n ) + 1;
 	} elsif ($spec =~ /^(\d+)$/) {
-		$o = $1 - 1;
-		$o += 1 if $o == 0;
-		$dist{$k} = int(( $LENGTH - $length - $margins{near} - $margins{far} ) / $o ) + 1;
+		$n = $1 - 1;
+		$n += 1 if $n == 0;
+		$dist{$k} = int(( $LENGTH - $length - $margins{near} - $margins{far} ) / $n ) + 1;
 	} elsif ($spec =~ /^(-?\d+)%$/) {
 		$dist{$k} = int( $1 / 100 * $length );
 		$dist{$k} += $length if $dist{$k} < 0;
