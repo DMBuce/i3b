@@ -290,6 +290,11 @@ for my $line ( split /\n/ => `xrandr` ) {
 	}
 }
 
+# if there are no displays horizontally or vertically aligned with window,
+# use root dimension for missing vroot dimension
+$vroot{width} = $root{width} if ($vroot{width} == 0);
+$vroot{height} = $root{height} if ($vroot{height} == 0);
+
 ## debug
 #use Data::Dumper;
 #print Dumper( \%monitors );
