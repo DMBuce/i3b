@@ -79,13 +79,6 @@ if (not $result) {
 	system("i3-sensible-terminal >/dev/null &");
 	sleep 1;
 
-	## get dimensions of root window: width, height
-	#my %root = ();
-	#for my $line ( split /\n/ => `xwininfo -root -int` ) {
-	#	my ($key, $val) = ( $line =~ /(Width|Height):\s*(\S*)/ );
-	#	$root{lc $key} = $val if defined $key;
-	#}
-
 	# make sure window is tiled and get its properties
 	system("i3-msg floating disable >/dev/null");
 	my %pos1 = ();
@@ -155,10 +148,8 @@ if (not $result) {
 	my $b = $pos3{x} - $pos2{x};
 	my $t = $pos3{y} - $pos2{y};
 	my $m1 = $pos1{y} - $t;
-	# TODO: adjust for multimon
 	my $m2 = $root{height} - $pos1{height} - $pos1{y};
 	my $m3 = $pos1{x};
-	# TODO: adjust for multimon
 	my $m4 = $root{width} - $pos1{width} - $pos1{x};
 
 	# figure out what i3's hide_edge_borders config is set to
@@ -230,14 +221,6 @@ if ( ! grep( /I3_FLOATING_WINDOW/, split( /[\r\n]+/, `xprop -id $window_id` ))) 
 	exit if not $options{passthru};
 	exec "i3-msg move $direction >/dev/null";
 }
-
-## get dimensions of root window: width, height
-## TODO: adjust for multimon
-#my %root = ();
-#for my $line ( split /\n/ => `xwininfo -root -int` ) {
-#	my ($key, $val) = ( $line =~ /(Width|Height):\s*(\S*)/ );
-#	$root{lc $key} = $val if defined $key;
-#}
 
 # get properties of active window: id, x, y, width, height, screen
 my %window = ();
@@ -327,7 +310,6 @@ my ($z, $length, $LENGTH, %margins);
 if ($direction eq "up" or $direction eq "down") {
 	$z = $options{compound} ? $window{y} - $monitors{nearest}{y_offset} : $window{y};
 	$length = $window{height};
-	# TODO: adjust for multimon
 	$LENGTH = $options{compound} ? $monitors{nearest}{height} : $monitors{all}{height};
 	%margins = (
 		near => ($options{margins}[0] or 0),
@@ -336,7 +318,6 @@ if ($direction eq "up" or $direction eq "down") {
 } else {
 	$z = $options{compound} ? $window{x} - $monitors{nearest}{x_offset} : $window{x};
 	$length = $window{width};
-	# TODO: adjust for multimon
 	$LENGTH = $options{compound} ? $monitors{nearest}{width} : $monitors{all}{width};
 	%margins = (
 		near => ($options{margins}[2] or 0),
