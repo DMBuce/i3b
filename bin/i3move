@@ -18,6 +18,7 @@ my %options = (
 	snap      => 1,
 	hide      => 1,
 	clamp     => 0,
+	multi     => 1,
 	passthru  => 1,
 	gen       => 0,
 	man       => 0,
@@ -42,12 +43,6 @@ for my $file (
 	@ARGV = (split(/\s+/, $config), @ARGV);
 	last;
 }
-
-## debug
-#use Data::Dumper;
-##print Dumper( [split(/\s+/, $ENV{'I3MOVE_DEFAULTS'}), @ARGV] );
-#print Dumper( @ARGV );
-#exit;
 
 # parse options
 my $result = GetOptions(
@@ -254,6 +249,7 @@ for my $line ( split /\n/ => `xdotool getactivewindow getwindowgeometry --shell`
 # figure out dimensions of screen
 my %root = ();
 my %vroot = ( width => 0, height => 0 );
+my %monitors = ( here => 0, up => 0, down => 0, left => 0, right => 0 );
 my ($x, $y) = ($window{x} + $window{width}/2, $window{y} + $window{height}/2);
 for my $line ( split /\n/ => `xrandr` ) {
 	if ($line =~ /\sconnected.*?(\d+)x(\d+)\+(\d+)\+(\d+)/) {
@@ -269,15 +265,23 @@ for my $line ( split /\n/ => `xrandr` ) {
 			$root{height} = $2;
 			$root{x_offset} = $3;
 			$root{y_offset} = $4;
+			$monitors{here} = 1;
 		} elsif ($x >= $3 and $x < $3 + $1) {
 			# display is above or below active window
 			$vroot{height} += $2;
+			$monitors{$y > $4 ? "up" : "down"} = 1;
 		} elsif ($y >= $4 and $y < $4 + $2) {
 			# display is left or right of active window
 			$vroot{width} += $1;
+			$monitors{$x > $3 ? "left" : "right"} = 1;
 		}
 	}
 }
+
+## debug
+#use Data::Dumper;
+#print Dumper( \%monitors );
+#exit;
 
 # figure out which axis to use
 my ($z, $length, $LENGTH, %margins);
@@ -285,7 +289,7 @@ if ($direction eq "up" or $direction eq "down") {
 	$z = $window{y} - $options{title};
 	$length = $window{height} + $options{title} + $options{border};
 	# TODO: adjust for multimon
-	$LENGTH = $vroot{height};
+	$LENGTH = $options{multi} ? $root{height} : $vroot{height};
 	%margins = (
 		near => ($options{margins}[0] or 0),
 		far  => ($options{margins}[1] or 0),
@@ -294,7 +298,7 @@ if ($direction eq "up" or $direction eq "down") {
 	$z = $window{x} - $options{border};
 	$length = $window{width} + 2*$options{border};
 	# TODO: adjust for multimon
-	$LENGTH = $vroot{width};
+	$LENGTH = $options{multi} ? $root{width} : $vroot{width};
 	%margins = (
 		near => ($options{margins}[2] or 0),
 		far  => ($options{margins}[3] or 0),
@@ -382,6 +386,8 @@ if ($z > $margins{near} and $z + $length < $LENGTH - $margins{far}) {
 } elsif ($z == $margins{near}) {
 	if ($direction eq "down" or $direction eq "right") {
 		$dz = $dist{inside};
+	} elsif ($options{multi} and $monitors{$direction}) {
+		$dz = 2*$margins{near} + $length;
 	} elsif ($options{clamp}) {
 		$dz = 0;
 	} elsif ($options{hide}) {
@@ -393,6 +399,8 @@ if ($z > $margins{near} and $z + $length < $LENGTH - $margins{far}) {
 } elsif ($z + $length == $LENGTH - $margins{far}) {
 	if ($direction eq "up" or $direction eq "left") {
 		$dz = $dist{inside};
+	} elsif ($options{multi} and $monitors{$direction}) {
+		$dz = 2*$margins{far} + $length;
 	} elsif ($options{clamp}) {
 		$dz = 0;
 	} elsif ($options{hide}) {
@@ -402,7 +410,9 @@ if ($z > $margins{near} and $z + $length < $LENGTH - $margins{far}) {
 	}
 # window is overlapping margins
 } else {
-	if ($options{hide} and $z == -$dist{outside}) {
+	if ($options{multi} and $monitors{$direction} and $monitors{here}) {
+		$dz = $dist{inside};
+	} elsif ($options{hide} and $z == -$dist{outside}) {
 		$dz = $dist{outside} + $margins{near};
 	} elsif ($options{hide} and $z + $length == $LENGTH + $dist{outside}) {
 		$dz = $dist{outside} + $margins{far};
