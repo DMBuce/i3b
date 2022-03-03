@@ -275,6 +275,18 @@ for my $line ( split /\n/ => `xrandr` ) {
 			$vroot{width} += $1;
 			$monitors{$x > $3 ? "left" : "right"} = 1;
 		}
+
+		# if window is not on a display but is touching this one,
+		# use its dimensions for %root
+		if (not %root and (
+			($window{x} >= $3 and $window{x} < $3 + $1) or
+			($window{x}+$window{width} >= $3 and $window{x}+$window{width} < $3+$1) or
+			($window{y} >= $4 and $window{y} < $4 + $2) or
+			($window{y}+$window{height} >= $4 and $window{y}+$window{height} < $4+$2)
+		)) {
+			$root{width} = $1;
+			$root{height} = $2;
+		}
 	}
 }
 
@@ -286,7 +298,7 @@ for my $line ( split /\n/ => `xrandr` ) {
 # figure out which axis to use
 my ($z, $length, $LENGTH, %margins);
 if ($direction eq "up" or $direction eq "down") {
-	$z = $window{y} - $options{title};
+	$z = $options{multi} ? $window{y} - $options{title} - $root{y_offset} : $window{y} - $options{title};
 	$length = $window{height} + $options{title} + $options{border};
 	# TODO: adjust for multimon
 	$LENGTH = $options{multi} ? $root{height} : $vroot{height};
@@ -295,7 +307,7 @@ if ($direction eq "up" or $direction eq "down") {
 		far  => ($options{margins}[1] or 0),
 	);
 } else {
-	$z = $window{x} - $options{border};
+	$z = $options{multi} ? $window{x} - $options{border} - $root{x_offset} : $window{x} - $options{border};
 	$length = $window{width} + 2*$options{border};
 	# TODO: adjust for multimon
 	$LENGTH = $options{multi} ? $root{width} : $vroot{width};
@@ -368,6 +380,7 @@ for my $k ("inside", "outside") {
 my $dz;
 # window is inside margins
 if ($z > $margins{near} and $z + $length < $LENGTH - $margins{far}) {
+	#print("inside margins\n");
 	$dz = $dist{inside};
 
 	# snap or clamp move distance if necessary
@@ -384,6 +397,7 @@ if ($z > $margins{near} and $z + $length < $LENGTH - $margins{far}) {
 	}
 # window is at edge of near margin
 } elsif ($z == $margins{near}) {
+	#print("near margin edge\n");
 	if ($direction eq "down" or $direction eq "right") {
 		$dz = $dist{inside};
 	} elsif ($options{multi} and $monitors{$direction}) {
@@ -397,6 +411,7 @@ if ($z > $margins{near} and $z + $length < $LENGTH - $margins{far}) {
 	}
 # window is at edge of far margin
 } elsif ($z + $length == $LENGTH - $margins{far}) {
+	#print("far margin edge\n");
 	if ($direction eq "up" or $direction eq "left") {
 		$dz = $dist{inside};
 	} elsif ($options{multi} and $monitors{$direction}) {
@@ -410,6 +425,7 @@ if ($z > $margins{near} and $z + $length < $LENGTH - $margins{far}) {
 	}
 # window is overlapping margins
 } else {
+	#print("overlapping margins\n");
 	if ($options{multi} and $monitors{$direction} and $monitors{here}) {
 		$dz = $dist{inside};
 	} elsif ($options{hide} and $z == -$dist{outside}) {
