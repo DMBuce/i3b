@@ -236,10 +236,11 @@ if (not $result) {
 	print "--small-distance $options{small}\n";
 	print "--large-distance $options{large}\n";
 	print "--threshold $options{threshold}\n";
-	print $options{clamp} ? "--clamp\n" : "--no-clamp\n";
-	print $options{snap} ? "--snap\n" : "--no-snap\n";
-	print $options{hide} ? "--hide\n" : "--no-hide\n";
-	print $options{passthru} ? "--passthru\n" : "--no-passthru\n";
+	print $options{clamp}    ? "--clamp\n"            : "--no-clamp\n";
+	print $options{snap}     ? "--snap\n"             : "--no-snap\n";
+	print $options{hide}     ? "--hide\n"             : "--no-hide\n";
+	print $options{compound} ? "--compound-display\n" : "--no-compound-display\n";
+	print $options{passthru} ? "--passthru\n"         : "--no-passthru\n";
 	exit;
 }
 
