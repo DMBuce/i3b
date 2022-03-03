@@ -286,6 +286,8 @@ for my $line ( split /\n/ => `xrandr` ) {
 		)) {
 			$root{width} = $1;
 			$root{height} = $2;
+			$root{x_offset} = $3;
+			$root{y_offset} = $4;
 		}
 	}
 }
