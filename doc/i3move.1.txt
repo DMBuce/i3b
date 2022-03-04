@@ -250,10 +250,9 @@ EXAMPLES
 
     If i3move does not snap windows to the bar or gaps correctly, try
     tweaking the --title, --border, and/or --margins options in the config.
-    See the description of those options for details.
-
-    For best results, open a screenshot with an image editor such as
-    kolourpaint to determine the correct values for these options.
+    See the description of those options for details. For best results, open
+    a screenshot with an image editor such as kolourpaint to determine the
+    correct values for these options.
 
     Move a floating window left, down, up, and right.
 
@@ -277,5 +276,5 @@ AUTHORS
 
 DISTRIBUTION
     i3move is part of the i3b project. The latest version can be downloaded
-    from DMBuce <https://github.com/DMBuce/i3b> .
+    from <https://github.com/DMBuce/i3b> .
 

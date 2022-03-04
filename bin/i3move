@@ -852,7 +852,6 @@ If i3move does not snap windows to the bar or gaps correctly,
 try tweaking the B<--title>, B<--border>, and/or B<--margins>
 options in the config.
 See the description of those options for details.
-
 For best results,
 open a screenshot with an image editor such as kolourpaint
 to determine the correct values for these options.
@@ -885,5 +884,5 @@ i3move was written by L<DMBuce|https://github.com/DMBuce> .
 
 i3move is part of the i3b project.
 The latest version can be downloaded from
-L<DMBuce|https://github.com/DMBuce/i3b> .
+L<https://github.com/DMBuce/i3b> .
 
