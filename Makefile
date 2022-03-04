@@ -63,6 +63,9 @@ INSTALL_DIRS      = $(sort $(dir $(INSTALL_FILES)))
 .PHONY: all
 all: doc
 
+.PHONY: html
+html: $(HTMLFILES)
+
 .PHONY: doc
 doc: $(DOCFILES)
 
