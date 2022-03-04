@@ -37,14 +37,10 @@ sub getmonitors {
 	my (%window) = @_;
 	my %monitors = ( up => 0, down => 0, left => 0, right => 0, here => 0 );
 	my ($x, $y) = ($window{x} + $window{width}/2, $window{y} + $window{height}/2);
-	for my $line ( split /\n/ => `xrandr -q` ) {
-		if ($line =~ /^Screen 0.*current (\d+) x (\d+)/) {
+	for my $line ( split /\n/ => `xrandr -q --screen $window{screen}` ) {
+		if ($line =~ /^Screen .*current (\d+) x (\d+)/) {
 			$monitors{all}
 				= { width => $1, height => $2, x => 0, y => 0 };
-		} elsif ($line =~ /^(Screen \d+)/) {
-			print STDERR "Multiple graphics cards not supported\n";
-			print STDERR "Trying anyway...\n";
-			last;
 		} elsif ($line =~ /\sconnected.*?(\d+)x(\d+)\+(\d+)\+(\d+)/) {
 			# $1: monitor width
 			# $2: monitor height
