@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "I3MOVE 1"
-.TH I3MOVE 1 "2022-03-03" "perl v5.34.0" "User Contributed Perl Documentation"
+.TH I3MOVE 1 "2022-03-04" "perl v5.34.0" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -405,8 +405,8 @@ Treat each monitor separately.
 Compute distances and positions with respect to
 the monitor that contains the active window.
 With \fB\-\-snap\fR enabled,
-a window that is snapped to a margin
-will snap to the adjacent margin when moved across monitors.
+when a window that is snapped to a margin is moved towards an adjacent monitor,
+it will snap to that monitor's nearest margin.
 .Sp
 This is the default behavior.
 .RE

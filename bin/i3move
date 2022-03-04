@@ -746,8 +746,8 @@ Treat each monitor separately.
 Compute distances and positions with respect to
 the monitor that contains the active window.
 With B<--snap> enabled,
-a window that is snapped to a margin
-will snap to the adjacent margin when moved across monitors.
+when a window that is snapped to a margin is moved towards an adjacent monitor,
+it will snap to that monitor's nearest margin.
 
 This is the default behavior.
 

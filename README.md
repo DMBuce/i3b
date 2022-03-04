@@ -27,7 +27,7 @@ Features:
 
 Requirements: perl, xrandr, xdotool, xprop
 
-See [the man page](https://dmbuce.github.io/i3b/i3move.html)
+See [the man page](https://dmbuce.github.io/i3b/i3move.1.html)
 for extensive documentation.
 
 ## rofi-blezz
