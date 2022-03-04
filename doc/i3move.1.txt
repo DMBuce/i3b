@@ -27,13 +27,14 @@ DESCRIPTION
 OPTIONS
     -t, --title SIZE
 
-        The size of i3's window title bars in pixels.
+        The size of i3's window title bars in pixels. Or, if title bars are
+        disabled, the size of the top window border.
 
         Default: 26
 
     -b, --border SIZE
 
-        The size of i3's window borders in pixels.
+        The size of i3's bottom, left, and right window borders in pixels.
 
         Default: 3
 
@@ -275,6 +276,6 @@ AUTHORS
     i3move was written by DMBuce <https://github.com/DMBuce> .
 
 DISTRIBUTION
-    i3move is part of the i3b project. The latest version can be downloaded
-    from <https://github.com/DMBuce/i3b> .
+    The latest version of i3move can be downloaded from the i3b project
+    <https://github.com/DMBuce/i3b> .
 
