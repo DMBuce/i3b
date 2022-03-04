@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "I3MOVE 1"
-.TH I3MOVE 1 "2022-03-01" "perl v5.34.0" "User Contributed Perl Documentation"
+.TH I3MOVE 1 "2022-03-03" "perl v5.34.0" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -398,6 +398,26 @@ will be snapped to the margin.
 Disable \fB\-\-hide\fR.
 .RE
 .PP
+\&\fB\-M, \-\-compound\-display\fR
+.Sp
+.RS 4
+Treat each monitor separately.
+Compute distances and positions with respect to
+the monitor that contains the active window.
+With \fB\-\-snap\fR enabled,
+a window that is snapped to a margin
+will snap to the adjacent margin when moved across monitors.
+.Sp
+This is the default behavior.
+.RE
+.PP
+\&\fB\-\-no\-compound\-display\fR
+.Sp
+.RS 4
+Disable \fB\-\-compound\-display\fR
+and treat multiple monitors as one big monitor.
+.RE
+.PP
 \&\fB\-P, \-\-passthru\fR
 .Sp
 .RS 4
@@ -463,6 +483,15 @@ Create or reset i3move's config with sane defaults
 \&    i3move \-\-gen > ~/.config/i3move
 .Ve
 .PP
+If i3move does not snap windows to the bar or gaps correctly,
+try tweaking the \fB\-\-title\fR, \fB\-\-border\fR, and/or \fB\-\-margins\fR
+options in the config.
+See the description of those options for details.
+.PP
+For best results,
+open a screenshot with an image editor such as kolourpaint
+to determine the correct values for these options.
+.PP
 Move a floating window left, down, up, and right.
 .PP
 .Vb 4
@@ -475,10 +504,10 @@ Move a floating window left, down, up, and right.
 Bind the commands above in i3's config
 .PP
 .Vb 4
-\&    bindsym $mod+Mod1+h $exec i3move left
-\&    bindsym $mod+Mod1+j $exec i3move down  
-\&    bindsym $mod+Mod1+k $exec i3move up    
-\&    bindsym $mod+Mod1+l $exec i3move right
+\&    bindsym $mod+Mod1+h exec i3move left
+\&    bindsym $mod+Mod1+j exec i3move down
+\&    bindsym $mod+Mod1+k exec i3move up
+\&    bindsym $mod+Mod1+l exec i3move right
 .Ve
 .PP
 After reloading i3 with the above config,
@@ -487,3 +516,8 @@ by holding down \f(CW$mod\fR+Alt and using vim keys (\f(CW\*(C`hjkl\*(C'\fR).
 .SH "AUTHORS"
 .IX Header "AUTHORS"
 i3move was written by DMBuce <https://github.com/DMBuce> .
+.SH "DISTRIBUTION"
+.IX Header "DISTRIBUTION"
+i3move is part of the i3b project.
+The latest version can be downloaded from
+DMBuce <https://github.com/DMBuce/i3b> .

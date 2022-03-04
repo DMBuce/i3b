@@ -186,6 +186,20 @@ OPTIONS
 
         Disable --hide.
 
+    -M, --compound-display
+
+        Treat each monitor separately. Compute distances and positions with
+        respect to the monitor that contains the active window. With --snap
+        enabled, a window that is snapped to a margin will snap to the
+        adjacent margin when moved across monitors.
+
+        This is the default behavior.
+
+    --no-compound-display
+
+        Disable --compound-display and treat multiple monitors as one big
+        monitor.
+
     -P, --passthru
 
         If the active window is tiled, use "i3-msg" to move it. This is the
@@ -234,6 +248,13 @@ EXAMPLES
 
         i3move --gen > ~/.config/i3move
 
+    If i3move does not snap windows to the bar or gaps correctly, try
+    tweaking the --title, --border, and/or --margins options in the config.
+    See the description of those options for details.
+
+    For best results, open a screenshot with an image editor such as
+    kolourpaint to determine the correct values for these options.
+
     Move a floating window left, down, up, and right.
 
         i3move left
@@ -243,14 +264,18 @@ EXAMPLES
 
     Bind the commands above in i3's config
 
-        bindsym $mod+Mod1+h $exec i3move left
-        bindsym $mod+Mod1+j $exec i3move down  
-        bindsym $mod+Mod1+k $exec i3move up    
-        bindsym $mod+Mod1+l $exec i3move right
+        bindsym $mod+Mod1+h exec i3move left
+        bindsym $mod+Mod1+j exec i3move down
+        bindsym $mod+Mod1+k exec i3move up
+        bindsym $mod+Mod1+l exec i3move right
 
     After reloading i3 with the above config, you can move windows with
     i3move by holding down $mod+Alt and using vim keys ("hjkl").
 
 AUTHORS
     i3move was written by DMBuce <https://github.com/DMBuce> .
+
+DISTRIBUTION
+    i3move is part of the i3b project. The latest version can be downloaded
+    from DMBuce <https://github.com/DMBuce/i3b> .
 

@@ -49,9 +49,9 @@ URL       = https://github.com/DMBuce/i3b
 BINFILES          = $(wildcard bin/*)
 #ETCFILES          = $(shell find config/ -type f)
 MAN1FILES         = doc/i3move.1
-HTMLFILES         = $(BINFILES:bin/%.1=doc/%.html)
-TEXTFILES         = $(BINFILES:bin/%.1=doc/%.txt)
 MANFILES          = $(MAN1FILES)
+HTMLFILES         = $(MANFILES:%=%.html)
+TEXTFILES         = $(MANFILES:%=%.txt)
 DOCFILES          = $(MANFILES) $(HTMLFILES) $(TEXTFILES)
 BINFILES_INSTALL  = $(BINFILES:bin/%=$(DESTDIR)$(bindir)/%)
 MAN1FILES_INSTALL = $(MAN1FILES:doc/%=$(DESTDIR)$(man1dir)/%)
@@ -70,11 +70,11 @@ doc/%.1: bin/%
 	mkdir -p doc
 	pod2man $< > $@
 
-doc/%.txt: bin/%
+doc/%.1.txt: bin/%
 	mkdir -p doc
 	pod2text $< > $@
 
-doc/%.html: bin/%
+doc/%.1.html: bin/%
 	mkdir -p doc
 	pod2html $< > $@
 

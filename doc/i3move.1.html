@@ -19,6 +19,7 @@
   <li><a href="#CONFIGURATION">CONFIGURATION</a></li>
   <li><a href="#EXAMPLES">EXAMPLES</a></li>
   <li><a href="#AUTHORS">AUTHORS</a></li>
+  <li><a href="#DISTRIBUTION">DISTRIBUTION</a></li>
 </ul>
 
 <h1 id="NAME">NAME</h1>
@@ -237,6 +238,24 @@
 
 </ul>
 
+<p><b>-M, --compound-display</b></p>
+
+<ul>
+
+<p>Treat each monitor separately. Compute distances and positions with respect to the monitor that contains the active window. With <b>--snap</b> enabled, a window that is snapped to a margin will snap to the adjacent margin when moved across monitors.</p>
+
+<p>This is the default behavior.</p>
+
+</ul>
+
+<p><b>--no-compound-display</b></p>
+
+<ul>
+
+<p>Disable <b>--compound-display</b> and treat multiple monitors as one big monitor.</p>
+
+</ul>
+
 <p><b>-P, --passthru</b></p>
 
 <ul>
@@ -303,6 +322,10 @@
 
 <pre><code>i3move --gen &gt; ~/.config/i3move</code></pre>
 
+<p>If i3move does not snap windows to the bar or gaps correctly, try tweaking the <b>--title</b>, <b>--border</b>, and/or <b>--margins</b> options in the config. See the description of those options for details.</p>
+
+<p>For best results, open a screenshot with an image editor such as kolourpaint to determine the correct values for these options.</p>
+
 <p>Move a floating window left, down, up, and right.</p>
 
 <pre><code>i3move left
@@ -312,16 +335,20 @@ i3move right</code></pre>
 
 <p>Bind the commands above in i3&#39;s config</p>
 
-<pre><code>bindsym $mod+Mod1+h $exec i3move left
-bindsym $mod+Mod1+j $exec i3move down  
-bindsym $mod+Mod1+k $exec i3move up    
-bindsym $mod+Mod1+l $exec i3move right </code></pre>
+<pre><code>bindsym $mod+Mod1+h exec i3move left
+bindsym $mod+Mod1+j exec i3move down
+bindsym $mod+Mod1+k exec i3move up
+bindsym $mod+Mod1+l exec i3move right</code></pre>
 
 <p>After reloading i3 with the above config, you can move windows with i3move by holding down $mod+Alt and using vim keys (<code>hjkl</code>).</p>
 
 <h1 id="AUTHORS">AUTHORS</h1>
 
 <p>i3move was written by <a href="https://github.com/DMBuce">DMBuce</a> .</p>
+
+<h1 id="DISTRIBUTION">DISTRIBUTION</h1>
+
+<p>i3move is part of the i3b project. The latest version can be downloaded from <a href="https://github.com/DMBuce/i3b">DMBuce</a> .</p>
 
 
 </body>
