@@ -30,7 +30,7 @@ Requirements: perl, xrandr, xdotool, xprop
 See [the man page](https://dmbuce.github.io/i3b/i3move.1.html)
 for extensive documentation.
 To get up and running quickly with i3move,
-refer to [the examples](https://dmbuce.github.io/i3b/i3move.html#EXAMPLES).
+refer to [the examples](https://dmbuce.github.io/i3b/i3move.1.html#EXAMPLES).
 
 ## rofi-blezz
 
