@@ -1,0 +1,78 @@
+#!/bin/bash
+
+# lists the name of each scratchpad window
+list_hidden_scratchpad_windows() {
+	i3-msg -t get_tree \
+	| jq ".nodes[].nodes[].nodes[]|select(.name==\"__i3_scratch\").floating_nodes[].nodes[].name"
+}
+
+# print usage
+usage() {
+	cat >&2 <<-EOF
+	Usage: ${0##*/} [-s] [-m MARK] [-c COMMAND] [-i I3_COMMAND]
+
+	    Toggle between showing and hiding the scratchpad window marked with
+	    MARK. If no such window exists and the active window is floating,
+	    mark it with MARK, run I3_COMMAND, and send it to the scratchpad.
+	    Otherwise, if COMMAND is not 'none', run COMMAND, wait for the next
+	    window to launch, mark it with MARK, run I3_COMMAND, and place it
+	    in the scratchpad without losing focus.
+
+	    If MARK is 'cycle', flip through scratchpad windows instead.
+
+	    With -s, make new scratchpad windows sticky.
+
+	    By default, MARK is 'cycle', COMMAND is 'i3-sensible-terminal',
+	    and I3_COMMAND is ''.
+
+	Example Config:
+
+	    bindsym \$mod+period exec i3scratchmark -m scratch -s -c urxvt
+	    bindsym \$mod+Mod1+period exec i3scratchmark -m itch -s -c none
+	    bindsym \$mod+comma exec i3scratchmark
+	    bindsym \$mod+Mod1+comma move scratchpad
+	EOF
+}
+
+# parse options
+mark=cycle
+i3cmds="floating enable;"
+cmd=i3-sensible-terminal
+while getopts c:i:m:s opt; do
+	case "$opt" in
+		c) cmd="$OPTARG" ;;
+		i) i3cmds="$i3cmds $OPTARG;" ;;
+		m) mark="$OPTARG" ;;
+		s) i3cmds="$i3cmds sticky enable;" ;;
+		*) usage; exit 1 ;;
+	esac
+done
+
+# suppress all output unless run from a terminal
+if [[ ! -t 0 ]]; then
+	exec &>/dev/null
+fi
+
+# cycle through scratchpad
+if [[ "$mark" == cycle ]]; then
+	n="$(list_hidden_scratchpad_windows | wc -l)"
+	i3-msg scratchpad show
+	if (( "$(list_hidden_scratchpad_windows | wc -l)" > n )); then
+		i3-msg scratchpad show
+	fi
+	exit
+fi
+
+# if mark already exists, flip back and forth between it
+if i3-msg -t get_marks | jq -r .[] | grep -qx "$mark"; then
+	i3-msg "[con_mark=\"$mark\"] scratchpad show"
+# if focused window is floating, mark it and send it to the scratchpad
+elif i3-msg '[con_id="__focused__" floating] focus' &>/dev/null; then
+	i3-msg "mark $mark; $i3cmds move scratchpad"
+# otherwise, launch $cmd, send it to the scratchpad, and bring it back
+elif [[ $cmd != none ]]; then
+	$cmd &
+	i3-msg -t subscribe '["window"]'
+	i3-msg "mark $mark; $i3cmds move scratchpad; [con_mark=\"$mark\"] scratchpad show"
+fi
+

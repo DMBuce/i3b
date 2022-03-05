@@ -32,6 +32,14 @@ for extensive documentation.
 To get up and running quickly with i3move,
 refer to [the examples](https://dmbuce.github.io/i3b/i3move.1.html#EXAMPLES).
 
+## i3scratchmark
+
+Manage i3 scratchpad windows with marks.
+
+Requirements: bash, jq
+
+See `i3scratchmark -?` output for usage and example bindsyms.
+
 ## rofi-blezz
 
 Run rofi's [blezz](https://github.com/davatorium/rofi-blezz) module
