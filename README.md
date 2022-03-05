@@ -38,7 +38,7 @@ Manage i3 scratchpad windows with marks.
 
 Requirements: bash, jq
 
-See `i3scratchmark -?` output for usage and example bindsyms.
+See `i3scratchmark --help` output for usage and example bindsyms.
 
 ## rofi-blezz
 
@@ -46,4 +46,6 @@ Run rofi's [blezz](https://github.com/davatorium/rofi-blezz) module
 with a different starting menu.
 Similar to blezz's `-d` option,
 this is a workaround for rofi's blezz module not having such functionality.
+
+See `rofi-menu --help` for usage.
 
