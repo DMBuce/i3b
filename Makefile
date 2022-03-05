@@ -51,7 +51,7 @@ BINFILES          = $(wildcard bin/*)
 MAN1FILES         = doc/i3move.1
 MANFILES          = $(MAN1FILES)
 HTMLFILES         = $(MANFILES:%=%.html)
-TEXTFILES         = $(MANFILES:%=%.txt)
+TEXTFILES         = $(MANFILES:%=%.txt) doc/i3scratchmark.1.txt doc/rofi-blezz.1.txt
 DOCFILES          = $(MANFILES) $(HTMLFILES) $(TEXTFILES)
 BINFILES_INSTALL  = $(BINFILES:bin/%=$(DESTDIR)$(bindir)/%)
 MAN1FILES_INSTALL = $(MAN1FILES:doc/%=$(DESTDIR)$(man1dir)/%)
@@ -66,6 +66,9 @@ all: doc
 .PHONY: html
 html: $(HTMLFILES)
 
+.PHONY: text
+text: $(TEXTFILES)
+
 .PHONY: doc
 doc: $(DOCFILES)
 
@@ -75,7 +78,7 @@ doc/%.1: bin/%
 
 doc/%.1.txt: bin/%
 	mkdir -p doc
-	pod2text $< > $@
+	pod2text $< > $@ || ./$< --help 2>&1 > $@
 
 doc/%.1.html: bin/%
 	mkdir -p doc
