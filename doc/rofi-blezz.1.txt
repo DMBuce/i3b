@@ -1,0 +1,1 @@
+Syntax: rofi-blezz [section] [config] [rofi args]

@@ -1,0 +1,23 @@
+./bin/i3scratchmark: illegal option -- -
+Usage: i3scratchmark [-s] [-m MARK] [-c COMMAND] [-i I3_COMMAND]
+
+    Toggle between showing and hiding the scratchpad window marked with
+    MARK. If no such window exists and the active window is floating,
+    mark it with MARK, run I3_COMMAND, and send it to the scratchpad.
+    Otherwise, if COMMAND is not 'none', run COMMAND, wait for the next
+    window to launch, mark it with MARK, run I3_COMMAND, and place it
+    in the scratchpad without losing focus.
+
+    If MARK is 'cycle', flip through scratchpad windows instead.
+
+    With -s, make new scratchpad windows sticky.
+
+    By default, MARK is 'cycle', COMMAND is 'i3-sensible-terminal',
+    and I3_COMMAND is ''.
+
+Example Config:
+
+    bindsym $mod+period exec i3scratchmark -m scratch -s -c urxvt
+    bindsym $mod+Mod1+period exec i3scratchmark -m itch -s -c none
+    bindsym $mod+comma exec i3scratchmark
+    bindsym $mod+Mod1+comma move scratchpad

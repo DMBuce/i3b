@@ -78,7 +78,7 @@ doc/%.1: bin/%
 
 doc/%.1.txt: bin/%
 	mkdir -p doc
-	pod2text $< > $@ || ./$< --help 2>&1 > $@
+	pod2text $< > $@ || ./$< --help > $@ 2>&1 || true
 
 doc/%.1.html: bin/%
 	mkdir -p doc

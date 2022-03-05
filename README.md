@@ -38,14 +38,14 @@ Manage i3 scratchpad windows with marks.
 
 Requirements: bash, jq
 
-See `i3scratchmark --help` output for usage and example bindsyms.
+See [i3scratchmark --help output](https://github.com/DMBuce/i3b/blob/master/doc/i3scratchmark.1.txt) output for usage and example bindsyms.
 
 ## rofi-blezz
 
-Run rofi's [blezz](https://github.com/davatorium/rofi-blezz) module
+Run [rofi's blezz module](https://github.com/davatorium/rofi-blezz)
 with a different starting menu.
-Similar to blezz's `-d` option,
+Similar to [blezz's](https://github.com/Blezzing/blezz) `-d` option,
 this is a workaround for rofi's blezz module not having such functionality.
 
-See `rofi-menu --help` for usage.
+See [rofi-blezz --help output](https://github.com/DMBuce/i3b/blob/master/doc/rofi-blezz.1.txt) for usage.
 
