@@ -47,5 +47,7 @@ with a different starting menu.
 Similar to [blezz's](https://github.com/Blezzing/blezz) `-d` option,
 this is a workaround for rofi's blezz module not having such functionality.
 
+Requirements: bash, rofi, rofi-blezz, sed
+
 See [rofi-blezz --help output](https://github.com/DMBuce/i3b/blob/master/doc/rofi-blezz.1.txt) for usage.
 

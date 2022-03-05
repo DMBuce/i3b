@@ -15,10 +15,21 @@ url="https://github.com/DMBuce/i3b"
 license=('GPL3')
 groups=()
 depends=(
+  # i3move
   perl
   i3-wm
   xorg-xrandr
   xdotool
+
+  # i3scratchmark
+  bash
+  jq
+
+  # rofi-blezz
+  bash
+  rofi
+  rofi-blezz
+  sed
 )
 makedepends=('git')
 provides=()
