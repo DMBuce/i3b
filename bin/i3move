@@ -501,13 +501,13 @@ Several aliases are provided for convenience.
 
 =over 4
 
-B<top, north>: Alias for C<--inside-direction 2 up>
+B<top, north>: Alias for C<--inside-distance 2 up>
 
-B<bottom, south>: Alias for C<--inside-direction 2 down>
+B<bottom, south>: Alias for C<--inside-distance 2 down>
 
-B<port, west>: Alias for C<--inside-direction 2 left>
+B<port, west>: Alias for C<--inside-distance 2 left>
 
-B<starboard, east>: Alias for C<--inside-direction 2 right>
+B<starboard, east>: Alias for C<--inside-distance 2 right>
 
 =back
 

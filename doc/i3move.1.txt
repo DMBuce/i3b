@@ -27,13 +27,13 @@ DESCRIPTION
 
     Several aliases are provided for convenience.
 
-        top, north: Alias for "--inside-direction 2 up"
+        top, north: Alias for "--inside-distance 2 up"
 
-        bottom, south: Alias for "--inside-direction 2 down"
+        bottom, south: Alias for "--inside-distance 2 down"
 
-        port, west: Alias for "--inside-direction 2 left"
+        port, west: Alias for "--inside-distance 2 left"
 
-        starboard, east: Alias for "--inside-direction 2 right"
+        starboard, east: Alias for "--inside-distance 2 right"
 
     If the active window is tiled, i3move will move it with "i3-msg move
     DIRECTION" instead.
