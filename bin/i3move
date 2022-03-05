@@ -381,6 +381,13 @@ if ($z > $margins{near} and $z + $length < $LENGTH - $margins{far}) {
 } elsif ($z == $margins{near}) {
 	if ($direction eq "down" or $direction eq "right") {
 		$dz = $dist{inside};
+
+		# snap or clamp move distance if necessary
+		if ($options{snap} or $options{clamp}) {
+			if ($z + $length + $dz > $LENGTH - $margins{far}) {
+				$dz = $LENGTH - $margins{far} - ($z + $length);
+			}
+		}
 	} elsif ($options{compound} and $monitors{$direction}) {
 		$dz = 2*$margins{near} + $length;
 	} elsif ($options{clamp}) {
@@ -394,6 +401,13 @@ if ($z > $margins{near} and $z + $length < $LENGTH - $margins{far}) {
 } elsif ($z + $length == $LENGTH - $margins{far}) {
 	if ($direction eq "up" or $direction eq "left") {
 		$dz = $dist{inside};
+
+		# snap or clamp move distance if necessary
+		if ($options{snap} or $options{clamp}) {
+			if ($z - $dz < $margins{near}) {
+				$dz = $z - $margins{near};
+			}
+		}
 	} elsif ($options{compound} and $monitors{$direction}) {
 		$dz = 2*$margins{far} + $length;
 	} elsif ($options{clamp}) {
