@@ -11,7 +11,7 @@ use Getopt::Long qw(:config no_ignore_case);
 sub activewindow {
 	my %window = ();
 	for my $line (
-		split /\n/ => `xdotool getactivewindow getwindowgeometry --shell`
+		split(/[\r\n]+/, `xdotool getactivewindow getwindowgeometry --shell`)
 	) {
 		my ($key, $val) = ( $line =~ /([^=]*)=(.*)/ );
 		$key = "id" if $key eq "window";
@@ -37,7 +37,7 @@ sub getmonitors {
 	my (%window) = @_;
 	my %monitors = ( up => 0, down => 0, left => 0, right => 0, here => 0 );
 	my ($x, $y) = ($window{x} + $window{width}/2, $window{y} + $window{height}/2);
-	for my $line ( split /\n/ => `xrandr -q --screen $window{screen}` ) {
+	for my $line ( split(/[\r\n]+/, `xrandr -q --screen $window{screen}`) ) {
 		if ($line =~ /^Screen .*current (\d+) x (\d+)/) {
 			$monitors{all}
 				= { width => $1, height => $2, x => 0, y => 0 };
