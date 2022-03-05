@@ -16,9 +16,9 @@ license=('GPL3')
 groups=()
 depends=(
   perl
+  i3-wm
   xorg-xrandr
   xdotool
-  xorg-xprop
 )
 makedepends=('git')
 provides=()
