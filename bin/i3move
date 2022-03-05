@@ -260,7 +260,7 @@ if ($direction =~ /^(top|north)$/) {
 } elsif ($direction =~ /^(starboard|east)$/) {
 	$options{inside} = "2";
 	$direction = "right";
-} else {
+} elsif (not $direction =~ /^(up|down|left|right)$/) {
 	require Pod::Usage;
 	Pod::Usage::pod2usage(
 		-msg => "Invalid direction: $direction",
