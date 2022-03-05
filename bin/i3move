@@ -198,19 +198,10 @@ if (not $result) {
 
 	# figure out what i3's hide_edge_borders config is set to
 	my $hide_edge_borders = "none";
-	for my $file (
-		"$configdir/i3/config",
-		"$ENV{HOME}/.i3/config",
-		"/etc/xdg/i3/config",
-		"/etc/i3/config",
-	) {
-		open $fh, '<', $file or next;
-		while (my $line = <$fh>) {
-			if ($line =~ /^\s*hide_edge_borders\s+(\S*)/) {
-				$hide_edge_borders = $1;
-			}
+	for my $line ( split(/[\r\n]+/, `i3-msg -t get_config`) ) {
+		if ($line =~ /^\s*hide_edge_borders\s+(\S*)/) {
+			$hide_edge_borders = $1;
 		}
-		last;
 	}
 
 	# adjust margins based on hide_edge_borders setting
@@ -271,7 +262,7 @@ if ($direction =~ /^(top|north)$/) {
 # figure out whether the active window is tiled or floating
 my $window_id = `xdotool getactivewindow`;
 chomp $window_id;
-if ( ! grep( /I3_FLOATING_WINDOW/, split( /[\r\n]+/, `xprop -id $window_id` ))) {
+if ( system("i3-msg '[con_id=\"__focused__\" floating]' focus >/dev/null 2>&1") ) {
 	exit if not $options{passthru};
 	exec "i3-msg move $direction >/dev/null";
 }
