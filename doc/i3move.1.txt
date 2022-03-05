@@ -15,11 +15,25 @@ USAGE
         [-C|--clamp|--no-clamp] [-S|--snap|--no-snap] [-H|--hide|--no-hide]
         [-P|--passthru|--no-passthru] [-g|--gen] [--man] [--help]
 
-    direction: up|down|left|right
+    directions:
+
+        up|down|left|right
+
+        top|bottom|port|starboard or north|south|east|west
 
 DESCRIPTION
     Move a floating i3 window up, down, left, or right. The distance moved
     is chosen based on the window's size and position.
+
+    Several aliases are provided for convenience.
+
+        top, north: Alias for "--inside-direction 2 up"
+
+        bottom, south: Alias for "--inside-direction 2 down"
+
+        port, west: Alias for "--inside-direction 2 left"
+
+        starboard, east: Alias for "--inside-direction 2 right"
 
     If the active window is tiled, i3move will move it with "i3-msg move
     DIRECTION" instead.
@@ -102,6 +116,9 @@ OPTIONS
             window is smaller than the size given by the --threshold option,
             then use the --small-distance option's value. Otherwise, use the
             --large-distance option's value.
+
+        This option is ignored and set to 2 if *direction* is one of: top,
+        bottom, port, starboard, north, south, east, or west.
 
         Default: w
 

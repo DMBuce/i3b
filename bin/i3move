@@ -244,16 +244,29 @@ if (not $result) {
 if (not @ARGV == 1) {
 	require Pod::Usage;
 	Pod::Usage::pod2usage(-verbose => 0, -exitcode => 1, -noperldoc => 1);
-} elsif (not $ARGV[0] =~ /^(up|down|left|right)$/) {
-	require Pod::Usage;
-	Pod::Usage::pod2usage(
-		-msg => "Invalid direction: $ARGV[0]",
-		-verbose => 0, -exitcode => 1, -noperldoc => 1
-	);
 }
 
 # parse params
 my $direction = $ARGV[0];
+if ($direction =~ /^(top|north)$/) {
+	$options{inside} = "2";
+	$direction = "up";
+} elsif ($direction =~ /^(bottom|south)$/) {
+	$options{inside} = "2";
+	$direction = "down";
+} elsif ($direction =~ /^(port|west)$/) {
+	$options{inside} = "2";
+	$direction = "left";
+} elsif ($direction =~ /^(starboard|east)$/) {
+	$options{inside} = "2";
+	$direction = "right";
+} else {
+	require Pod::Usage;
+	Pod::Usage::pod2usage(
+		-msg => "Invalid direction: $direction",
+		-verbose => 0, -exitcode => 1, -noperldoc => 1
+	);
+}
 
 # figure out whether the active window is tiled or floating
 my $window_id = `xdotool getactivewindow`;
@@ -467,7 +480,15 @@ S<[--help]>
 
 =back
 
-direction: S<up|down|left|right>
+directions:
+
+=over 4
+
+S<up|down|left|right>
+
+S<top|bottom|port|starboard> or S<north|south|east|west>
+
+=back
 
 
 =head1 DESCRIPTION
@@ -475,6 +496,20 @@ direction: S<up|down|left|right>
 Move a floating i3 window up, down, left, or right.
 The distance moved is chosen based on
 the window's size and position.
+
+Several aliases are provided for convenience.
+
+=over 4
+
+B<top, north>: Alias for C<--inside-direction 2 up>
+
+B<bottom, south>: Alias for C<--inside-direction 2 down>
+
+B<port, west>: Alias for C<--inside-direction 2 left>
+
+B<starboard, east>: Alias for C<--inside-direction 2 right>
+
+=back
 
 If the active window is tiled,
 i3move will move it with C<i3-msg move DIRECTION> instead.
@@ -604,6 +639,9 @@ then use the B<--small-distance> option's value.
 Otherwise, use the B<--large-distance> option's value.
 
 =back
+
+This option is ignored and set to C<2> if I<direction> is one of:
+top, bottom, port, starboard, north, south, east, or west.
 
 Default: w
 

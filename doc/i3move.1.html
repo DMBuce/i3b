@@ -38,11 +38,33 @@
 
 </ul>
 
-<p>direction: <span style="white-space: nowrap;">up|down|left|right</span></p>
+<p>directions:</p>
+
+<ul>
+
+<p><span style="white-space: nowrap;">up|down|left|right</span></p>
+
+<p><span style="white-space: nowrap;">top|bottom|port|starboard</span> or <span style="white-space: nowrap;">north|south|east|west</span></p>
+
+</ul>
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
 <p>Move a floating i3 window up, down, left, or right. The distance moved is chosen based on the window&#39;s size and position.</p>
+
+<p>Several aliases are provided for convenience.</p>
+
+<ul>
+
+<p><b>top, north</b>: Alias for <code>--inside-direction 2 up</code></p>
+
+<p><b>bottom, south</b>: Alias for <code>--inside-direction 2 down</code></p>
+
+<p><b>port, west</b>: Alias for <code>--inside-direction 2 left</code></p>
+
+<p><b>starboard, east</b>: Alias for <code>--inside-direction 2 right</code></p>
+
+</ul>
 
 <p>If the active window is tiled, i3move will move it with <code>i3-msg move DIRECTION</code> instead.</p>
 
@@ -133,6 +155,8 @@
 <p>Use the window&#39;s size to determine the distance to move. If the window is smaller than the size given by the <b>--threshold</b> option, then use the <b>--small-distance</b> option&#39;s value. Otherwise, use the <b>--large-distance</b> option&#39;s value.</p>
 
 </ul>
+
+<p>This option is ignored and set to <code>2</code> if <i>direction</i> is one of: top, bottom, port, starboard, north, south, east, or west.</p>
 
 <p>Default: w</p>
 

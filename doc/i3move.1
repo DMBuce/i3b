@@ -164,12 +164,30 @@ options:
 [\-\-help]
 .RE
 .PP
-direction: up|down|left|right
+directions:
+.Sp
+.RS 4
+up|down|left|right
+.Sp
+top|bottom|port|starboard or north|south|east|west
+.RE
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
 Move a floating i3 window up, down, left, or right.
 The distance moved is chosen based on
 the window's size and position.
+.PP
+Several aliases are provided for convenience.
+.Sp
+.RS 4
+\&\fBtop, north\fR: Alias for \f(CW\*(C`\-\-inside\-direction 2 up\*(C'\fR
+.Sp
+\&\fBbottom, south\fR: Alias for \f(CW\*(C`\-\-inside\-direction 2 down\*(C'\fR
+.Sp
+\&\fBport, west\fR: Alias for \f(CW\*(C`\-\-inside\-direction 2 left\*(C'\fR
+.Sp
+\&\fBstarboard, east\fR: Alias for \f(CW\*(C`\-\-inside\-direction 2 right\*(C'\fR
+.RE
 .PP
 If the active window is tiled,
 i3move will move it with \f(CW\*(C`i3\-msg move DIRECTION\*(C'\fR instead.
@@ -286,6 +304,9 @@ Otherwise, use the \fB\-\-large\-distance\fR option's value.
 .RE
 .RE
 .RS 4
+.Sp
+This option is ignored and set to \f(CW2\fR if \fIdirection\fR is one of:
+top, bottom, port, starboard, north, south, east, or west.
 .Sp
 Default: w
 .RE
