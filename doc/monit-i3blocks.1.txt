@@ -6,7 +6,7 @@ Usage: monit-i3blocks [ENV=value] [...]
 Example Config:
 
     [monit]
-    command=/home/woody/dev/proj/i3b/bin/monit-i3blocks
+    command=/usr/bin/monit-i3blocks
     markup=pango
     interval=3600
     STYLE_UP=weight='bold' background='#009000' color='#FFFFFF'

@@ -36,7 +36,7 @@ if [[ "$*" == *--help* ]]; then
 		Example Config:
 
 		    [monit]
-		    command=$(readlink -f $0)
+		    command=/usr/bin/${0##*/}
 		    markup=pango
 		    interval=3600
 		    STYLE_UP=${styles[up]}
