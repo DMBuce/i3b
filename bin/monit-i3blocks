@@ -31,7 +31,7 @@ if [[ "$*" == *--help* ]]; then
 		Usage: ${0##*/} [OPTION=value] [...]
 
 		    Report monit services state in pango format. Options for i3blocks
-		    can be given as environment variables or on the command line.
+		    can be provided as environment variables or on the command line.
 
 		Example Config:
 
