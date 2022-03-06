@@ -1,0 +1,23 @@
+Usage: monit-i3blocks [ENV=value] [...]
+
+    Report monit services state in pango format. Options for i3blocks
+    can be given as environment variables or on the command line.
+
+Example Config:
+
+    [monit]
+    command=/home/woody/dev/proj/i3b/bin/monit-i3blocks
+    markup=pango
+    interval=3600
+    STYLE_UP=weight='bold' background='#009000' color='#FFFFFF'
+    STYLE_UMON=weight='bold' background='#F0F000' color='#000000'
+    STYLE_DOWN=weight='bold' background='#900000' color='#FFFFFF'
+    STYLE_INIT=weight='bold' background='#C09000' color='#FFFFFF'
+    LABEL_UP=UP
+    LABEL_UMON=UMON
+    LABEL_DOWN=DOWN
+    LABEL_INIT=INIT
+    ORDER=up unmonitored down initialising
+    SHOW_LABELS=1
+    SHOW_ZEROS=1
+

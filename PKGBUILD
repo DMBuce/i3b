@@ -26,10 +26,12 @@ depends=(
   jq
 
   # rofi-blezz
-  bash
   rofi
   rofi-blezz
   sed
+
+  # monit-i3blocks
+  monit
 )
 makedepends=('git')
 provides=()

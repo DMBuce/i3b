@@ -39,5 +39,19 @@ this is a workaround for rofi's blezz module not having such functionality.
 
 Requirements: bash, rofi, rofi-blezz, sed
 
-Documentation :https://github.com/DMBuce/i3b/blob/master/doc/rofi-blezz.1.txt
+Documentation: https://github.com/DMBuce/i3b/blob/master/doc/rofi-blezz.1.txt
+
+## monit-i3blocks
+
+Add [monit](https://mmonit.com/monit/) services summary to i3blocks.
+
+Default Look: ![Default Look](https://i.imgur.com/1pK873k.png)
+
+Custom Labels: ![Custom Labels](https://i.imgur.com/HuStDiw.png)
+
+Minimal: ![Minimal](https://i.imgur.com/Ki0SCD5.png)
+
+Requirements: bash, monit
+
+Documentation: https://github.com/DMBuce/i3b/blob/master/doc/monit-i3blocks.1.txt
 

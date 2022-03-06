@@ -51,7 +51,7 @@ BINFILES          = $(wildcard bin/*)
 MAN1FILES         = doc/i3move.1
 MANFILES          = $(MAN1FILES)
 HTMLFILES         = $(MANFILES:%=%.html)
-TEXTFILES         = $(MANFILES:%=%.txt) doc/i3scratchmark.1.txt doc/rofi-blezz.1.txt
+TEXTFILES         = $(BINFILES:bin/%=doc/%.1.txt)
 DOCFILES          = $(MANFILES) $(HTMLFILES) $(TEXTFILES)
 BINFILES_INSTALL  = $(BINFILES:bin/%=$(DESTDIR)$(bindir)/%)
 MAN1FILES_INSTALL = $(MAN1FILES:doc/%=$(DESTDIR)$(man1dir)/%)

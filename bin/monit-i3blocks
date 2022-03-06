@@ -1,0 +1,91 @@
+#!/bin/bash
+
+# parse args
+for dec in "$@"; do
+	[[ $dec == --help ]] && continue
+	declare "$dec" || exit
+done
+
+# set vars
+declare -A styles
+declare -A labels
+styles=(
+	[up]="${STYLE_UP-weight='bold' background='#009000' color='#FFFFFF'}"
+	[unmonitored]="${STYLE_UMON-weight='bold' background='#F0F000' color='#000000'}"
+	[down]="${STYLE_DOWN-weight='bold' background='#900000' color='#FFFFFF'}"
+	[initialising]="${STYLE_INIT-weight='bold' background='#C09000' color='#FFFFFF'}"
+)
+labels=(
+	[up]="${LABEL_UP-UP}"
+	[down]="${LABEL_DOWN-DOWN}"
+	[initialising]="${LABEL_INIT-INIT}"
+	[unmonitored]="${LABEL_UMON-UMON}"
+)
+order="${ORDER:-up unmonitored down initialising}"
+showlabels="${SHOW_LABELS:-1}"
+showzeros="${SHOW_ZEROS:-1}"
+
+# check args
+if [[ "$*" == *--help* ]]; then
+	cat <<-EOF
+		Usage: ${0##*/} [ENV=value] [...]
+
+		    Report monit services state in pango format. Options for i3blocks
+		    can be given as environment variables or on the command line.
+
+		Example Config:
+
+		    [monit]
+		    command=$(readlink -f $0)
+		    markup=pango
+		    interval=3600
+		    STYLE_UP=${styles[up]}
+		    STYLE_UMON=${styles[unmonitored]}
+		    STYLE_DOWN=${styles[down]}
+		    STYLE_INIT=${styles[initialising]}
+		    LABEL_UP=${labels[up]}
+		    LABEL_UMON=${labels[unmonitored]}
+		    LABEL_DOWN=${labels[down]}
+		    LABEL_INIT=${labels[initialising]}
+		    ORDER=$order
+		    SHOW_LABELS=$showlabels
+		    SHOW_ZEROS=$showzeros
+
+	EOF
+	exit
+fi
+
+# process data
+declare -A results
+results=()
+while read state num perc; do
+	# skip total
+	state="${state%:}"
+	[[ $state == total ]] && continue
+
+	# copy short style and label indexes to long
+	styles[${state:0:2}]="${styles[$state]}"
+	labels[${state:0:2}]="${labels[$state]}"
+
+	# store result from monit
+	results[$state]=$num
+	results[${state:0:2}]=$num
+done < <(monit report)
+
+# show results
+for l in $order; do
+	num=${results[$l]}
+	if (( ! showlabels )); then
+		result="$num"
+	elif (( ${#result} <= 2 )); then
+		result=" $num ${labels[$l]} "
+	else
+		result="$num ${labels[$l]}"
+	fi
+
+	if (( showzeros || num != 0 )); then
+		echo -n "<span ${styles[$l]}> $result </span>"
+	fi
+done
+echo
+
