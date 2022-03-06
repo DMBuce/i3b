@@ -28,7 +28,7 @@ showzeros="${SHOW_ZEROS:-1}"
 # check args
 if [[ "$*" == *--help* ]]; then
 	cat <<-EOF
-		Usage: ${0##*/} [ENV=value] [...]
+		Usage: ${0##*/} [OPTION=value] [...]
 
 		    Report monit services state in pango format. Options for i3blocks
 		    can be given as environment variables or on the command line.

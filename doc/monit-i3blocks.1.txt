@@ -1,4 +1,4 @@
-Usage: monit-i3blocks [ENV=value] [...]
+Usage: monit-i3blocks [OPTION=value] [...]
 
     Report monit services state in pango format. Options for i3blocks
     can be given as environment variables or on the command line.

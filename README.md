@@ -45,11 +45,14 @@ Documentation: https://github.com/DMBuce/i3b/blob/master/doc/rofi-blezz.1.txt
 
 Add [monit](https://mmonit.com/monit/) services summary to i3blocks.
 
-Default Look: ![Default Look](https://i.imgur.com/1pK873k.png)
+Below are images showing the default look,
+custom labels, and a minimalistic setup.
 
-Custom Labels: ![Custom Labels](https://i.imgur.com/HuStDiw.png)
+![Default Look](https://i.imgur.com/1pK873k.png)
 
-Minimal: ![Minimal](https://i.imgur.com/Ki0SCD5.png)
+![Custom Labels](https://i.imgur.com/HuStDiw.png)
+
+![Minimal](https://i.imgur.com/Ki0SCD5.png)
 
 Requirements: bash, monit
 
