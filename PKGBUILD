@@ -30,7 +30,7 @@ depends=(
   rofi-blezz
   sed
 
-  # monit-i3blocks
+  # i3blocks-monit
   monit
 )
 makedepends=('git')
