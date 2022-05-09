@@ -64,12 +64,12 @@ fi
 #	fi
 #fi
 
-## run tests
-#make check
-
 # update docs
 make doc
 git add doc/*
+
+## run tests
+#make check
 
 ## unstage a file if the only lines in it that changed start with a pattern
 #file=PKGBUILD
