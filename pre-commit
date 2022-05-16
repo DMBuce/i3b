@@ -69,7 +69,7 @@ make doc
 git add doc/*
 
 ## run tests
-#make check
+#make -kB check
 
 ## unstage a file if the only lines in it that changed start with a pattern
 #file=PKGBUILD
