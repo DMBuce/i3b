@@ -17,17 +17,17 @@ Keybindings:
 
 Environment Variables:
 
-    PICKDATE_FORMAT:          The date format to use if no FORMAT is provided.
-    PICKDATE_CAL:             The calendar command to use.
-    PICKDATE_WEEKDAY_ATTRS:   Pango <span> attributes used on the weekday line.
-    PICKDATE_THEMESTR:        Theme string used to override config.rasi .
+    PICKDATE_FMT:         The date format to use if no FORMAT is provided.
+    PICKDATE_CAL:         The calendar command to use.
+    PICKDATE_SPANATTRS:   Pango <span> attributes used on the row of weekdays.
+    PICKDATE_THEMESTR:    Theme string used to override config.rasi .
 
 Defaults:
 
-    PICKDATE_FORMAT='%F'
+    PICKDATE_FMT='%F'
     PICKDATE_CAL='cal'
     # see https://docs.gtk.org/Pango/pango_markup.html
-    PICKDATE_WEEKDAY_ATTRS='bgcolor="#285577" fgcolor="#fff" weight="bold"'
+    PICKDATE_SPANATTRS='bgcolor="#285577" fgcolor="#fff" weight="bold"'
     PICKDATE_THEMESTR='configuration {
     	kb-move-char-back: "h,Left,Control+b";
     	kb-move-char-forward: "l,Right,Control+f";

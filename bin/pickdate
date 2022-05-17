@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 # date picker
 
 # defaults
@@ -14,9 +14,9 @@ default_themestr='configuration {
 }'
 
 # set environment variable defaults
-PICKDATE_FORMAT="${PICKDATE_FORMAT-$default_format}"
+PICKDATE_FMT="${PICKDATE_FMT-$default_format}"
 PICKDATE_CAL="${PICKDATE_CAL-$default_cal}"
-PICKDATE_WEEKDAY_ATTRS="${PICKDATE_WEEKDAY_ATTRS-$default_attrs}"
+PICKDATE_SPANATTRS="${PICKDATE_SPANATTRS-$default_attrs}"
 PICKDATE_THEMESTR="${PICKDATE_THEMESTR-$default_themestr}"
 
 # prints message to stderr
@@ -63,17 +63,17 @@ Keybindings:
 
 Environment Variables:
 
-    PICKDATE_FORMAT:          The date format to use if no FORMAT is provided.
-    PICKDATE_CAL:             The calendar command to use.
-    PICKDATE_WEEKDAY_ATTRS:   Pango <span> attributes used on the weekday line.
-    PICKDATE_THEMESTR:        Theme string used to override config.rasi .
+    PICKDATE_FMT:         The date format to use if no FORMAT is provided.
+    PICKDATE_CAL:         The calendar command to use.
+    PICKDATE_SPANATTRS:   Pango <span> attributes used on the row of weekdays.
+    PICKDATE_THEMESTR:    Theme string used to override config.rasi .
 
 Defaults:
 
-    PICKDATE_FORMAT='%$default_format'
+    PICKDATE_FMT='%$default_format'
     PICKDATE_CAL='$default_cal'
     # see https://docs.gtk.org/Pango/pango_markup.html
-    PICKDATE_WEEKDAY_ATTRS='$default_attrs'
+    PICKDATE_SPANATTRS='$default_attrs'
     PICKDATE_THEMESTR='${default_themestr//$'\n'/$'\n    '}'
 
 See Also:
@@ -86,7 +86,7 @@ fi
 
 # parse args
 if [[ -z "$ROFI_RETV" ]]; then
-	export PICKDATE_FORMAT="${1-$PICKDATE_FORMAT}"
+	export PICKDATE_FMT="${1-$PICKDATE_FMT}"
 	export ROFI_INFO="$(date -d "${2-now}" +'%-Y-%-m')"
 fi
 
@@ -131,7 +131,7 @@ case "$ROFI_RETV" in
 
 	# run rofi
 	selected="$(selections "$days" $cellwidth | cat -n | awk "/\s$day\s*$/ {print \$1 - 1}")"
-	exec rofi -show date -modi "date:$prog" \
+	exec rofi -show date -modi "date:$0" \
 		-selected-row "$selected" \
 		-theme-str "$themestr" \
 		2>&1
@@ -140,7 +140,7 @@ case "$ROFI_RETV" in
 ;;
 1) # rofi: selected an entry
 	day="$1"
-	date -d "$year-$month-$day" +"${PICKDATE_FORMAT#+}" >&2
+	date -d "$year-$month-$day" +"${PICKDATE_FMT#+}" >&2
 	exit
 ;;
 2) # rofi: selected a custom entry
@@ -151,7 +151,7 @@ esac
 
 # set rofi options
 echo -en "\0prompt\x1f$prompt\n"
-echo -en "\0message\x1f<span $PICKDATE_WEEKDAY_ATTRS>$weekdays </span>\n"
+echo -en "\0message\x1f<span $PICKDATE_SPANATTRS>$weekdays </span>\n"
 echo -en "\0no-custom\x1ftrue\n"
 echo -en "\0markup-rows\x1ftrue\n"
 echo -en "\0use-hot-keys\x1ftrue\n"
