@@ -2,7 +2,6 @@
 # date picker
 
 # defaults
-# https://docs.gtk.org/Pango/pango_markup.html#the-span-attributes
 default_format='%F'
 default_cal='cal'
 default_attrs='bgcolor="#285577" fgcolor="#ffffff" weight="bold"'
