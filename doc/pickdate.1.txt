@@ -1,11 +1,41 @@
 Usage: pickdate [FORMAT] [DATE]
 
-    Pick a date starting from DATE's month. FORMAT controls the output.
+    Pick a date starting from DATE's month using rofi. FORMAT controls
+    the output.
+
+Keybindings:
+
+    By default, rofi's keybindings for 'kb-custom-1' and 'kb-custom-2'
+    are bound to 'p' and 'n'. Pressing them goes to the previous and
+    next month, respectively.
+
+    Movement is controlled by vim keybindings (hjkl) or rofi's default
+    keybindings for 'kb-move-char-back', 'kb-move-char-forward',
+    'kb-row-up' and 'kb-row-down'.
+
+    All keybindings can be overridden with $PICKDATE_THEMESTR.
 
 Environment Variables:
 
-    PICKDATE_FORMAT:        The FORMAT to use. '%F' by default.
-    PICKDATE_CAL:           The calendar command to use. 'cal' by default.
-    PICKDATE_WEEKDAY_ATTRS: The pango attributes to use on the weekday line.
-    PICKDATE_THEMESTR:      Theme string used to override rofi's defaults.
+    PICKDATE_FORMAT:          The date format to use if no FORMAT is provided.
+    PICKDATE_CAL:             The calendar command to use.
+    PICKDATE_WEEKDAY_ATTRS:   Pango <span> attributes used on the weekday line.
+    PICKDATE_THEMESTR:        Theme string used to override config.rasi .
+
+Defaults:
+
+    PICKDATE_FORMAT='%F'
+    PICKDATE_CAL='cal'
+    # see https://docs.gtk.org/Pango/pango_markup.html
+    PICKDATE_WEEKDAY_ATTRS='bgcolor="#285577" fgcolor="#fff" weight="bold"'
+    PICKDATE_THEMESTR='configuration {
+    	kb-move-char-back: "h,Left,Control+b";
+    	kb-move-char-forward: "l,Right,Control+f";
+    	kb-row-up: "k,Up,Control+p,ISO_Left_Tab";
+    	kb-row-down: "j,Down,Control+n";
+    }'
+
+See Also:
+
+    rofi(1), rofi-keys(5), rofi-theme(5), cal(1), ncal(1)
 
