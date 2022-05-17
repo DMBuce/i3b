@@ -51,15 +51,14 @@ usage="Usage: $prog [FORMAT] [DATE]
 
 Keybindings:
 
-    By default, rofi's keybindings for 'kb-custom-1' and 'kb-custom-2'
-    are bound to 'p' and 'n'. Pressing them goes to the previous and
-    next month, respectively.
+    Rofi's keybindings for 'kb-custom-1' and 'kb-custom-2' are bound to
+    'p' and 'n'. Pressing them goes to the previous and next month,
+    respectively.
 
-    Movement is controlled by vim keybindings (hjkl) or rofi's default
-    keybindings for 'kb-move-char-back', 'kb-move-char-forward',
-    'kb-row-up' and 'kb-row-down'.
+    By default, movement is controlled by vim-like \"hjkl\" keybindings,
+    Ctrl + f/b/p/n, arrow keys, and Tab.
 
-    All keybindings can be overridden with \$PICKDATE_THEMESTR.
+    Keybindings can be overridden with \$PICKDATE_THEMESTR.
 
 Environment Variables:
 
