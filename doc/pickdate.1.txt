@@ -27,7 +27,7 @@ Defaults:
     PICKDATE_FMT='%F'
     PICKDATE_CAL='cal'
     # see https://docs.gtk.org/Pango/pango_markup.html
-    PICKDATE_SPANATTRS='bgcolor="#285577" fgcolor="#fff" weight="bold"'
+    PICKDATE_SPANATTRS='bgcolor="#285577" fgcolor="#ffffff" weight="bold"'
     PICKDATE_THEMESTR='configuration {
     	kb-move-char-back: "h,Left,Control+b";
     	kb-move-char-forward: "l,Right,Control+f";
