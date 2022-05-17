@@ -4,17 +4,25 @@
 # defaults
 default_format='%F'
 default_cal='cal'
+default_buttons=' <:<<: .:>>: >'
 default_attrs='bgcolor="#285577" fgcolor="#ffffff" weight="bold"'
-default_themestr='configuration {
+custom_keybinds='
+	kb-custom-1: "p";
+	kb-custom-2: "n";
+	kb-custom-3: "P,less";
+	kb-custom-4: "N,greater";
+	kb-custom-5: "period";'
+default_themestr='configuration {'"$custom_keybinds"'
 	kb-move-char-back: "h,Left,Control+b";
 	kb-move-char-forward: "l,Right,Control+f";
 	kb-row-up: "k,Up,Control+p,ISO_Left_Tab";
 	kb-row-down: "j,Down,Control+n";
 }'
 
-# set environment variable defaults
+# environment variables
 PICKDATE_FMT="${PICKDATE_FMT-$default_format}"
 PICKDATE_CAL="${PICKDATE_CAL-$default_cal}"
+PICKDATE_BUTTONS="${PICKDATE_BUTTONS-$default_buttons}"
 PICKDATE_SPANATTRS="${PICKDATE_SPANATTRS-$default_attrs}"
 PICKDATE_THEMESTR="${PICKDATE_THEMESTR-$default_themestr}"
 
@@ -33,11 +41,17 @@ die() {
 }
 
 # prints rofi selections from $days part of `cal` output
+IFS=: read -a b <<< "$PICKDATE_BUTTONS"
+buttons=()
+(( ${#b[@]} )) && buttons=(
+	"${b[0]:- }" "${b[1]:- }" " " "${b[2]:- }" " " "${b[3]:- }" "${b[4]:- }"
+)
 selections() {
 	local days="$*"
 	local w="$2"
 	for i in {0..6}; do
 		cut -c $((i*w+1))-$((i*w+w-1)) <<< "$days"
+		echo "${buttons[i]}"
 	done
 }
 
@@ -46,30 +60,26 @@ prog="${0##*/}"
 usage="Usage: $prog [FORMAT] [DATE]
 
     Pick a date starting from DATE's month using rofi. FORMAT controls
-    the output.
+    the output. The following keybindings are available.
 
-Keybindings:
-
-    Rofi's keybindings for 'kb-custom-1' and 'kb-custom-2' are bound to
-    'p' and 'n'. Pressing them goes to the previous and next month,
-    respectively.
-
-    By default, movement is controlled by vim-like \"hjkl\" keybindings,
-    Ctrl + f/b/p/n, arrow keys, and Tab.
-
-    Keybindings can be overridden with \$PICKDATE_THEMESTR.
+        p/n        Go to previous/next month
+        P/N, </>   Go to previous/next year
+        .          Jump to current month
+        h/j/k/l    Vim-like movement (default movement bindings also work)
 
 Environment Variables:
 
     PICKDATE_FMT:         The date format to use if no FORMAT is provided.
     PICKDATE_CAL:         The calendar command to use.
-    PICKDATE_SPANATTRS:   Pango <span> attributes used on the row of weekdays.
+    PICKDATE_BUTTONS:     Colon-delimited list of buttons shown on the bottom.
+    PICKDATE_SPANATTRS:   Pango <span> attributes used on the weekday header.
     PICKDATE_THEMESTR:    Theme string used to override config.rasi .
 
 Defaults:
 
     PICKDATE_FMT='%$default_format'
     PICKDATE_CAL='$default_cal'
+    PICKDATE_BUTTONS='$default_buttons'
     # see https://docs.gtk.org/Pango/pango_markup.html
     PICKDATE_SPANATTRS='$default_attrs'
     PICKDATE_THEMESTR='${default_themestr//$'\n'/$'\n    '}'
@@ -93,14 +103,28 @@ IFS=- read year month day junk <<< "$ROFI_INFO"
 day="$(date +%-d)"
 
 # adjust date if necessary
-case "$ROFI_RETV" in
-10) # rofi kb-custom-1: go to prev month
+case "$ROFI_RETV:$1" in
+10:*|"1:${b[0]}") # rofi kb-custom-1: go to prev month
 	year=$(( month-1 < 1 ? year-1 : year))
 	month=$((month-1 < 1 ? 12     : month-1))
+	ROFI_RETV=0
 ;;
-11) # rofi kb-custom-2: go to next month
+11:*|"1:${b[4]}") # rofi kb-custom-2: go to next month
 	year=$(( month+1 > 12 ? year+1 : year))
 	month=$((month+1 > 12 ? 1      : month+1))
+	ROFI_RETV=0
+;;
+12:*|"1:${b[1]}") # rofi kb-custom-3: go to prev year
+	year=$(( year-1 ))
+	ROFI_RETV=0
+;;
+13:*|"1:${b[3]}") # rofi kb-custom-4: go to next year
+	year=$(( year+1 ))
+	ROFI_RETV=0
+;;
+14:*|"1:${b[2]}") # rofi kb-custom-5: go to current month
+	IFS=- read year month <<< $(date +'%-Y-%-m')
+	ROFI_RETV=0
 ;;
 esac
 
@@ -118,12 +142,11 @@ case "$ROFI_RETV" in
 
 	# set styling
 	themestr="configuration {
-		kb-custom-1: \"p\";
-		kb-custom-2: \"n\";
+		$custom_keybinds
 	}
 	$PICKDATE_THEMESTR
 	window { width: $((${#weekdays}+2))ch; }
-	listview { columns:7; lines:$(( $(wc -l <<< "$days") )); scrollbar: false; }
+	listview { columns:7; lines:$(( $(wc -l <<< "$days") + (${#b[@]}?1:0) )); scrollbar: false; }
 	inputbar { children: [prompt]; }
 	"
 
@@ -151,7 +174,6 @@ esac
 echo -en "\0prompt\x1f$prompt\n"
 echo -en "\0message\x1f<span $PICKDATE_SPANATTRS>$weekdays </span>\n"
 echo -en "\0no-custom\x1ftrue\n"
-echo -en "\0markup-rows\x1ftrue\n"
 echo -en "\0use-hot-keys\x1ftrue\n"
 
 # check if we're displaying current month
@@ -165,5 +187,6 @@ selections "$days" $cellwidth | awk "
 	/[0-9]/    {printf \$0 \"\0info\x1f$year-$month\n\"}
 	/[a-zA-Z]/ {printf \$0 \"\0info\x1f$year-$month\x1fnonselectable\x1ftrue\n\"}
 	/^\s*$/    {printf \$0 \"\0info\x1f$year-$month\x1fnonselectable\x1ftrue\n\"}
+	/[^0-9a-zA-Z ]/ {printf \$0 \"\0info\x1f$year-$month\n\"}
 "
 
