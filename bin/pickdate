@@ -166,7 +166,7 @@ case "$ROFI_RETV" in
 ;;
 2) # rofi: selected a custom entry
 	warn "Custom entry selected. This shouldn't happen."
-	die "If you didn't explicityly set \$ROFI_RETV, please report as a bug!"
+	die "If you didn't explicitly set \$ROFI_RETV, please report as a bug!"
 ;;
 esac
 
