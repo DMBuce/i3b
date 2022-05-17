@@ -32,7 +32,7 @@ Documentation: https://github.com/DMBuce/i3b/blob/master/doc/i3scratchmark.1.txt
 
 ## pickdate
 
-A simple rofi-powered date picker.
+A simple rofi date picker.
 
 Requirements: rofi, cal, awk
 
