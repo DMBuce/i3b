@@ -1,0 +1,11 @@
+Usage: pickdate [FORMAT] [DATE]
+
+    Pick a date starting from DATE's month. FORMAT controls the output.
+
+Environment Variables:
+
+    PICKDATE_FORMAT:        The FORMAT to use. '%F' by default.
+    PICKDATE_CAL:           The calendar command to use. 'cal' by default.
+    PICKDATE_WEEKDAY_ATTRS: The pango attributes to use on the weekday line.
+    PICKDATE_THEMESTR:      Theme string used to override rofi's defaults.
+

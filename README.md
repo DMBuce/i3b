@@ -30,6 +30,14 @@ Requirements: bash, jq
 
 Documentation: https://github.com/DMBuce/i3b/blob/master/doc/i3scratchmark.1.txt
 
+## pickdate
+
+A simple rofi-powered date picker.
+
+Requirements: rofi, cal, awk
+
+Documentation: https://github.com/DMBuce/i3b/blob/master/doc/pickdate.1.txt
+
 ## rofi-blezz
 
 Run [rofi's blezz module](https://github.com/davatorium/rofi-blezz)
