@@ -5,7 +5,7 @@
 default_format='%F'
 default_cal='cal'
 default_buttons=' <:<<: .:>>: >'
-default_attrs='bgcolor="#285577" fgcolor="#ffffff" weight="bold"'
+default_attrs='weight="bold"'
 custom_keybinds='
 	kb-custom-1: "p";
 	kb-custom-2: "n";
