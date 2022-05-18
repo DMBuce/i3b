@@ -11,7 +11,7 @@ Usage: pickdate [FORMAT] [DATE]
 Environment Variables:
 
     PICKDATE_FMT:         The date format to use if no FORMAT is provided.
-    PICKDATE_CAL:         The calendar command to use.
+    PICKDATE_CAL:         The cal command to use, e.g. 'cal -m' or 'ncal -hb'.
     PICKDATE_BUTTONS:     Colon-delimited list of buttons shown on the bottom.
     PICKDATE_SPANATTRS:   Pango <span> attributes used on the weekday header.
     PICKDATE_THEMESTR:    Theme string used to override config.rasi .
