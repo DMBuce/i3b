@@ -1,5 +1,5 @@
 #!/bin/bash
-# date picker
+# rofi date picker
 
 # defaults
 default_format='%F'
@@ -40,12 +40,14 @@ die() {
 	exit ${retval-1}
 }
 
-# prints rofi selections from $days part of `cal` output
+# parse $PICKDATE_BUTTONS
 IFS=: read -a b <<< "$PICKDATE_BUTTONS"
 buttons=()
 (( ${#b[@]} )) && buttons=(
 	"${b[0]:- }" "${b[1]:- }" " " "${b[2]:- }" " " "${b[3]:- }" "${b[4]:- }"
 )
+
+# prints rofi selections from $days part of `cal` output
 selections() {
 	local days="$*"
 	local w="$2"
@@ -134,7 +136,6 @@ prompt="$(awk 'NR==1 {print}' <<< "$cal")"
 weekdays="$(awk 'NR==2 {print}' <<< "$cal")"
 days="$(awk 'NR>2 {print}' <<< "$cal")"
 cellwidth=$(( (${#weekdays}+1) / 7 ))
-#die 0 $cellwidth
 
 # figure out how the script was called
 case "$ROFI_RETV" in
@@ -184,7 +185,6 @@ currentmonth=0
 [[ "$year-$month" == $(date +'%-Y-%-m') ]] && currentmonth=1
 
 # set rofi selections
-#	active=$(echo "$selections" | awk "/^ *$day *$/ {print NR-1; exit}")
 selections "$days" $cellwidth | awk "
 	$currentmonth && /^\s*$day\s*$/ {print \"\0active\x1f\" NR-1}
 	/[0-9]/    {printf \$0 \"\0info\x1f$year-$month\n\"}
