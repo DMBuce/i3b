@@ -34,7 +34,7 @@ Documentation: https://github.com/DMBuce/i3b/blob/master/doc/i3scratchmark.1.txt
 
 A simple rofi date picker.
 
-!link:https://i.imgur.com/TCnCXKU.png[Screenshot]
+image::https://i.imgur.com/TCnCXKU.png[Screenshot]
 
 Requirements: rofi, cal, awk
 
