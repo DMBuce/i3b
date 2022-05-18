@@ -152,16 +152,19 @@ case "$ROFI_RETV" in
 
 	# run rofi
 	selected="$(selections "$days" $cellwidth | cat -n | awk "/\s$day\s*$/ {print \$1 - 1}")"
-	exec rofi -show date -modi "date:$0" \
+	trap 'rm -f "$_PICKDATE_TMP"' EXIT
+	export _PICKDATE_TMP="$(mktemp --tmpdir "$prog.XXXXXXXXXX")" || exit 1
+	rofi -show date -modi "date:$0" \
 		-selected-row "$selected" \
-		-theme-str "$themestr" \
-		2>&1
+		-theme-str "$themestr"
+	cat "$_PICKDATE_TMP"
+	exit
 ;;
 0) # rofi: initial call of script
 ;;
 1) # rofi: selected an entry
 	day="$1"
-	date -d "$year-$month-$day" +"${PICKDATE_FMT#+}" >&2
+	date -d "$year-$month-$day" +"${PICKDATE_FMT#+}" > "$_PICKDATE_TMP"
 	exit
 ;;
 2) # rofi: selected a custom entry
