@@ -1,0 +1,35 @@
+#!/bin/bash
+# i3blocks support for pickdate
+
+# defaults
+BAR_POS="${BAR_POS-top}"
+OPTIONS="${OPTIONS--c primary}${BAR_POS+ -m $BAR_POS}"
+DISPLAY_FORMAT="${DISPLAY_FORMAT-%a %Y-%m-%d %H:%M}"
+OUTPUT_FORMAT="${OUTPUT_FORMAT-%a, %b %-e}"
+
+
+usage="Usage: i3blocks-pickdate
+
+    Shows the date. Opens a calendar with 'pickdate' when clicked on.
+
+Example Config:
+
+    [time]
+    command=i3blocks-pickdate
+    BAR_POS=top
+    OPTIONS=-c primary
+    DISPLAY_FORMAT=%a %Y-%m-%d %H:%M
+    OUTPUT_FORMAT=%a, %b %-e
+    interval=5
+"
+if [[ "$*" == *--help* ]]; then
+	echo "$usage" >&2
+fi
+
+# launch rofi when clicked on
+[[ -n "$BLOCK_BUTTON" ]] && \
+	i3-msg -q exec -- "\"$(dirname "$0")/pickdate $OPTIONS '$OUTPUT_FORMAT'\""
+
+# print i3blocks output and exit
+date +"${DISPLAY_FORMAT#+}"
+

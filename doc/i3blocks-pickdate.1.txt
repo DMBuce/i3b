@@ -1,1 +1,15 @@
-Thu 2022-05-19 14:35
+Usage: i3blocks-pickdate
+
+    Shows the date. Opens a calendar with 'pickdate' when clicked on.
+
+Example Config:
+
+    [time]
+    command=i3blocks-pickdate
+    BAR_POS=top
+    OPTIONS=-c primary
+    DISPLAY_FORMAT=%a %Y-%m-%d %H:%M
+    OUTPUT_FORMAT=%a, %b %-e
+    interval=5
+
+Thu 2022-05-19 14:42
