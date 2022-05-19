@@ -10,7 +10,7 @@ OUTPUT_FORMAT="${OUTPUT_FORMAT-%a, %b %-e}"
 
 usage="Usage: i3blocks-pickdate
 
-    Shows the date. Opens a calendar with 'pickdate' when clicked on.
+    Shows the date in i3blocks and runs 'pickdate' when clicked on.
 
 Example Config:
 
