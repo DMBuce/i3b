@@ -159,6 +159,7 @@ case "$ROFI_RETV" in
 		-selected-row "$selected" \
 		-theme-str "$themestr"
 	cat "$_PICKDATE_TMP"
+	[[ -n $(<"$_PICKDATE_TMP") ]]
 	exit
 ;;
 0) # rofi: initial call of script
