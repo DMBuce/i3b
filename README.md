@@ -40,6 +40,14 @@ Requirements: rofi, cal, awk
 
 Documentation: https://github.com/DMBuce/i3b/blob/master/doc/pickdate.1.txt
 
+## i3blocks-pickdate
+
+Use `pickdate` as a dropdown calendar in i3blocks.
+
+Requirements: bash, pickdate
+
+Documentation: https://github.com/DMBuce/i3b/blob/master/doc/i3blocks-pickdate.1.txt
+
 ## rofi-blezz
 
 Run [rofi's blezz module](https://github.com/davatorium/rofi-blezz)
