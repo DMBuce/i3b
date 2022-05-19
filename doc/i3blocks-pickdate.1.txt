@@ -4,12 +4,12 @@ Usage: i3blocks-pickdate
 
 Example Config:
 
-    [time]
-    command=i3blocks-pickdate
+    [pickdate]
+    command=/usr/bin/i3blocks-pickdate
     BAR_POS=top
     OPTIONS=-c primary
     DISPLAY_FORMAT=%a %Y-%m-%d %H:%M
     OUTPUT_FORMAT=%a, %b %-e
     interval=5
 
-Thu 2022-05-19 14:42
+Thu 2022-05-19 14:44
