@@ -37,6 +37,7 @@ Default Config:
 "
 if [[ "$*" == *--help* ]]; then
 	echo "$usage" >&2
+	exit
 fi
 
 # launch rofi when clicked on
