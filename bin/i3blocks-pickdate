@@ -5,21 +5,34 @@
 BAR_POS="${BAR_POS-top}"
 OPTIONS="${OPTIONS--c primary}${BAR_POS+ -m $BAR_POS}"
 DISPLAY_FORMAT="${DISPLAY_FORMAT-%a %Y-%m-%d %H:%M}"
-OUTPUT_FORMAT="${OUTPUT_FORMAT-%a, %b %-e}"
 
+# figure out environment to use
+env=
+for var in FMT CAL BUTTONS SPANATTRS THEMESTR; do
+	# escape double quotes for 'i3-msg exec'
+	if [[ -v $var ]]; then
+		env+=" PICKDATE_$var='${!var//\"/\\\"}'"
+	elif var=PICKDATE_$var; [[ -v $var ]]; then
+		env+=" $var='${!var//\"/\\\"}'"
+	fi
+done
 
+# print help output
 usage="Usage: i3blocks-pickdate
 
     Shows the date in i3blocks and runs 'pickdate' when clicked on.
 
-Example Config:
+Default Config:
 
     [pickdate]
     command=/usr/bin/i3blocks-pickdate
     BAR_POS=top
     OPTIONS=-c primary
     DISPLAY_FORMAT=%a %Y-%m-%d %H:%M
-    OUTPUT_FORMAT=%a, %b %-e
+    FMT=%F
+    CAL=cal
+    BUTTONS= <:<<: .:>>: >
+    SPANATTRS=weight=\"bold\"
     interval=5
 "
 if [[ "$*" == *--help* ]]; then
@@ -27,8 +40,8 @@ if [[ "$*" == *--help* ]]; then
 fi
 
 # launch rofi when clicked on
-[[ -n "$BLOCK_BUTTON" ]] && \
-	i3-msg -q exec -- "\"$(dirname "$0")/pickdate $OPTIONS '$OUTPUT_FORMAT'\""
+[[ -n "$BLOCK_BUTTON$button" ]] && \
+	i3-msg -q exec -- "\"$env $(dirname "$0")/pickdate $OPTIONS\""
 
 # print i3blocks output and exit
 date +"${DISPLAY_FORMAT#+}"

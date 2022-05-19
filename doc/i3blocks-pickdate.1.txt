@@ -2,14 +2,17 @@ Usage: i3blocks-pickdate
 
     Shows the date in i3blocks and runs 'pickdate' when clicked on.
 
-Example Config:
+Default Config:
 
     [pickdate]
     command=/usr/bin/i3blocks-pickdate
     BAR_POS=top
     OPTIONS=-c primary
     DISPLAY_FORMAT=%a %Y-%m-%d %H:%M
-    OUTPUT_FORMAT=%a, %b %-e
+    FMT=%F
+    CAL=cal
+    BUTTONS= <:<<: .:>>: >
+    SPANATTRS=weight="bold"
     interval=5
 
-Thu 2022-05-19 14:50
+Thu 2022-05-19 15:55

@@ -93,7 +93,7 @@ Defaults:
     PICKDATE_FMT='${default_format//%/%%}'
     PICKDATE_CAL='$default_cal'
     PICKDATE_BUTTONS='$default_buttons'
-    # see https://docs.gtk.org/Pango/pango_markup.html
+    # see https://docs.gtk.org/Pango/pango_markup.html#the-span-attributes
     PICKDATE_SPANATTRS='$default_attrs'
     PICKDATE_THEMESTR='${default_themestr//$'\n'/$'\n    '}'
 

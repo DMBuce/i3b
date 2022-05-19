@@ -32,7 +32,7 @@ Defaults:
     PICKDATE_FMT='%F'
     PICKDATE_CAL='cal'
     PICKDATE_BUTTONS=' <:<<: .:>>: >'
-    # see https://docs.gtk.org/Pango/pango_markup.html
+    # see https://docs.gtk.org/Pango/pango_markup.html#the-span-attributes
     PICKDATE_SPANATTRS='weight="bold"'
     PICKDATE_THEMESTR='configuration {
     	kb-custom-1: "p";
