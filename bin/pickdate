@@ -12,7 +12,7 @@ custom_keybinds='
 	kb-custom-3: "P,less";
 	kb-custom-4: "N,greater";
 	kb-custom-5: "period";'
-default_themestr='configuration {'"$custom_keybinds"'
+default_themestr="configuration {$custom_keybinds"'
 	kb-move-char-back: "h,Left,Control+b";
 	kb-move-char-forward: "l,Right,Control+f";
 	kb-row-up: "k,Up,Control+p,ISO_Left_Tab";
@@ -35,7 +35,7 @@ warn() {
 
 # prints error and exits
 die() {
-	[[ "$1" =~ ^[0-9]+$ ]] && { retval="$1"; shift; }
+	[[ "$1" =~ ^[0-9]+$ ]] && { local retval="$1"; shift; }
 	warn "$@"
 	exit ${retval-1}
 }
@@ -59,7 +59,7 @@ selections() {
 
 # print usage
 prog="${0##*/}"
-usage="Usage: $prog [FORMAT] [DATE]
+usage="Usage: $prog [OPTIONS] [FORMAT] [DATE]
 
     Pick a date starting from DATE's month using rofi. FORMAT controls
     the output. The following keybindings are available.
@@ -69,17 +69,28 @@ usage="Usage: $prog [FORMAT] [DATE]
         .          Jump to current month
         h/j/k/l    Vim-like movement (default movement bindings also work)
 
+Options:
+
+    -c SELECTION   Use 'xclip -selection' to copy selected date to SELECTION.
+    -m POSITION    Position rofi with respect to the mouse.
+    -p             Print selected date. This is the default behavior.
+    -w POSITION    Position rofi with respect to the focused window.
+    -h, --help     Print this help message and exit.
+
+    Valid POSITIONs: center, north, east, southwest, etc.
+    Valid SELECTIONs: primary, secondary, clipboard
+
 Environment Variables:
 
-    PICKDATE_FMT:         The date format to use if no FORMAT is provided.
-    PICKDATE_CAL:         The cal command to use, e.g. 'cal -m' or 'ncal -hb'.
-    PICKDATE_BUTTONS:     Colon-delimited list of buttons shown on the bottom.
-    PICKDATE_SPANATTRS:   Pango <span> attributes used on the weekday header.
-    PICKDATE_THEMESTR:    Theme string used to override config.rasi .
+    PICKDATE_FMT         The date format to use if no FORMAT is provided.
+    PICKDATE_CAL         The cal command to use, e.g. 'cal -m' or 'ncal -hb'.
+    PICKDATE_BUTTONS     Colon-delimited list of buttons shown on the bottom.
+    PICKDATE_SPANATTRS   Pango <span> attributes used on the weekday header.
+    PICKDATE_THEMESTR    Theme string used to override config.rasi .
 
 Defaults:
 
-    PICKDATE_FMT='%$default_format'
+    PICKDATE_FMT='${default_format//%/%%}'
     PICKDATE_CAL='$default_cal'
     PICKDATE_BUTTONS='$default_buttons'
     # see https://docs.gtk.org/Pango/pango_markup.html
@@ -93,6 +104,41 @@ See Also:
 if [[ "$*" == *--help* ]]; then
 	die 0 "$usage"
 fi
+
+# parse options
+action=print
+rofiargs=
+declare -A anchors
+anchors=(
+	[northwest]=southeast [north]=south   [northeast]=southwest
+	[west]=east           [center]=center [east]=west
+	[southwest]=northeast [south]=north   [southeast]=northwest
+	[top]=northeast [bottom]=southeast
+)
+while getopts "h:c:m:pw:" opt; do
+	case $opt in
+	c) action=copy; clipboard="$OPTARG" ;;
+	m)
+		if [[ "${!anchors[@]}" != *$OPTARG* ]]; then
+			warn "Invalid position: $OPTARG"
+			die "Try e.g. 'northwest' or 'center' instead"
+		fi
+		rofiargs='-m -3'
+		PICKDATE_THEMESTR+="window {anchor: ${anchors[$OPTARG]}; location: northwest;}"
+	;;
+	p) action=print ;;
+	w)
+		if [[ "${!anchors[@]}" != *$OPTARG* ]]; then
+			warn "Invalid position: $OPTARG"
+			die "Try e.g. 'northwest' or 'center' instead"
+		fi
+		rofiargs='-m -2'
+		PICKDATE_THEMESTR+="window {anchor: $OPTARG; location: $OPTARG;}"
+	;;
+	h) die 0 "$usage" ;;
+	esac
+done
+shift $((OPTIND-1))
 
 # parse args
 if [[ -z "$ROFI_RETV" ]]; then
@@ -139,7 +185,7 @@ cellwidth=$(( (${#weekdays}+1) / 7 ))
 
 # figure out how the script was called
 case "$ROFI_RETV" in
-"") # script called directly by user
+"") # script called directly
 
 	# set styling
 	themestr="configuration {
@@ -155,11 +201,18 @@ case "$ROFI_RETV" in
 	selected="$(selections "$days" $cellwidth | cat -n | awk "/\S\s*$day\s*$/ {print \$1 - 1}")"
 	trap 'rm -f "$_PICKDATE_TMP"' EXIT
 	export _PICKDATE_TMP="$(mktemp --tmpdir "$prog.XXXXXXXXXX")" || exit 1
-	rofi -show date -modi "date:$0" \
+	rofi $rofiargs -show date -modi "date:$0" \
 		-selected-row "$selected" \
 		-theme-str "$themestr"
-	cat "$_PICKDATE_TMP"
-	[[ -n $(<"$_PICKDATE_TMP") ]]
+
+	# do something with the output
+	output="$(<"$_PICKDATE_TMP")"
+	if [[ $action == print ]]; then
+		echo "$output"
+	elif [[ $action == copy ]]; then
+		echo -n "$output" | xclip -selection "$clipboard"
+	fi
+	[[ -n "$output" ]]
 	exit
 ;;
 0) # rofi: initial call of script
