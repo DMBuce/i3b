@@ -20,11 +20,11 @@ default_themestr="configuration {$custom_keybinds"'
 }'
 
 # environment variables
-PICKDATE_FMT="${PICKDATE_FMT-$default_format}"
-PICKDATE_CAL="${PICKDATE_CAL-$default_cal}"
-PICKDATE_BUTTONS="${PICKDATE_BUTTONS-$default_buttons}"
-PICKDATE_SPANATTRS="${PICKDATE_SPANATTRS-$default_attrs}"
-PICKDATE_THEMESTR="${PICKDATE_THEMESTR-$default_themestr}"
+export PICKDATE_FMT="${PICKDATE_FMT-$default_format}"
+export PICKDATE_CAL="${PICKDATE_CAL-$default_cal}"
+export PICKDATE_BUTTONS="${PICKDATE_BUTTONS-$default_buttons}"
+export PICKDATE_SPANATTRS="${PICKDATE_SPANATTRS-$default_attrs}"
+export PICKDATE_THEMESTR="${PICKDATE_THEMESTR-$default_themestr}"
 
 # prints message to stderr
 warn() {
@@ -136,6 +136,7 @@ while getopts "h:c:m:pw:" opt; do
 		PICKDATE_THEMESTR+="window {anchor: $OPTARG; location: $OPTARG;}"
 	;;
 	h) die 0 "$usage" ;;
+	*) exit 1 ;;
 	esac
 done
 shift $((OPTIND-1))
@@ -207,43 +208,41 @@ case "$ROFI_RETV" in
 
 	# do something with the output
 	output="$(<"$_PICKDATE_TMP")"
-	if [[ $action == print ]]; then
+	if [[ $action == print && -n "$output" ]]; then
 		echo "$output"
 	elif [[ $action == copy ]]; then
 		echo -n "$output" | xclip -selection "$clipboard"
 	fi
 	[[ -n "$output" ]]
-	exit
 ;;
 0) # rofi: initial call of script
+
+	# set rofi options
+	echo -en "\0prompt\x1f$prompt\n"
+	echo -en "\0message\x1f<span $PICKDATE_SPANATTRS>$weekdays </span>\n"
+	echo -en "\0no-custom\x1ftrue\n"
+	echo -en "\0use-hot-keys\x1ftrue\n"
+
+	# check if we're displaying current month
+	currentmonth=0
+	[[ "$year-$month" == $(date +'%-Y-%-m') ]] && currentmonth=1
+
+	# set rofi selections
+	selections "$days" $cellwidth | awk "
+		$currentmonth && /^\s*$day\s*$/ {print \"\0active\x1f\" NR-1}
+		/[0-9]/    {printf \$0 \"\0info\x1f$year-$month\n\"}
+		/[a-zA-Z]/ {printf \$0 \"\0info\x1f$year-$month\x1fnonselectable\x1ftrue\n\"}
+		/^\s*$/    {printf \$0 \"\0info\x1f$year-$month\x1fnonselectable\x1ftrue\n\"}
+		/[^0-9a-zA-Z ]/ {printf \$0 \"\0info\x1f$year-$month\n\"}
+	"
 ;;
 1) # rofi: selected an entry
 	day="$1"
 	date -d "$year-$month-$day" +"${PICKDATE_FMT#+}" > "$_PICKDATE_TMP"
-	exit
 ;;
 2) # rofi: selected a custom entry
 	warn "Custom entry selected. This shouldn't happen."
 	die "If you didn't explicitly set \$ROFI_RETV, please report as a bug!"
 ;;
 esac
-
-# set rofi options
-echo -en "\0prompt\x1f$prompt\n"
-echo -en "\0message\x1f<span $PICKDATE_SPANATTRS>$weekdays </span>\n"
-echo -en "\0no-custom\x1ftrue\n"
-echo -en "\0use-hot-keys\x1ftrue\n"
-
-# check if we're displaying current month
-currentmonth=0
-[[ "$year-$month" == $(date +'%-Y-%-m') ]] && currentmonth=1
-
-# set rofi selections
-selections "$days" $cellwidth | awk "
-	$currentmonth && /^\s*$day\s*$/ {print \"\0active\x1f\" NR-1}
-	/[0-9]/    {printf \$0 \"\0info\x1f$year-$month\n\"}
-	/[a-zA-Z]/ {printf \$0 \"\0info\x1f$year-$month\x1fnonselectable\x1ftrue\n\"}
-	/^\s*$/    {printf \$0 \"\0info\x1f$year-$month\x1fnonselectable\x1ftrue\n\"}
-	/[^0-9a-zA-Z ]/ {printf \$0 \"\0info\x1f$year-$month\n\"}
-"
 

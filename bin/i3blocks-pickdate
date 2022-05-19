@@ -1,6 +1,12 @@
 #!/bin/bash
 # i3blocks support for pickdate
 
+# parse args
+for dec in "$@"; do
+	[[ $dec == --help ]] && continue
+	declare "$dec" || exit
+done
+
 # defaults
 BAR_POS="${BAR_POS-top}"
 OPTIONS="${OPTIONS--c primary}${BAR_POS+ -m $BAR_POS}"
@@ -18,11 +24,13 @@ for var in FMT CAL BUTTONS SPANATTRS THEMESTR; do
 done
 
 # print help output
-usage="Usage: i3blocks-pickdate
+usage="Usage: i3blocks-pickdate [OPTION=value] [...]
 
     Shows the date in i3blocks and runs 'pickdate' when clicked on.
+    Options for i3blocks can be provided as environment variables or on
+    the command line.
 
-Default Config:
+Example Config:
 
     [pickdate]
     command=/usr/bin/i3blocks-pickdate
