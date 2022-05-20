@@ -34,7 +34,8 @@ Defaults:
     PICKDATE_BUTTONS=' <:<<: .:>>: >'
     # see https://docs.gtk.org/Pango/pango_markup.html#the-span-attributes
     PICKDATE_SPANATTRS='weight="bold"'
-    PICKDATE_THEMESTR='configuration {
+    PICKDATE_THEMESTR='* { font: "mono 16"; }
+    configuration {
     	kb-custom-1: "p";
     	kb-custom-2: "n";
     	kb-custom-3: "P,less";

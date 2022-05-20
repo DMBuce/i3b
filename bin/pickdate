@@ -13,7 +13,8 @@ custom_keybinds='
 	kb-custom-3: "P,less";
 	kb-custom-4: "N,greater";
 	kb-custom-5: "period";'
-default_themestr="configuration {$custom_keybinds"'
+default_themestr="* { font: \"mono 16\"; }
+configuration {$custom_keybinds"'
 	kb-move-char-back: "h,Left,Control+b";
 	kb-move-char-forward: "l,Right,Control+f";
 	kb-row-up: "k,Up,Control+p,ISO_Left_Tab";
