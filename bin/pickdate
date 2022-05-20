@@ -237,8 +237,7 @@ case "$ROFI_RETV" in
 	date -d "$year-$month-$day" +"${PICKDATE_FMT#+}" > "$_PICKDATE_TMP"
 ;;
 2) # rofi: selected a custom entry
-	warn "Custom entry selected. This shouldn't happen."
-	die "If you didn't explicitly set \$ROFI_RETV, please report as a bug!"
+	die "Unknown entry selected (this is a bug): $1"
 ;;
 esac
 
