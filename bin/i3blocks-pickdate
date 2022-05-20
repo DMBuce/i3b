@@ -35,6 +35,7 @@ Example Config:
     [pickdate]
     command=/usr/bin/i3blocks-pickdate
     BAR_POS=top
+    OPTIONS=
     DISPLAY_FORMAT=%a %Y-%m-%d %H:%M
     CMD=echo -n \"\$REPLY\" | xclip -selection primary
     FMT=%a, %b %-d
