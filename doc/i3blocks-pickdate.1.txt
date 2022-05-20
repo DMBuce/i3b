@@ -11,7 +11,7 @@ Example Config:
     BAR_POS=top
     DISPLAY_FORMAT=%a %Y-%m-%d %H:%M
     CMD=echo -n "$REPLY" | xclip -selection primary
-    FMT=%F
+    FMT=%a, %b %-d
     CAL=cal
     BUTTONS= <:<<: .:>>: >
     SPANATTRS=weight="bold"

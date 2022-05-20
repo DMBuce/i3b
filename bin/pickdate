@@ -72,8 +72,8 @@ usage="Usage: $prog [OPTIONS]
 
 Options:
 
-    -c COMMAND     Run COMMAND with \$REPLY set to the selected date.
-    -f FORMAT      Control the output with a date-compatible FORMAT.
+    -r COMMAND     Run COMMAND with \$REPLY set to the selected date.
+    -f FORMAT      Control the output with a date(1) compatible FORMAT.
     -m POSITION    Position rofi with respect to the mouse.
     -w POSITION    Position rofi with respect to the focused window.
     -h, --help     Print this help message and exit.
@@ -117,9 +117,9 @@ anchors=(
 	[southwest]=northeast [south]=north   [southeast]=northwest
 	[top]=northeast [bottom]=southeast
 )
-while getopts "c:f:m:w:h:" opt; do
+while getopts "r:f:m:w:h:" opt; do
 	case $opt in
-	c) PICKDATE_CMD="$OPTARG" ;;
+	r) PICKDATE_CMD="$OPTARG" ;;
 	f) PICKDATE_FMT="$OPTARG" ;;
 	m)
 		if [[ "${!anchors[@]}" != *$OPTARG* ]]; then
