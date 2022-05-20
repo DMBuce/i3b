@@ -143,6 +143,9 @@ while getopts "r:f:m:w:h:" opt; do
 done
 shift $((OPTIND-1))
 
+# parse args
+(( $# != 0 )) && die "$usage"
+
 # parse $ROFI_INFO
 export ROFI_INFO="${ROFI_INFO-$(date +'%-Y-%-m')}"
 IFS=- read year month day junk <<< "$ROFI_INFO"
