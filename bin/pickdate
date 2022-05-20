@@ -144,7 +144,7 @@ done
 shift $((OPTIND-1))
 
 # parse args
-(( $# != 0 )) && die "$usage"
+(( $# > 1 )) && die "$usage"
 
 # parse $ROFI_INFO
 export ROFI_INFO="${ROFI_INFO-$(date +'%-Y-%-m')}"
