@@ -208,7 +208,7 @@ case "$ROFI_RETV" in
 		-theme-str "$themestr"
 
 	# do something with the output
-	REPLY="$(<"$_PICKDATE_TMP")"
+	read -r < "$_PICKDATE_TMP"
 	[[ -n "$REPLY" ]] && eval "$PICKDATE_CMD"
 ;;
 0) # rofi: initial call of script
