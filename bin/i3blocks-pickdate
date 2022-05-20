@@ -9,12 +9,12 @@ done
 
 # defaults
 BAR_POS="${BAR_POS-top}"
-OPTIONS="${OPTIONS--c primary}${BAR_POS+ -m $BAR_POS}"
+OPTIONS="${BAR_POS+ -m $BAR_POS}"
 DISPLAY_FORMAT="${DISPLAY_FORMAT-%a %Y-%m-%d %H:%M}"
 
 # figure out environment to use
 env=
-for var in FMT CAL BUTTONS SPANATTRS THEMESTR; do
+for var in CMD FMT CAL BUTTONS SPANATTRS THEMESTR; do
 	# escape double quotes for 'i3-msg exec'
 	if [[ -v $var ]]; then
 		env+=" PICKDATE_$var='${!var//\"/\\\"}'"
@@ -35,8 +35,8 @@ Example Config:
     [pickdate]
     command=/usr/bin/i3blocks-pickdate
     BAR_POS=top
-    OPTIONS=-c primary
     DISPLAY_FORMAT=%a %Y-%m-%d %H:%M
+    CMD=echo -n \"\$REPLY\" | xclip -selection primary
     FMT=%F
     CAL=cal
     BUTTONS= <:<<: .:>>: >
