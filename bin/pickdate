@@ -117,7 +117,7 @@ anchors=(
 	[southwest]=northeast [south]=north   [southeast]=northwest
 	[top]=northeast [bottom]=southeast
 )
-while getopts "r:f:m:w:h:" opt; do
+while getopts "r:f:m:w:h" opt; do
 	case $opt in
 	r) PICKDATE_CMD="$OPTARG" ;;
 	f) PICKDATE_FMT="$OPTARG" ;;
