@@ -181,9 +181,9 @@ esac
 # get days of month
 cal="$($PICKDATE_CAL $month $year)"
 prompt="$(awk 'NR==1 {print}' <<< "$cal")"
-weekdays="$(awk 'NR==2 {print}' <<< "$cal")"
+weekdays="$(awk 'NR==2 {print}' <<< "$cal") "
 days="$(awk 'NR>2 {print}' <<< "$cal")"
-cellwidth=$(( (${#weekdays}+1) / 7 ))
+cellwidth=$(( ${#weekdays} / 7 ))
 
 # figure out how the script was called
 case "$ROFI_RETV" in
@@ -194,7 +194,7 @@ case "$ROFI_RETV" in
 		$custom_keybinds
 	}
 	$PICKDATE_THEMESTR
-	window { width: $((${#weekdays}+2))ch; }
+	window { width: $((${#weekdays}+1))ch; }
 	listview { columns:7; lines:$(( $(wc -l <<< "$days") + (${#b[@]}?1:0) )); scrollbar: false; }
 	inputbar { children: [prompt]; }
 	"
@@ -215,7 +215,7 @@ case "$ROFI_RETV" in
 
 	# set rofi options
 	echo -en "\0prompt\x1f$prompt\n"
-	echo -en "\0message\x1f<span $PICKDATE_SPANATTRS>$weekdays </span>\n"
+	echo -en "\0message\x1f<span $PICKDATE_SPANATTRS>$weekdays</span>\n"
 	echo -en "\0no-custom\x1ftrue\n"
 	echo -en "\0use-hot-keys\x1ftrue\n"
 
