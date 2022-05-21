@@ -11,7 +11,7 @@ default_themestr='entry {placeholder:"Press hotkey";}'
 ROFI_BLEZZ_THEMESTR="${ROFI_BLEZZ_THEMESTR-$default_themestr}"
 
 # check args
-usage="Syntax: ${0##*/} [section] [config] [rofi args]
+usage="Usage: ${0##*/} [menu] [config] [rofi args]
 
     Run rofi in blezz mode with a different starting menu. The
     \$ROFI_BLEZZ_THEMESTR environment variable can be used to override

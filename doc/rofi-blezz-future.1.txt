@@ -1,4 +1,4 @@
-Usage: rofi-blezz [menu] [config] [rofi args]
+Usage: rofi-blezz-future [menu] [rofi args]
 
     Run rofi in blezz mode with a different starting menu. The
     $ROFI_BLEZZ_THEMESTR environment variable can be used to override
