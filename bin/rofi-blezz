@@ -6,8 +6,18 @@ file="${2-$HOME/.config/blezz/content}"
 pattern="^\s*$section\s*:$"
 shift 2
 
+# environment
+default_themestr='entry {placeholder:"Press hotkey";}'
+ROFI_BLEZZ_THEMESTR="${ROFI_BLEZZ_THEMESTR-$default_themestr}"
+
 # check args
-usage="Syntax: ${0##*/} [section] [config] [rofi args]"
+usage="Syntax: ${0##*/} [section] [config] [rofi args]
+
+    Run rofi in blezz mode with a different starting menu. The
+    \$ROFI_BLEZZ_THEMESTR environment variable can be used to override
+    rofi's theme on a per-setting basis. The default is
+    '$default_themestr'.
+"
 if [[ "$section $file $*" == *--help* ]]; then
 	echo "$usage" >&2
 	exit
@@ -20,7 +30,7 @@ elif ! grep -q "$pattern" "$file"; then
 fi
 
 # run rofi with blezz module and modified config
-rofi -show blezz -modi blezz -auto-select -matching normal -theme-str 'window {width:50%;} entry {placeholder:"Press hotkey";} * {columns:4;}' "$@" -blezz-config <(
+rofi -show blezz -modi blezz -auto-select -matching normal -theme-str "$ROFI_BLEZZ_THEMESTR" "$@" -blezz-config <(
 	sed -n "/$pattern/,$ p" "$file"
 	sed -n "/$pattern/!p; /$pattern/q" "$file"
 )
