@@ -15,8 +15,7 @@ usage="Usage: ${0##*/} [menu] [config] [rofi args]
 
     Run rofi in blezz mode with a different starting menu. The
     \$ROFI_BLEZZ_THEMESTR environment variable can be used to override
-    rofi's theme on a per-setting basis. The default is
-    '$default_themestr'.
+    rofi's theme. The default is '$default_themestr'.
 "
 if [[ "$section $file $*" == *--help* ]]; then
 	echo "$usage" >&2

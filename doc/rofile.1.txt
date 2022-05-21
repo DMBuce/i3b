@@ -1,0 +1,19 @@
+Usage: rofile PROFILE [ARGS]
+
+    Run rofi with arguments taken from PROFILE's environment variables.
+    Any additional ARGS are passed to rofi as well.
+
+    When invoked as 'rofile foo bar baz', rofile runs
+
+        rofi -theme-str "$ROFI_FOO_THEMESTR" $ROFI_FOO_ARGS bar baz
+
+Example
+
+    ROFI_BLEZZ_ARGS='-show blezz -modi blezz -auto-select -matching normal -blezz-config'
+    ROFI_BLEZZ_THEMESTR='entry {placeholder:"Press hotkey";}'
+    export ROFI_BLEZZ_ARGS ROFI_BLEZZ_THEMESTR
+    rofile blezz ~/.config/blezz/content
+    #^this is the same as:
+    #
+    # rofi -theme-str 'entry {placeholder:"Press hotkey";}'     #      -show blezz -modi blezz -auto-select -matching normal -blezz-config     #      ~/.config/blezz/content
+
