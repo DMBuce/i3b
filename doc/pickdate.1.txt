@@ -1,54 +1,123 @@
-Usage: pickdate [OPTIONS]
+:linkcss:
+//:copycss:
+:stylesheet: style.css
+:toc:
 
-    Pick a date with rofi. The following keybindings are available.
+pickdate(1)
+===========
 
-        p/n        Go to previous/next month
-        P/N, </>   Go to previous/next year
-        .          Jump to current month
-        h/j/k/l    Vim-like movement (default movement bindings also work)
+Name
+----
 
-Options:
+pickdate - Rofi date picker.
 
-    -r COMMAND     Run COMMAND with $REPLY set to the selected date.
-    -f FORMAT      Control the output with a date(1) compatible FORMAT.
-    -m POSITION    Position rofi with respect to the mouse.
-    -w POSITION    Position rofi with respect to the focused window.
-    -h, --help     Print this help message and exit.
+Synopsis
+--------
 
-    Valid POSITIONs: center, north, east, southwest, etc.
+'pickdate' [options]
 
-Environment Variables:
+Description
+-----------
 
-    PICKDATE_CMD         Default command for the -r option.
-    PICKDATE_FMT         Default format for the -f option.
-    PICKDATE_CAL         The cal command to use, e.g. 'cal -m' or 'ncal -hb'.
-    PICKDATE_BUTTONS     Colon-delimited list of buttons shown on the bottom.
-    PICKDATE_SPANATTRS   Pango <span> attributes used on the weekday header.
-    PICKDATE_THEMESTR    Theme string used to override config.rasi .
-    TMPDIR               Place temporary file here instead of in /tmp .
+Picks a date with rofi. The following keybindings are available.
 
-Defaults:
+* Go to previous or next month: p, n
+* Go to previous or next year: P, N, <, >
+* Jump to current month: .
+* Vim-like movement keys (default movement bindings also work): h, j, k, l
 
-    PICKDATE_CMD='echo "$REPLY"'
-    PICKDATE_FMT='%F'
-    PICKDATE_CAL='cal'
-    PICKDATE_BUTTONS=' <:<<: .:>>: >'
-    # see https://docs.gtk.org/Pango/pango_markup.html#the-span-attributes
-    PICKDATE_SPANATTRS='weight="bold"'
-    PICKDATE_THEMESTR='* { font: "mono 16"; }
-    configuration {
-    	kb-custom-1: "p";
-    	kb-custom-2: "n";
-    	kb-custom-3: "P,less";
-    	kb-custom-4: "N,greater";
-    	kb-custom-5: "period";
-    	kb-move-char-back: "h,Left,Control+b";
-    	kb-move-char-forward: "l,Right,Control+f";
-    	kb-row-up: "k,Up,Control+p,ISO_Left_Tab";
-    	kb-row-down: "j,Down,Control+n";
-    }'
+Options
+-------
 
-See Also:
+**-r** command {nbsp} {nbsp} (default: `$PICKDATE_CMD` or `'echo "$REPLY"'`)::
+	Run 'command' once a date is selected. `$REPLY` is set to the selected date.
 
-    rofi(1), rofi-keys(5), rofi-theme(5), cal(1), ncal(1)
+**-f** format {nbsp} {nbsp} (default: `$PICKDATE_FMT` or `%F`)::
+	The date(1) compatible format to output.
 
+**-m** position::
+	Position rofi with respect to the mouse instead of using rofi's theme to
+	determine positioning.
++
+Valid values for 'position' are `center`, `north`, `south`, `east`, `west`,
+`northeast`, `northwest`, `southeast`, and `southwest`.
+
+**-w** position::
+	Position rofi with respect to the focused window.
+	By default, the position is determined by rofi's theme.
+	See the '-m' option, above, for valid positions.
+
+**-h, --help**::
+	Print a help message and exit.
+
+Environment Variables
+---------------------
+
+**PICKDATE_CMD**=command {nbsp} {nbsp} (default: `'echo "$REPLY"'`)::
+	The default command for the -r option.
+
+**PICKDATE_FMT**=format {nbsp} {nbsp} (default: `%F`)::
+	The default format for the -f option.
+
+**PICKDATE_CAL**=command {nbsp} {nbsp} (default: `cal`)::
+	The cal command to use. Commands whose output deviate too much from cal(1)
+	are not supported, but you might set this to `cal -m`
+	to get weeks that start with Monday, for example.
+
+**PICKDATE_BUTTONS**=btn1:btn2:btn3:btn4:btn5 {nbsp} {nbsp} (default: `' <:<<: .:>>: >'`)::
+	Colon-delimited list of the "previous month", "previous year", "current
+	month", "next year", and "next month" buttons shown on the bottom.
+
+**PICKDATE_SPANATTRS**=attributes {nbsp} {nbsp} (default: `'weight="bold"'`)::
+	Pango `<span>` attributes used on the weekday header.
+	See https://docs.gtk.org/Pango/pango_markup.html#the-span-attributes
+	for the available attributes.
+
+**PICKDATE_THEMESTR**=themestring {nbsp} {nbsp} (default: see below)::
+	Theme string used to override config.rasi .
+	The default is:
+
+ PICKDATE_THEMESTR='* { font: "mono 16"; }
+ configuration {
+ 	kb-custom-1: "p";
+ 	kb-custom-2: "n";
+ 	kb-custom-3: "P,less";
+ 	kb-custom-4: "N,greater";
+ 	kb-custom-5: "period";
+ 	kb-move-char-back: "h,Left,Control+b";
+ 	kb-move-char-forward: "l,Right,Control+f";
+ 	kb-row-up: "k,Up,Control+p,ISO_Left_Tab";
+ 	kb-row-down: "j,Down,Control+n";
+ }'
++
+Setting this environment variable to `''` (an empty string) has no effect on
+custom keybindings (`kb-custom-*`), but restores the other properties to their
+defaults. Custom keybindings can be overriden by explicitly defining them in
+`$PICKDATE_THEMESTR`.
++
+The following properties are always set and can't be overridden. `<num>` is
+computed dynamically at runtime.
+
+ window { width: <num>ch; }
+ listview { columns: 7; lines: <num>; scrollbar: false; }
+ inputbar { children: [prompt]; }
+
+**TMPDIR**=directory {nbsp} {nbsp} (default: `/tmp`)::
+	The directory to use for temporary files.
+
+See Also
+--------
+
+rofi(1), rofi-keys(5), rofi-theme(5), cal(1), ncal(1), i3blocks-pickdate(1)
+
+Authors
+-------
+i3move was written by
+link:https://github.com/DMBuce[DMBuce].
+
+Distribution
+------------
+The latest version of i3move can be downloaded from
+link:https://github.com/DMBuce/i3b[the i3b project].
+
+// vim: set syntax=asciidoc:

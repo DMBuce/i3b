@@ -1,0 +1,204 @@
+'\" t
+.\"     Title: pickdate
+.\"    Author: [see the "AUTHOR(S)" section]
+.\" Generator: Asciidoctor 2.0.17
+.\"      Date: 2022-05-22
+.\"    Manual: \ \&
+.\"    Source: \ \&
+.\"  Language: English
+.\"
+.TH "PICKDATE" "1" "2022-05-22" "\ \&" "\ \&"
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.ss \n[.ss] 0
+.nh
+.ad l
+.de URL
+\fI\\$2\fP <\\$1>\\$3
+..
+.als MTO URL
+.if \n[.g] \{\
+.  mso www.tmac
+.  am URL
+.    ad l
+.  .
+.  am MTO
+.    ad l
+.  .
+.  LINKSTYLE blue R < >
+.\}
+.SH "NAME"
+pickdate \- Rofi date picker.
+.SH "SYNOPSIS"
+.sp
+\fIpickdate\fP [options]
+.SH "DESCRIPTION"
+.sp
+Picks a date with rofi. The following keybindings are available.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.  sp -1
+.  IP \(bu 2.3
+.\}
+Go to previous or next month: p, n
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.  sp -1
+.  IP \(bu 2.3
+.\}
+Go to previous or next year: P, N, <, >
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.  sp -1
+.  IP \(bu 2.3
+.\}
+Jump to current month: .
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.  sp -1
+.  IP \(bu 2.3
+.\}
+Vim\-like movement keys (default movement bindings also work): h, j, k, l
+.RE
+.SH "OPTIONS"
+.sp
+\fB\-r\fP command \~ \~ (default: \f(CR$PICKDATE_CMD\fP or \f(CR\*(Aqecho "$REPLY"\*(Aq\fP)
+.RS 4
+Run \fIcommand\fP once a date is selected. \f(CR$REPLY\fP is set to the selected date.
+.RE
+.sp
+\fB\-f\fP format \~ \~ (default: \f(CR$PICKDATE_FMT\fP or \f(CR%F\fP)
+.RS 4
+The date(1) compatible format to output.
+.RE
+.sp
+\fB\-m\fP position
+.RS 4
+Position rofi with respect to the mouse instead of using rofi\(cqs theme to
+determine positioning.
+.sp
+Valid values for \fIposition\fP are \f(CRcenter\fP, \f(CRnorth\fP, \f(CRsouth\fP, \f(CReast\fP, \f(CRwest\fP,
+\f(CRnortheast\fP, \f(CRnorthwest\fP, \f(CRsoutheast\fP, and \f(CRsouthwest\fP.
+.RE
+.sp
+\fB\-w\fP position
+.RS 4
+Position rofi with respect to the focused window.
+By default, the position is determined by rofi\(cqs theme.
+See the \fI\-m\fP option, above, for valid positions.
+.RE
+.sp
+\fB\-h, \-\-help\fP
+.RS 4
+Print a help message and exit.
+.RE
+.SH "ENVIRONMENT VARIABLES"
+.sp
+\fBPICKDATE_CMD\fP=command \~ \~ (default: \f(CR\*(Aqecho "$REPLY"\*(Aq\fP)
+.RS 4
+The default command for the \-r option.
+.RE
+.sp
+\fBPICKDATE_FMT\fP=format \~ \~ (default: \f(CR%F\fP)
+.RS 4
+The default format for the \-f option.
+.RE
+.sp
+\fBPICKDATE_CAL\fP=command \~ \~ (default: \f(CRcal\fP)
+.RS 4
+The cal command to use. Commands whose output deviate too much from cal(1)
+are not supported, but you might set this to \f(CRcal \-m\fP
+to get weeks that start with Monday, for example.
+.RE
+.sp
+\fBPICKDATE_BUTTONS\fP=btn1:btn2:btn3:btn4:btn5 \~ \~ (default: \f(CR\*(Aq <:<<: .:>>: >\*(Aq\fP)
+.RS 4
+Colon\-delimited list of the "previous month", "previous year", "current
+month", "next year", and "next month" buttons shown on the bottom.
+.RE
+.sp
+\fBPICKDATE_SPANATTRS\fP=attributes \~ \~ (default: \f(CR\*(Aqweight="bold"\*(Aq\fP)
+.RS 4
+Pango \f(CR<span>\fP attributes used on the weekday header.
+See \c
+.URL "https://docs.gtk.org/Pango/pango_markup.html#the\-span\-attributes" ""
+for the available attributes.
+.RE
+.sp
+\fBPICKDATE_THEMESTR\fP=themestring \~ \~ (default: see below)
+.RS 4
+Theme string used to override config.rasi .
+The default is:
+.sp
+.if n .RS 4
+.nf
+.fam C
+PICKDATE_THEMESTR=\*(Aq* { font: "mono 16"; }
+configuration {
+        kb\-custom\-1: "p";
+        kb\-custom\-2: "n";
+        kb\-custom\-3: "P,less";
+        kb\-custom\-4: "N,greater";
+        kb\-custom\-5: "period";
+        kb\-move\-char\-back: "h,Left,Control+b";
+        kb\-move\-char\-forward: "l,Right,Control+f";
+        kb\-row\-up: "k,Up,Control+p,ISO_Left_Tab";
+        kb\-row\-down: "j,Down,Control+n";
+}\*(Aq
+.fam
+.fi
+.if n .RE
+.sp
+Setting this environment variable to \f(CR\*(Aq\*(Aq\fP (an empty string) has no effect on
+custom keybindings (\f(CRkb\-custom\-*\fP), but restores the other properties to their
+defaults. Custom keybindings can be overriden by explicitly defining them in
+\f(CR$PICKDATE_THEMESTR\fP.
+.sp
+The following properties are always set and can\(cqt be overridden. \f(CR<num>\fP is
+computed dynamically at runtime.
+.sp
+.if n .RS 4
+.nf
+.fam C
+window { width: <num>ch; }
+listview { columns: 7; lines: <num>; scrollbar: false; }
+inputbar { children: [prompt]; }
+.fam
+.fi
+.if n .RE
+.RE
+.sp
+\fBTMPDIR\fP=directory \~ \~ (default: \f(CR/tmp\fP)
+.RS 4
+The directory to use for temporary files.
+.RE
+.SH "SEE ALSO"
+.sp
+rofi(1), rofi\-keys(5), rofi\-theme(5), cal(1), ncal(1), i3blocks\-pickdate(1)
+.SH "AUTHORS"
+.sp
+i3move was written by
+.URL "https://github.com/DMBuce" "DMBuce" "."
+.SH "DISTRIBUTION"
+.sp
+The latest version of i3move can be downloaded from
+.URL "https://github.com/DMBuce/i3b" "the i3b project" "."
