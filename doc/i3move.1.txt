@@ -71,7 +71,7 @@ the description of the '--snap' and '--clamp' options for details.
 
 **-i, --inside-distance** <distance> {nbsp} {nbsp} (default: `w`)::
 	The distance to move the window when it's inside the margins.
-	See the <<DISTANCE,DISTANCE>> section for the format of 'distance'.
+	See the <<Distance,Distance>> section for the format of 'distance'.
 +
 This option is ignored and set to `2` if 'direction' is
 `top`, `bottom`, `port`, `starboard`, `north`, `south`, `east`, or `west`.
