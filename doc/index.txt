@@ -24,6 +24,7 @@ by dropping them in your `$PATH` and making them executable.
 * i3scratchmark: bash, jq
 * pickdate: rofi, cal, awk
 * rofi-blezz: bash, rofi, rofi-blezz, sed
+* rofile: bash, rofi
 
 == Utilities
 
