@@ -1,4 +1,5 @@
 #!/bin/bash
+# requirements: bash, rofi
 
 # check args
 prog="${0##*/}"

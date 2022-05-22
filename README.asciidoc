@@ -55,6 +55,18 @@ Use `pickdate` as a dropdown calendar in i3blocks.
 
 Example usage: https://dmbuce.github.io/i3b/i3blocks-pickdate.1.html#_examples
 
+=== https://dmbuce.github.io/i3b/i3blocks-monit.1.html[i3blocks-monit]
+
+Add link:https://mmonit.com/monit/[monit] services summary to i3blocks.
+
+image::https://i.imgur.com/HuStDiw.png[Custom Labels]
+
+Default Look: https://i.imgur.com/1pK873k.png
+
+Minimal Look: https://i.imgur.com/Ki0SCD5.png
+
+Example usage: https://dmbuce.github.io/i3b/i3blocks-monit.1.html#_examples
+
 === https://dmbuce.github.io/i3b/rofi-blezz.1.html[rofi-blezz]
 
 Run link:https://github.com/davatorium/rofi-blezz[rofi's blezz module]
@@ -67,18 +79,6 @@ this is a workaround for rofi's blezz module not having such functionality.
 Use environment variables to configure default options to pass to rofi.
 
 Example usage: https://dmbuce.github.io/i3b/rofile.1.html#_examples
-
-=== https://dmbuce.github.io/i3b/i3blocks-monit.1.html[i3blocks-monit]
-
-Add link:https://mmonit.com/monit/[monit] services summary to i3blocks.
-
-image::https://i.imgur.com/HuStDiw.png[Custom Labels]
-
-Default Look: https://i.imgur.com/1pK873k.png
-
-Minimal Look: https://i.imgur.com/Ki0SCD5.png
-
-Example usage: https://dmbuce.github.io/i3b/i3blocks-monit.1.html#_examples
 
 == Documentation
 
