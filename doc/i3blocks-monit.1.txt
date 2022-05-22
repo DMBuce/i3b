@@ -1,23 +1,105 @@
-Usage: i3blocks-monit [OPTION=value] [...]
+:linkcss:
+//:copycss:
+:stylesheet: style.css
+:toc:
 
-    Report monit service states in pango format. Options for i3blocks
-    can be provided as environment variables or on the command line.
+i3blocks-monit(1)
+=================
 
-Example Config:
+Name
+----
 
-    [monit]
-    command=/usr/bin/i3blocks-monit
-    markup=pango
-    interval=3600
-    STYLE_UP=weight='bold' background='#009000' color='#FFFFFF'
-    STYLE_UMON=weight='bold' background='#F0F000' color='#000000'
-    STYLE_DOWN=weight='bold' background='#900000' color='#FFFFFF'
-    STYLE_INIT=weight='bold' background='#C09000' color='#FFFFFF'
-    LABEL_UP=UP
-    LABEL_UMON=UMON
-    LABEL_DOWN=DOWN
-    LABEL_INIT=INIT
-    ORDER=up unmonitored down initialising
-    SHOW_LABELS=1
-    SHOW_ZEROS=1
+i3blocks-monit - i3blocks bar block for monit services.
 
+Synopsis
+--------
+
+'i3blocks-monit' [OPTION=value] [...]
+
+Description
+-----------
+
+Report a summary of monit(1) service states. The output is in pango format and
+suitable for i3blocks(1). Options can be
+specified as environment variables or on the command line as 'OPTION=value'.
+
+Options
+-------
+
+**STYLE_UP**::
+	The link:https://docs.gtk.org/Pango/pango_markup.html#the-span-attributes[span attributes]
+	to apply to the number of up services.
+
+**STYLE_UMON**::
+	The link:https://docs.gtk.org/Pango/pango_markup.html#the-span-attributes[span attributes]
+	to apply to the number of unmonitored services.
+
+**STYLE_DOWN**::
+	The link:https://docs.gtk.org/Pango/pango_markup.html#the-span-attributes[span attributes]
+	to apply to the number of down services.
+
+**STYLE_INIT**::
+	The link:https://docs.gtk.org/Pango/pango_markup.html#the-span-attributes[span attributes]
+	to apply to the number of initialising services.
+
+**LABEL_UP**:: The label to use for up services.
+**LABEL_UMON**:: The label to use for unmonitored services.
+**LABEL_DOWN**:: The label to use for down services.
+**LABEL_INIT**:: The label to use for initialising services.
+**ORDER**::
+	The order to display up, unmonitored, down, and initialising services in.
+**SHOW_LABELS**:: `1` to show labels, `0` to suppress labels.
+**SHOW_ZEROS**:: `1` to show states with 0 total services, `0` to suppress them.
+
+Examples
+--------
+
+i3blocks config with default values:
+
+ [monit]
+ command=i3blocks-monit
+ markup=pango
+ interval=3600
+ STYLE_UP=weight='bold' background='#009000' color='#FFFFFF'
+ STYLE_UMON=weight='bold' background='#F0F000' color='#000000'
+ STYLE_DOWN=weight='bold' background='#900000' color='#FFFFFF'
+ STYLE_INIT=weight='bold' background='#C09000' color='#FFFFFF'
+ LABEL_UP=UP
+ LABEL_UMON=UMON
+ LABEL_DOWN=DOWN
+ LABEL_INIT=INIT
+ ORDER=up unmonitored down initialising
+ SHOW_LABELS=1
+ SHOW_ZEROS=1
+
+Nagios-like labels:
+
+ [monit]
+ command=i3blocks-monit
+ markup=pango
+ interval=3600
+ LABEL_UP=OK
+ LABEL_UMON=WARN
+ LABEL_DOWN=CRIT
+ LABEL_INIT=UNKN
+
+Minimal display:
+
+ [monit]
+ command=i3blocks-monit
+ markup=pango
+ interval=3600
+ SHOW_LABELS=0
+ SHOW_ZEROS=0
+
+Authors
+-------
+i3move was written by
+link:https://github.com/DMBuce[DMBuce].
+
+Distribution
+------------
+The latest version of i3move can be downloaded from
+link:https://github.com/DMBuce/i3b[the i3b project].
+
+// vim: set syntax=asciidoc:

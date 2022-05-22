@@ -23,9 +23,9 @@ a {
   color: blue;
   text-decoration: underline;
 }
-/*a:visited {
+a:visited {
   color: fuchsia;
-}*/
+}
 
 em {
   font-style: italic;
