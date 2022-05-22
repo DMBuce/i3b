@@ -45,8 +45,8 @@ Options
 **THEMESTR**=theme_string::
 	Used to set `\$PICKDATE_THEMESTR` for pickdate(1).
 
-Example
--------
+Examples
+--------
 
 Copy the selected date to the clipboard with 'xclip':
 
