@@ -65,12 +65,12 @@ Keybindings for i3's config:
 
 Authors
 -------
-i3move was written by
+i3scratchmark was written by
 link:https://github.com/DMBuce[DMBuce].
 
 Distribution
 ------------
-The latest version of i3move can be downloaded from
+The latest version of i3scratchmark can be downloaded from
 link:https://github.com/DMBuce/i3b[the i3b project].
 
 // vim: set syntax=asciidoc:
