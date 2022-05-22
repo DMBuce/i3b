@@ -28,12 +28,17 @@ When invoked as 'rofile foo bar baz', rofile runs
 Examples
 --------
 
+If you have these environment variables:
+
  ROFI_BLEZZ_ARGS='-show blezz -modi blezz -auto-select -matching normal -blezz-config'
  ROFI_BLEZZ_THEMESTR='entry {placeholder:"Press hotkey";}'
  export ROFI_BLEZZ_ARGS ROFI_BLEZZ_THEMESTR
+
+Then this:
+
  rofile blezz ~/.config/blezz/content
 
-^ This is the same as
+is the same as this:
 
  rofi -theme-str 'entry {placeholder:"Press hotkey";}' \
       -show blezz -modi blezz -auto-select -matching normal -blezz-config \

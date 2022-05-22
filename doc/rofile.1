@@ -48,18 +48,29 @@ rofi \-theme\-str "$ROFI_FOO_THEMESTR" $ROFI_FOO_ARGS bar baz
 .if n .RE
 .SH "EXAMPLES"
 .sp
+If you have these environment variables:
+.sp
 .if n .RS 4
 .nf
 .fam C
 ROFI_BLEZZ_ARGS=\*(Aq\-show blezz \-modi blezz \-auto\-select \-matching normal \-blezz\-config\*(Aq
 ROFI_BLEZZ_THEMESTR=\*(Aqentry {placeholder:"Press hotkey";}\*(Aq
 export ROFI_BLEZZ_ARGS ROFI_BLEZZ_THEMESTR
+.fam
+.fi
+.if n .RE
+.sp
+Then this:
+.sp
+.if n .RS 4
+.nf
+.fam C
 rofile blezz ~/.config/blezz/content
 .fam
 .fi
 .if n .RE
 .sp
-^ This is the same as
+is the same as this:
 .sp
 .if n .RS 4
 .nf

@@ -62,6 +62,12 @@ with a different starting menu.
 Similar to link:https://github.com/Blezzing/blezz[blezz's] `-d` option,
 this is a workaround for rofi's blezz module not having such functionality.
 
+=== https://dmbuce.github.io/i3b/rofile.1.html[rofile]
+
+Use environment variables to configure default options to pass to rofi.
+
+Example usage: https://dmbuce.github.io/i3b/rofile.1.html#_examples
+
 === https://dmbuce.github.io/i3b/i3blocks-monit.1.html[i3blocks-monit]
 
 Add link:https://mmonit.com/monit/[monit] services summary to i3blocks.

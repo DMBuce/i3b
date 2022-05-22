@@ -53,14 +53,19 @@ Any additional <em>args</em> are also passed to rofi.</p></div>
 <div class="sect1">
 <h2 id="_examples">Examples</h2>
 <div class="sectionbody">
+<div class="paragraph"><p>If you have these environment variables:</p></div>
 <div class="literalblock">
 <div class="content">
 <pre><code>ROFI_BLEZZ_ARGS='-show blezz -modi blezz -auto-select -matching normal -blezz-config'
 ROFI_BLEZZ_THEMESTR='entry {placeholder:"Press hotkey";}'
-export ROFI_BLEZZ_ARGS ROFI_BLEZZ_THEMESTR
-rofile blezz ~/.config/blezz/content</code></pre>
+export ROFI_BLEZZ_ARGS ROFI_BLEZZ_THEMESTR</code></pre>
 </div></div>
-<div class="paragraph"><p>^ This is the same as</p></div>
+<div class="paragraph"><p>Then this:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>rofile blezz ~/.config/blezz/content</code></pre>
+</div></div>
+<div class="paragraph"><p>is the same as this:</p></div>
 <div class="literalblock">
 <div class="content">
 <pre><code>rofi -theme-str 'entry {placeholder:"Press hotkey";}' \
@@ -88,7 +93,7 @@ rofile blezz ~/.config/blezz/content</code></pre>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2022-05-22 13:40:48 CDT
+ 2022-05-22 13:42:19 CDT
 </div>
 </div>
 </body>
