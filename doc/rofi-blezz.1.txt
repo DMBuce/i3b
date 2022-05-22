@@ -1,6 +1,6 @@
 Usage: rofi-blezz [menu] [config] [rofi args]
 
     Run rofi in blezz mode with a different starting menu. The
-    $ROFI_BLEZZ_THEMESTR environment variable can be used to override
-    rofi's theme. The default is 'entry {placeholder:"Press hotkey";}'.
+    $ROFI_BLEZZ_THEMESTR environment variable will be applied to rofi's
+    theme. The default is 'entry {placeholder:"Press hotkey";}' .
 
