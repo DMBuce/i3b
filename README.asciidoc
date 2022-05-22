@@ -33,28 +33,28 @@ Demo: https://i.imgur.com/IVnZ9fS.mp4
 
 Quick Start: https://dmbuce.github.io/i3b/i3move.1.html#EXAMPLES
 
-=== https://dmbuce.github.io/i3b/i3scratchmark.1.txt[i3scratchmark]
+=== https://dmbuce.github.io/i3b/i3scratchmark.1.html[i3scratchmark]
 
 Manage i3 scratchpad windows with marks.
 
-=== https://dmbuce.github.io/i3b/pickdate.1.txt[pickdate]
+=== https://dmbuce.github.io/i3b/pickdate.1.html[pickdate]
 
 A simple rofi date picker.
 
 image::https://i.imgur.com/TCnCXKU.png[Screenshot]
 
-=== https://dmbuce.github.io/i3b/i3blocks-pickdate.1.txt[i3blocks-pickdate]
+=== https://dmbuce.github.io/i3b/i3blocks-pickdate.1.html[i3blocks-pickdate]
 
 Use `pickdate` as a dropdown calendar in i3blocks.
 
-=== https://dmbuce.github.io/i3b/rofi-blezz.1.txt[rofi-blezz]
+=== https://dmbuce.github.io/i3b/rofi-blezz.1.html[rofi-blezz]
 
 Run link:https://github.com/davatorium/rofi-blezz[rofi's blezz module]
 with a different starting menu.
 Similar to link:https://github.com/Blezzing/blezz[blezz's] `-d` option,
 this is a workaround for rofi's blezz module not having such functionality.
 
-=== https://dmbuce.github.io/i3b/i3blocks-monit.1.txt[i3blocks-monit]
+=== https://dmbuce.github.io/i3b/i3blocks-monit.1.html[i3blocks-monit]
 
 Add link:https://mmonit.com/monit/[monit] services summary to i3blocks.
 

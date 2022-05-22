@@ -59,8 +59,14 @@ Default Look: https://i.imgur.com/1pK873k.png
 
 Minimal Look: https://i.imgur.com/Ki0SCD5.png
 
-== Terms and Conditions
+== Documentation
 
-See the LICENSE file for terms and conditions.
+Project documentation can be found in these files:
+
+* LICENSE - Terms and conditions
+* README - This document
+
+The changelog can be viewed on GitHub at
+https://github.com/DMBuce/i3b/commits/master .
 
 // vim: set syntax=asciidoc:
