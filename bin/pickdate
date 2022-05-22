@@ -89,6 +89,7 @@ Environment Variables:
     PICKDATE_BUTTONS     Colon-delimited list of buttons shown on the bottom.
     PICKDATE_SPANATTRS   Pango <span> attributes used on the weekday header.
     PICKDATE_THEMESTR    Theme string used to override config.rasi .
+    TMPDIR               Place temporary file here instead of in /tmp .
 
 Defaults:
 
@@ -213,6 +214,11 @@ case "$ROFI_RETV" in
 ;;
 0) # rofi: initial call of script
 
+	# check if called directly with rofi instead of through pickdate
+	if [[ -z "$1$_PICKDATE_TMP" ]]; then
+		warn "Invoked with 'rofi -modi'. To fix alignment issues, run 'pickdate' instead."
+	fi
+
 	# set rofi options
 	echo -en "\0prompt\x1f$prompt\n"
 	echo -en "\0message\x1f<span $PICKDATE_SPANATTRS>$weekdays</span>\n"
@@ -234,7 +240,11 @@ case "$ROFI_RETV" in
 ;;
 1) # rofi: selected an entry
 	day="$1"
-	date -d "$year-$month-$day" +"${PICKDATE_FMT#+}" > "$_PICKDATE_TMP"
+	if [[ -n "$_PICKDATE_TMP" ]]; then
+		date -d "$year-$month-$day" +"${PICKDATE_FMT#+}" >> "$_PICKDATE_TMP"
+	else
+		date -d "$year-$month-$day" +"Selection: ${PICKDATE_FMT#+}" >&2
+	fi
 ;;
 2) # rofi: selected a custom entry
 	die "Unknown entry selected (this is a bug): $1"

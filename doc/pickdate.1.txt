@@ -25,6 +25,7 @@ Environment Variables:
     PICKDATE_BUTTONS     Colon-delimited list of buttons shown on the bottom.
     PICKDATE_SPANATTRS   Pango <span> attributes used on the weekday header.
     PICKDATE_THEMESTR    Theme string used to override config.rasi .
+    TMPDIR               Place temporary file here instead of in /tmp .
 
 Defaults:
 
