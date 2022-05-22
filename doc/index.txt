@@ -64,4 +64,8 @@ Default Look: https://i.imgur.com/1pK873k.png
 
 Minimal Look: https://i.imgur.com/Ki0SCD5.png
 
+== Terms and Conditions
+
+See the LICENSE file for terms and conditions.
+
 // vim: set syntax=asciidoc:
