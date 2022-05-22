@@ -3,7 +3,11 @@
 :stylesheet: style.css
 :toc:
 
-= i3b - Buce's window manager scripts and configs
+= i3b
+
+== Description
+
+Buce's window manager scripts and configs.
 
 == Install
 
@@ -16,7 +20,7 @@ by dropping them in your `$PATH` and making them executable.
 
 {!grep '^# requires' bin/* | sed 's|bin/|* |; s/# requires//'}
 
-== Description
+== Utilities
 
 === https://dmbuce.github.io/i3b/i3move.1.html[i3move]
 
