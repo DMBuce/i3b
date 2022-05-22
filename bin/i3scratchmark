@@ -17,8 +17,19 @@ usage() {
 
 	Options:
 
+	    -m <mark>         Toggle between showing and hiding the marked window.
+	    -c <command>      The command to run if no mark exists.
+	    -i <i3-command>   An i3 command to run after marking a window.
+	    -s                Make marked windows sticky.
+
 	EOF
 }
+
+# show help output
+if [[ "$*" == *--help* ]]; then
+	usage
+	exit 1
+fi
 
 # parse options
 mark=cycle

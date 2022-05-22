@@ -15,5 +15,7 @@ Example
     rofile blezz ~/.config/blezz/content
     #^this is the same as:
     #
-    # rofi -theme-str 'entry {placeholder:"Press hotkey";}'     #      -show blezz -modi blezz -auto-select -matching normal -blezz-config     #      ~/.config/blezz/content
+    # rofi -theme-str 'entry {placeholder:"Press hotkey";}' \
+    #      -show blezz -modi blezz -auto-select -matching normal -blezz-config \
+    #      ~/.config/blezz/content
 

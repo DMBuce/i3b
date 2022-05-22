@@ -31,7 +31,7 @@
 i3scratchmark \- Flip through scratchpad windows.
 .SH "SYNOPSIS"
 .sp
-\fIi3scratchmark\fP [\-s] [\-m <mark>] [\-c <command>] [\-i <i3_command>]
+\fIi3scratchmark\fP [\-s] [\-m <mark>] [\-c <command>] [\-i <i3\-command>]
 .SH "DESCRIPTION"
 .sp
 By default, \fIi3scratchmark\fP flips through scratchpad windows. With \f(CR\-m\fP, it
@@ -49,8 +49,8 @@ Otherwise, toggle between showing and hiding the scratchpad window marked with
 If no such window exists and the active window is floating, mark it with
 \fImark\fP and send it to the scratchpad.
 .sp
-Otherwise, run the command specified by the \fI\-c\fP option, mark the next
-window to launch with \fImark\fP, and send it to the scratchpad.
+Otherwise, run the command specified by the \fI\-c\fP option,
+mark the next launched window with \fImark\fP, and send it to the scratchpad.
 .RE
 .sp
 \fB\-c\fP <command> \~ \~ (default: \fIi3\-sensible\-terminal\fP)
@@ -63,7 +63,7 @@ send whatever window is created next to the scratchpad, which is usually
 not what you want.
 .RE
 .sp
-\fB\-i\fP <i3_command> \~ \~ (default: \*(Aq\*(Aq)
+\fB\-i\fP <i3\-command> \~ \~ (default: \*(Aq\*(Aq)
 .RS 4
 An \fIi3\fP command to run after the \fI\-m\fP option marks a window.
 Can be specified multiple times.

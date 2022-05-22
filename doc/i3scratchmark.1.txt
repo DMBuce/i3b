@@ -14,7 +14,7 @@ i3scratchmark - Flip through scratchpad windows.
 Synopsis
 --------
 
-'i3scratchmark' [-s] [-m <mark>] [-c <command>] [-i <i3_command>]
+'i3scratchmark' [-s] [-m <mark>] [-c <command>] [-i <i3-command>]
 
 Description
 -----------
@@ -35,8 +35,8 @@ Otherwise, toggle between showing and hiding the scratchpad window marked with
 If no such window exists and the active window is floating, mark it with
 'mark' and send it to the scratchpad.
 +
-Otherwise, run the command specified by the '-c' option, mark the next
-window to launch with 'mark', and send it to the scratchpad.
+Otherwise, run the command specified by the '-c' option,
+mark the next launched window with 'mark', and send it to the scratchpad.
 
 **-c** <command> {nbsp} {nbsp} (default: 'i3-sensible-terminal')::
 	The command to run if no 'mark' exists for the '-m' option and the active
@@ -46,7 +46,7 @@ Note that if the command does not create a new window, the '-m' option will
 send whatever window is created next to the scratchpad, which is usually
 not what you want.
 
-**-i** <i3_command> {nbsp} {nbsp} (default: '')::
+**-i** <i3-command> {nbsp} {nbsp} (default: '')::
 	An 'i3' command to run after the '-m' option marks a window.
 	Can be specified multiple times.
 

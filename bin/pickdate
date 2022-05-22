@@ -64,9 +64,9 @@ selections() {
 
 # print usage
 prog="${0##*/}"
-usage="Usage: $prog [OPTIONS]
+usage="Usage: $prog [options]
 
-    Pick a date with rofi. The following keybindings are available.
+    Picks a date with rofi. The following keybindings are available.
 
         p/n        Go to previous/next month
         P/N, </>   Go to previous/next year
@@ -82,30 +82,6 @@ Options:
     -h, --help     Print this help message and exit.
 
     Valid POSITIONs: center, north, east, southwest, etc.
-
-Environment Variables:
-
-    PICKDATE_CMD         Default command for the -r option.
-    PICKDATE_FMT         Default format for the -f option.
-    PICKDATE_CAL         The cal command to use, e.g. 'cal -m' or 'ncal -hb'.
-    PICKDATE_BUTTONS     Colon-delimited list of buttons shown on the bottom.
-    PICKDATE_SPANATTRS   Pango <span> attributes used on the weekday header.
-    PICKDATE_THEMESTR    Theme string used to override config.rasi .
-    TMPDIR               Place temporary file here instead of in /tmp .
-
-Defaults:
-
-    PICKDATE_CMD='$default_command'
-    PICKDATE_FMT='${default_format//%/%%}'
-    PICKDATE_CAL='$default_cal'
-    PICKDATE_BUTTONS='$default_buttons'
-    # see https://docs.gtk.org/Pango/pango_markup.html#the-span-attributes
-    PICKDATE_SPANATTRS='$default_attrs'
-    PICKDATE_THEMESTR='${default_themestr//$'\n'/$'\n    '}'
-
-See Also:
-
-    rofi(1), rofi-keys(5), rofi-theme(5), cal(1), ncal(1)
 "
 if [[ "$*" == *--help* ]]; then
 	die 0 "$usage"
