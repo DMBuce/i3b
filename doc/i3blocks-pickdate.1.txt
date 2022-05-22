@@ -3,8 +3,8 @@
 :stylesheet: style.css
 :toc:
 
-i3blocks-monit(1)
-=================
+i3blocks-pickdate(1)
+====================
 
 Name
 ----
