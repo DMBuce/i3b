@@ -26,11 +26,13 @@ Move a floating i3 window.
 
 Demo: https://i.imgur.com/IVnZ9fS.mp4
 
-Quick Start: https://dmbuce.github.io/i3b/i3move.1.html#EXAMPLES
+Example usage: https://dmbuce.github.io/i3b/i3move.1.html#_examples
 
 === https://dmbuce.github.io/i3b/i3scratchmark.1.html[i3scratchmark]
 
 Manage i3 scratchpad windows with marks.
+
+Example usage: https://dmbuce.github.io/i3b/i3scratchmark.1.html#_examples
 
 === https://dmbuce.github.io/i3b/pickdate.1.html[pickdate]
 
@@ -38,9 +40,13 @@ A simple rofi date picker.
 
 image::https://i.imgur.com/TCnCXKU.png[Screenshot]
 
+Example usage: https://dmbuce.github.io/i3b/pickdate.1.html#_examples
+
 === https://dmbuce.github.io/i3b/i3blocks-pickdate.1.html[i3blocks-pickdate]
 
 Use `pickdate` as a dropdown calendar in i3blocks.
+
+Example usage: https://dmbuce.github.io/i3b/i3blocks-pickdate.1.html#_examples
 
 === https://dmbuce.github.io/i3b/rofi-blezz.1.html[rofi-blezz]
 
@@ -48,6 +54,8 @@ Run link:https://github.com/davatorium/rofi-blezz[rofi's blezz module]
 with a different starting menu.
 Similar to link:https://github.com/Blezzing/blezz[blezz's] `-d` option,
 this is a workaround for rofi's blezz module not having such functionality.
+
+Example usage: https://dmbuce.github.io/i3b/rofi-blezz.1.html#_examples
 
 === https://dmbuce.github.io/i3b/i3blocks-monit.1.html[i3blocks-monit]
 
@@ -58,6 +66,8 @@ image::https://i.imgur.com/HuStDiw.png[Custom Labels]
 Default Look: https://i.imgur.com/1pK873k.png
 
 Minimal Look: https://i.imgur.com/Ki0SCD5.png
+
+Example usage: https://dmbuce.github.io/i3b/i3blocks-monit.1.html#_examples
 
 == Documentation
 
