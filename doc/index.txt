@@ -25,55 +25,43 @@ by dropping them in your `$PATH` and making them executable.
 
 == Description
 
-=== i3move
+=== https://dmbuce.github.io/i3b/i3move.1.html[i3move]
 
 Move a floating i3 window.
 
 Demo: https://i.imgur.com/IVnZ9fS.mp4
 
-Documentation: https://dmbuce.github.io/i3b/i3move.1.html
-
 Quick Start: https://dmbuce.github.io/i3b/i3move.1.html#EXAMPLES
 
-== i3scratchmark
+=== https://dmbuce.github.io/i3b/i3scratchmark.1.txt[i3scratchmark]
 
 Manage i3 scratchpad windows with marks.
 
-Documentation: https://github.com/DMBuce/i3b/blob/master/doc/i3scratchmark.1.txt
-
-== pickdate
+=== https://dmbuce.github.io/i3b/pickdate.1.txt[pickdate]
 
 A simple rofi date picker.
 
-!link:https://i.imgur.com/TCnCXKU.png[Screenshot]
+image::https://i.imgur.com/TCnCXKU.png[Screenshot]
 
-Documentation: https://github.com/DMBuce/i3b/blob/master/doc/pickdate.1.txt
-
-== i3blocks-pickdate
+=== https://dmbuce.github.io/i3b/i3blocks-pickdate.1.txt[i3blocks-pickdate]
 
 Use `pickdate` as a dropdown calendar in i3blocks.
 
-Documentation: https://github.com/DMBuce/i3b/blob/master/doc/i3blocks-pickdate.1.txt
-
-== rofi-blezz
+=== https://dmbuce.github.io/i3b/rofi-blezz.1.txt[rofi-blezz]
 
 Run link:https://github.com/davatorium/rofi-blezz[rofi's blezz module]
 with a different starting menu.
 Similar to link:https://github.com/Blezzing/blezz[blezz's] `-d` option,
 this is a workaround for rofi's blezz module not having such functionality.
 
-Documentation: https://github.com/DMBuce/i3b/blob/master/doc/rofi-blezz.1.txt
-
-== i3blocks-monit
+=== https://dmbuce.github.io/i3b/i3blocks-monit.1.txt[i3blocks-monit]
 
 Add link:https://mmonit.com/monit/[monit] services summary to i3blocks.
 
+image::https://i.imgur.com/HuStDiw.png[Custom Labels]
+
 Default Look: https://i.imgur.com/1pK873k.png
 
-Custom Labels: https://i.imgur.com/HuStDiw.png
-
-Minimal: https://i.imgur.com/Ki0SCD5.png
-
-Documentation: https://github.com/DMBuce/i3b/blob/master/doc/i3blocks-monit.1.txt
+Minimal Look: https://i.imgur.com/Ki0SCD5.png
 
 // vim: set syntax=asciidoc:
