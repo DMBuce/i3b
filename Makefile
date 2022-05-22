@@ -21,14 +21,15 @@ URL       = https://github.com/DMBuce/i3b
 
 BINFILES          = $(wildcard bin/*)
 #ETCFILES          = $(shell find config/ -type f)
-MAN1FILES         = doc/i3move.1
+#MAN1FILES         = doc/i3move.1
+MAN1SRC           = $(wildcard doc/*.1.txt)
+MAN1FILES         = $(sort $(BINFILES:bin/%=doc/%.1) $(MAN1SRC:%.txt=%))
 MANFILES          = $(MAN1FILES)
-HTMLFILES         = $(MANFILES:%=%.html)
-TEXTFILES         = $(BINFILES:bin/%=doc/%.1.txt)
-DOCFILES          = $(MANFILES) $(HTMLFILES) $(TEXTFILES)
+HTMLSRC           = $(wildcard doc/*.txt)
+HTMLFILES         = $(HTMLSRC:%.txt=%.html)
+DOCFILES          = $(MANFILES) $(HTMLFILES)
 BINFILES_INSTALL  = $(BINFILES:bin/%=$(DESTDIR)$(bindir)/%)
-MAN1FILES_INSTALL = $(MAN1FILES:doc/%=$(DESTDIR)$(man1dir)/%)
-MANFILES_INSTALL  = $(MAN1FILES_INSTALL)
+MANFILES_INSTALL  = $(MANFILES:doc/%=$(DESTDIR)$(man1dir)/%)
 #ETCFILES_INSTALL  = $(ETCFILES:config/%=$(DESTDIR)$(sysconfdir)/%)
 INSTALL_FILES     = $(BINFILES_INSTALL) $(ETCFILES_INSTALL) $(MANFILES_INSTALL)
 INSTALL_DIRS      = $(sort $(dir $(INSTALL_FILES)))
@@ -39,23 +40,17 @@ all: doc
 .PHONY: html
 html: $(HTMLFILES)
 
-.PHONY: text
-text: $(TEXTFILES)
-
 .PHONY: doc
 doc: $(DOCFILES)
 
-doc/%.1: bin/%
-	mkdir -p doc
-	pod2man $< > $@
+%.1: %.1.txt
+	asciidoctor -b manpage $<
+	# TODO: remove this when everything is converted to asciidoc
+	rm -f $@.1
 
-doc/%.1.txt: bin/%
-	mkdir -p doc
-	pod2text $< > $@ || ./$< --help > $@ 2>&1 || true
-
-doc/%.1.html: bin/%
-	mkdir -p doc
-	pod2html $< > $@
+%.html: %.txt
+	asciidoc $<
+	dos2unix $@
 
 .PHONY: install
 install: all installdirs $(INSTALL_FILES)
