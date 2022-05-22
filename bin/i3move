@@ -148,18 +148,55 @@ my $result = GetOptions(
 	"snap|S!"              => \$options{snap},
 	"title|t=i"            => \$options{title},
 	"threshold|T=s"        => \$options{threshold},
-	"man"                  => \$options{man},
 	"help|h|?"             => \$options{help},
 );
-if (not $result) {
-	require Pod::Usage;
-	Pod::Usage::pod2usage(-verbose => 0, -exitcode => 1, -noperldoc => 1);
-} elsif ($options{man}) {
-	require Pod::Usage;
-	Pod::Usage::pod2usage(-verbose => 2, -exitcode => 0, -noperldoc => 1);
-} elsif ($options{help}) {
-	require Pod::Usage;
-	Pod::Usage::pod2usage(-verbose => 1, -exitcode => 0, -noperldoc => 1);
+
+# check options
+my $prog = (split(/\//,$0))[-1];
+my $usg = <<EOF;
+Usage: $prog [options] up|down|left|right
+       $prog [options] north|south|east|west
+       $prog [options] top|bottom|port|starboard
+
+    Move a floating i3 window up, down, left, or right. The distance
+    moved is chosen based on the window's size and position. If the active
+    window is tiled, i3move will move it with 'i3-msg move' instead.
+
+EOF
+my $usage = $usg . <<EOF;
+Options:
+
+    -t, --title <size>         The size of i3's title bar in pixels.
+    -b, --border <size>        The size of i3's bottom, left, and
+                               right window borders in pixels
+    -m, --margins <m1> [m2] [m3] [m4]
+                               The width of margins along the top,
+                               bottom, left, and right of the screen.
+    -i, --inside-distance <distance>
+                               The distance to move when inside the
+                               margins. Format is \\<|\\>|w|N[px|%|%%]
+    -o, --outside-distance <distance>
+                               The distance to move when outside the
+                               margins. Format is \\<|\\>|w|N[px|%|%%]
+    -s, --small-distance <distance>
+                               The distance to move small windows.
+                               Format is \\<|\\>|w|N[px|%|%%]
+    -l, --large-distance <distance>
+                               The distance to move large windows.
+                               Format is \\<|\\>|w|N[px|%|%%]
+    -T, --threshold N[px|%%]   Window size threshole for -s and -l.
+    -C, --clamp, --no-clamp    Enable or disable clamping to margin edges.
+    -S, --snap, --no-snap      Enable or disable snapping to margin edges.
+    -H, --hide, --no-hide      Enable or disable hiding when snapped.
+    -P, --passthru, --no-passthru
+                               Enable or disable moving tiled windows
+                               with i3-msg.
+    -g, --gen                  Generate defaults for -t, -b, and -m.
+    --help                     Show this help message and exit.
+
+EOF
+if (not $result or $options{help}) {
+	die $usage;
 # generate config
 } elsif ($options{gen}) {
 	# switch to temp workspace and launch a terminal
@@ -233,8 +270,7 @@ if (not $result) {
 
 # check params
 if (not @ARGV == 1) {
-	require Pod::Usage;
-	Pod::Usage::pod2usage(-verbose => 0, -exitcode => 1, -noperldoc => 1);
+	die $usg;
 }
 
 # parse params
@@ -252,11 +288,8 @@ if ($direction =~ /^(top|north)$/) {
 	$options{inside} = "2";
 	$direction = "right";
 } elsif (not $direction =~ /^(up|down|left|right)$/) {
-	require Pod::Usage;
-	Pod::Usage::pod2usage(
-		-msg => "Invalid direction: $direction",
-		-verbose => 0, -exitcode => 1, -noperldoc => 1
-	);
+	warn "Invalid direction: $direction\n";
+	die $usg;
 }
 
 # figure out whether the active window is tiled or floating
@@ -311,11 +344,7 @@ if ($options{threshold} =~ /^(\d+)(px)?$/) {
 } elsif ($options{threshold} =~ /^(\d+)%%$/) {
 	$threshold = $1 / 100 * ( $LENGTH - $margins{near} - $margins{far} );
 } else {
-	require Pod::Usage;
-	Pod::Usage::pod2usage(
-		-msg => "Invalid threshold: $options{threshold}",
-		-verbose => 0, -exitcode => 1, -noperldoc => 1
-	);
+	die "Invalid threshold: $options{threshold}\n";
 }
 
 # parse step size from distance options
@@ -348,11 +377,7 @@ for my $k ("small", "large", "inside", "outside") {
 	} elsif ($spec =~ /^(w)$/ and $k =~ /^(inside|outside)$/) {
 		$dist{$k} = "w";
 	} else {
-		require Pod::Usage;
-		Pod::Usage::pod2usage(
-			-msg => "Invalid $k distance: $spec",
-			-verbose => 0, -exitcode => 1, -noperldoc => 1
-		);
+		die "Invalid $k distance: $spec\n";
 	}
 }
 
@@ -436,493 +461,4 @@ if ($z > $margins{near} and $z + $length < $LENGTH - $margins{far}) {
 
 # move in chosen direction
 exec "i3-msg move $direction $dz >/dev/null";
-
-__END__
-
-
-=head1 NAME
-
-i3move - Move a floating i3 window.
-
-
-=head1 USAGE
-
-i3move [options] <direction>
-
-options:
-
-=over 4
-
-S<[-t|--title E<lt>sizeE<gt>]>
-S<[-b|--border E<lt>sizeE<gt>]>
-S<[-m|--margins E<lt>topE<gt> [bottom] [left] [right]]>
-S<[-i|--inside-distance \E<lt>|\E<gt>|w|I<N>[px|%|%%]]>
-S<[-o|--outside-distance \E<lt>|\E<gt>|w|I<N>[px|%|%%]]>
-S<[-s|--small-distance \E<lt>|\E<gt>|I<N>[px|%|%%]]>
-S<[-l|--large-distance \E<lt>|\E<gt>|I<N>[px|%|%%]]>
-S<[-T|--threshold I<N>[px|%%]]>
-S<[-C|--clamp|--no-clamp]>
-S<[-S|--snap|--no-snap]>
-S<[-H|--hide|--no-hide]>
-S<[-P|--passthru|--no-passthru]>
-S<[-g|--gen]>
-S<[--man]>
-S<[--help]>
-
-=back
-
-directions:
-
-=over 4
-
-S<up|down|left|right>
-
-S<top|bottom|port|starboard> or S<north|south|east|west>
-
-=back
-
-
-=head1 DESCRIPTION
-
-Move a floating i3 window up, down, left, or right.
-The distance moved is chosen based on
-the window's size and position.
-
-Several aliases are provided for convenience.
-
-=over 4
-
-B<top, north>: Alias for C<--inside-distance 2 up>
-
-B<bottom, south>: Alias for C<--inside-distance 2 down>
-
-B<port, west>: Alias for C<--inside-distance 2 left>
-
-B<starboard, east>: Alias for C<--inside-distance 2 right>
-
-=back
-
-If the active window is tiled,
-i3move will move it with C<i3-msg move DIRECTION> instead.
-
-
-=head1 OPTIONS
-
-
-B<-t, --title> SIZE
-
-=over 4
-
-The size of i3's window title bars in pixels.
-Or, if title bars are disabled,
-the size of the top window border.
-
-Default: 26
-
-=back
-
-
-B<-b, --border> SIZE
-
-=over 4
-
-The size of i3's bottom, left, and right window borders in pixels.
-
-Default: 3
-
-=back
-
-
-B<-m, --margins> TOP [BOTTOM] [LEFT] [RIGHT]
-
-=over 4
-
-The width of margins along the top, bottom, left,
-and right sides of the screen.
-
-If the window is inside the margins,
-its movement is determined by B<--inside-distance>.
-Otherwise, its movement is determined by B<--outside-distance>.
-See the description of those options for details.
-
-The margins can also be used to prevent floating windows
-from overlapping i3bar and/or the gaps around the edge of the screen.
-See the description of the B<--snap> and B<--clamp> options for details.
-
-Default: 0 0 0 0
-
-=back
-
-
-B<-i, --inside-distance> DISTANCE
-
-=over 4
-
-The distance to move the window when it's inside the margins.
-DISTANCE can be one of the following.
-
-C<E<lt>>
-
-=over 4
-
-Choose a distance such that
-(1) a window on the edge of a margin will be aligned to the opposite margin
-after being moved several times by i3move, and
-(2) the distance chosen is smaller than the window's size
-while being as large as possible.
-
-=back
-
-C<E<gt>>
-
-=over 4
-
-Like C<E<lt>> except that the distance chosen is larger than the window's size
-while being as small as possible.
-
-=back
-
-C<=>
-
-=over 4
-
-A combination of C<E<lt>> and C<E<gt>>.
-If the distance given by C<E<lt>> is such that
-a window on the edge of a margin would be centered
-after being moved several times by i3move,
-that distance is used.
-Otherwise, the distance given by C<E<gt>> is used.
-
-=back
-
-I<N>[px|%|%%]
-
-=over 4
-
-I<N> must be an integer.
-
-An optional suffix may be provided.
-If a suffix of 'px' is used,
-I<N> is measured in pixels.
-If a suffix of '%' is used,
-I<N> is measured as a percentage of the window's size.
-If a suffix of '%%' is used,
-I<N> is measured as a percentage of the screen's size.
-
-With no suffix,
-the distance is chosen such that,
-when moved by successive i3move commands,
-a window at the edge of a margin will occupy I<N> equally spaced positions,
-and the final position will be aligned to the opposite margin.
-
-If the distance computed is negative,
-the difference between it and the window's size is used.
-
-=back
-
-C<w>
-
-=over 4
-
-Use the window's size to determine the distance to move.
-If the window is smaller than the size given by the B<--threshold> option,
-then use the B<--small-distance> option's value.
-Otherwise, use the B<--large-distance> option's value.
-
-=back
-
-This option is ignored and set to C<2> if I<direction> is one of:
-top, bottom, port, starboard, north, south, east, or west.
-
-Default: w
-
-=back
-
-
-B<-o, --outside-distance> DISTANCE
-
-=over 4
-
-The distance to move the window when it's overlapping the margins.
-The format for DISTANCE is the same as for B<--inside-distance>.
-See that option for details.
-
-Default: -17px
-
-=back
-
-
-B<-s, --small-distance> DISTANCE
-
-=over 4
-
-The distance to move small windows.
-A window is considered small if its size is less than
-the B<--threshold> option's value.
-
-This option has no effect unless
-B<--inside-distance> or B<--outside-distance> is C<w>.
-
-The format for DISTANCE is the same as for B<--inside-distance>,
-except that it can't be C<w>.
-See the description of that option for details.
-
-Default: =
-
-=back
-
-
-B<-l, --large-distance> DISTANCE
-
-=over 4
-
-The distance to move large windows.
-A window is considered large if its size is greater than or equal to
-the B<--threshold> option's value.
-
-This option has no effect unless
-B<--inside-distance> or B<--outside-distance> is C<w>.
-
-The format for DISTANCE is the same as for B<--inside-distance>,
-except that it can't be C<w>.
-See that option for details.
-
-Default: 3
-
-=back
-
-
-B<-T, --threshold> THRESHOLD
-
-=over 4
-
-The window size threshold.
-THRESHOLD must be an integer.
-An optional suffix of 'px' or '%%' may be used.
-With '%%', THRESHOLD is measured as a percentage of the window's size.
-Otherwise, it's measured in pixels.
-
-If the threshold computed is negative,
-the difference between it and the window's size is used.
-
-The threshold interacts with the B<--small-distance>, B<--large-distance>,
-B<--inside-distance>, and B<--outside-distance> options
-to determine the distance to move.
-See the description of those options for details.
-
-Default: 33%%
-
-=back
-
-
-B<-C, --clamp>
-
-=over 4
-
-Constrain the window's movement so that it does not overlap the margins.
-A window that already overlaps can be moved normally.
-
-=back
-
-
-B<--no-clamp>
-
-=over 4
-
-Disable B<--clamp>.
-This is the default behavior.
-
-=back
-
-
-B<-S, --snap>
-
-=over 4
-
-When the window encounters a margin, snap it to the margin's edge.
-Once snapped, a window can be moved past a margin normally.
-This is the default behavior.
-
-=back
-
-
-B<--no-snap>
-
-=over 4
-
-Disable B<--snap>.
-
-=back
-
-
-B<-H, --hide>
-
-=over 4
-
-When moved towards the edge of the screen
-while snapped to a margin,
-hide the window past the edge of the screen
-by a distance determined by B<--outside-distance>.
-This is the default behavior.
-Once hidden, a window moved towards the center of the screen
-will be snapped to the margin.
-
-=back
-
-
-B<--no-hide>
-
-=over 4
-
-Disable B<--hide>.
-
-=back
-
-
-B<-M, --compound-display>
-
-=over 4
-
-Treat each monitor separately.
-Compute distances and positions with respect to
-the monitor that contains the active window.
-With B<--snap> enabled,
-when a window that is snapped to a margin is moved towards an adjacent monitor,
-it will snap to that monitor's nearest margin.
-
-This is the default behavior.
-
-=back
-
-
-B<--no-compound-display>
-
-=over 4
-
-Disable B<--compound-display>
-and treat multiple monitors as one big monitor.
-
-=back
-
-
-B<-P, --passthru>
-
-=over 4
-
-If the active window is tiled, use C<i3-msg> to move it.
-This is the default behavior.
-
-=back
-
-
-B<--no-passthru>
-
-=over 4
-
-Disable B<--passthru>.
-
-=back
-
-
-B<--gen>
-
-=over 4
-
-Try to generate sane defaults for the
-B<--title>, B<--border>, and B<--margins> options,
-then exit.
-The output of this command can be set in
-C<$HOME/.config/i3move> or the C<$I3MOVE_OPTIONS> environment variable.
-
-i3move guesses the title, border, and margin sizes by reading the i3 config,
-opening a new workspace named C<tmp.i3move>,
-launching C<i3-sensible-terminal>,
-then manipulating the terminal in order to measure
-the window borders, window title, bar size, and gap sizes.
-
-
-=back
-
-
-B<--man>
-
-=over 4
-
-Print the manual and exit.
-
-=back
-
-
-B<--help>
-
-=over 4
-
-Print a help message and exit.
-
-=back
-
-
-=head1 CONFIGURATION
-
-In addition to being passed on the command line,
-options are read from the following locations,
-with later options overriding earlier ones.
-
-=over 4
-
-C<$XDG_CONFIG_HOME/i3move>
-
-C<$XDG_CONFIG_HOME/i3/move>
-
-C<$HOME/.i3move>
-
-C<$I3MOVE_OPTIONS> environment variable
-
-=back
-
-If C<$XDG_CONFIG_HOME> is not defined, it defaults to C<$HOME/.config> .
-
-
-=head1 EXAMPLES
-
-Create or reset i3move's config with sane defaults
-
-    i3move --gen > ~/.config/i3move
-
-If i3move does not snap windows to the bar or gaps correctly,
-try tweaking the B<--title>, B<--border>, and/or B<--margins>
-options in the config.
-See the description of those options for details.
-For best results,
-open a screenshot with an image editor such as kolourpaint
-to determine the correct values for these options.
-
-Move a floating window left, down, up, and right.
-
-    i3move left
-    i3move down
-    i3move up
-    i3move right
-
-Bind the commands above in i3's config
-
-    bindsym $mod+Mod1+h exec i3move left
-    bindsym $mod+Mod1+j exec i3move down
-    bindsym $mod+Mod1+k exec i3move up
-    bindsym $mod+Mod1+l exec i3move right
-
-After reloading i3 with the above config,
-you can move windows with i3move
-by holding down $mod+Alt and using vim keys (C<hjkl>).
-
-
-=head1 AUTHORS
-
-i3move was written by L<DMBuce|https://github.com/DMBuce> .
-
-
-=head1 DISTRIBUTION
-
-The latest version of i3move can be downloaded from
-L<the i3b project|https://github.com/DMBuce/i3b> .
 

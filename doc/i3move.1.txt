@@ -170,11 +170,8 @@ config, opening a new workspace named "tmp.i3move", launching
 'i3-sensible-terminal', then manipulating the terminal in order to
 measure the window borders, window title, bar size, and gap sizes.
 
-**--man**::
-	Print the manual and exit.
-
 **--help**::
-	Print a help message and exit.
+	Show a help message and exit.
 
 Distance[[Distance]]
 --------------------
