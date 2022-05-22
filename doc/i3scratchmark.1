@@ -1,0 +1,97 @@
+'\" t
+.\"     Title: i3scratchmark
+.\"    Author: [see the "AUTHOR(S)" section]
+.\" Generator: Asciidoctor 2.0.17
+.\"      Date: 2022-05-22
+.\"    Manual: \ \&
+.\"    Source: \ \&
+.\"  Language: English
+.\"
+.TH "I3SCRATCHMARK" "1" "2022-05-22" "\ \&" "\ \&"
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.ss \n[.ss] 0
+.nh
+.ad l
+.de URL
+\fI\\$2\fP <\\$1>\\$3
+..
+.als MTO URL
+.if \n[.g] \{\
+.  mso www.tmac
+.  am URL
+.    ad l
+.  .
+.  am MTO
+.    ad l
+.  .
+.  LINKSTYLE blue R < >
+.\}
+.SH "NAME"
+i3scratchmark \- Flip through scratchpad windows.
+.SH "SYNOPSIS"
+.sp
+\fIi3scratchmark\fP [\-s] [\-m <mark>] [\-c <command>] [\-i <i3_command>]
+.SH "DESCRIPTION"
+.sp
+By default, \fIi3scratchmark\fP flips through scratchpad windows. With \f(CR\-m\fP, it
+toggles between showing and hiding a marked scratchpad window.
+.SH "OPTIONS"
+.sp
+\fB\-m\fP <mark> \~ \~ (default: \fIcycle\fP)
+.RS 4
+If \fImark\fP is \f(CRcycle\fP, flip through scratchpad windows. This is the default
+behavior.
+.sp
+Otherwise, toggle between showing and hiding the scratchpad window marked with
+\fImark\fP.
+.sp
+If no such window exists and the active window is floating, mark it with
+\fImark\fP and send it to the scratchpad.
+.sp
+Otherwise, run the command specified by the \fI\-c\fP option, mark the next
+window to launch with \fImark\fP, and send it to the scratchpad.
+.RE
+.sp
+\fB\-c\fP <command> \~ \~ (default: \fIi3\-sensible\-terminal\fP)
+.RS 4
+The command to run if no \fImark\fP exists for the \fI\-m\fP option and the active
+window is tiled.
+.sp
+Note that if the command does not create a new window, the \fI\-m\fP option will
+send whatever window is created next to the scratchpad, which is usually
+not what you want.
+.RE
+.sp
+\fB\-i\fP <i3_command> \~ \~ (default: \*(Aq\*(Aq)
+.RS 4
+An \fIi3\fP command to run after the \fI\-m\fP option marks a window.
+Can be specified multiple times.
+.RE
+.sp
+\fB\-s\fP
+.RS 4
+Equivalent to \f(CR\-i \*(Aqsticky enable\*(Aq\fP. Makes newly marked windows sticky.
+.RE
+.SH "EXAMPLES"
+.sp
+Keybindings for i3\(cqs config:
+.sp
+.if n .RS 4
+.nf
+.fam C
+bindsym $mod+period exec i3scratchmark \-m scratch \-s \-c urxvt
+bindsym $mod+Mod1+period exec i3scratchmark \-m itch \-s \-c none
+bindsym $mod+comma exec i3scratchmark
+bindsym $mod+Mod1+comma move scratchpad
+.fam
+.fi
+.if n .RE
+.SH "AUTHORS"
+.sp
+i3move was written by
+.URL "https://github.com/DMBuce" "DMBuce" "."
+.SH "DISTRIBUTION"
+.sp
+The latest version of i3move can be downloaded from
+.URL "https://github.com/DMBuce/i3b" "the i3b project" "."

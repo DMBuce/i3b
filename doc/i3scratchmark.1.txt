@@ -1,23 +1,76 @@
-./bin/i3scratchmark: illegal option -- -
-Usage: i3scratchmark [-s] [-m MARK] [-c COMMAND] [-i I3_COMMAND]
+:linkcss:
+//:copycss:
+:stylesheet: style.css
+:toc:
 
-    Toggle between showing and hiding the scratchpad window marked with
-    MARK. If no such window exists and the active window is floating,
-    mark it with MARK, run I3_COMMAND, and send it to the scratchpad.
-    Otherwise, if COMMAND is not 'none', run COMMAND, wait for the next
-    window to launch, mark it with MARK, run I3_COMMAND, and place it
-    in the scratchpad without losing focus.
+i3scratchmark(1)
+================
 
-    If MARK is 'cycle', flip through scratchpad windows instead.
+Name
+----
 
-    With -s, make new scratchpad windows sticky.
+i3scratchmark - Flip through scratchpad windows.
 
-    By default, MARK is 'cycle', COMMAND is 'i3-sensible-terminal',
-    and I3_COMMAND is ''.
+Synopsis
+--------
 
-Example Config:
+'i3scratchmark' [-s] [-m <mark>] [-c <command>] [-i <i3_command>]
 
-    bindsym $mod+period exec i3scratchmark -m scratch -s -c urxvt
-    bindsym $mod+Mod1+period exec i3scratchmark -m itch -s -c none
-    bindsym $mod+comma exec i3scratchmark
-    bindsym $mod+Mod1+comma move scratchpad
+Description
+-----------
+
+By default, 'i3scratchmark' flips through scratchpad windows. With `-m`, it
+toggles between showing and hiding a marked scratchpad window.
+
+Options
+-------
+
+**-m** <mark> {nbsp} {nbsp} (default: 'cycle')::
+	If 'mark' is `cycle`, flip through scratchpad windows. This is the default
+	behavior.
++
+Otherwise, toggle between showing and hiding the scratchpad window marked with
+'mark'.
++
+If no such window exists and the active window is floating, mark it with
+'mark' and send it to the scratchpad.
++
+Otherwise, run the command specified by the '-c' option, mark the next
+window to launch with 'mark', and send it to the scratchpad.
+
+**-c** <command> {nbsp} {nbsp} (default: 'i3-sensible-terminal')::
+	The command to run if no 'mark' exists for the '-m' option and the active
+	window is tiled.
++
+Note that if the command does not create a new window, the '-m' option will
+send whatever window is created next to the scratchpad, which is usually
+not what you want.
+
+**-i** <i3_command> {nbsp} {nbsp} (default: '')::
+	An 'i3' command to run after the '-m' option marks a window.
+	Can be specified multiple times.
+
+**-s**::
+	Equivalent to `-i 'sticky enable'`. Makes newly marked windows sticky.
+
+Examples
+--------
+
+Keybindings for i3's config:
+
+ bindsym $mod+period exec i3scratchmark -m scratch -s -c urxvt
+ bindsym $mod+Mod1+period exec i3scratchmark -m itch -s -c none
+ bindsym $mod+comma exec i3scratchmark
+ bindsym $mod+Mod1+comma move scratchpad
+
+Authors
+-------
+i3move was written by
+link:https://github.com/DMBuce[DMBuce].
+
+Distribution
+------------
+The latest version of i3move can be downloaded from
+link:https://github.com/DMBuce/i3b[the i3b project].
+
+// vim: set syntax=asciidoc:
