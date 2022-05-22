@@ -7,6 +7,8 @@
 
 Buce's window manager scripts and configs.
 
+toc::[]
+
 == Install
 
 There's an link:https://aur.archlinux.org/packages/i3b[AUR package] for Arch Linux
