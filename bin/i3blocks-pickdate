@@ -1,5 +1,7 @@
 #!/bin/bash
 # i3blocks support for pickdate
+#
+# requires bash, pickdate
 
 # parse args
 for dec in "$@"; do

@@ -1,4 +1,5 @@
 #!/bin/bash
+# requires bash, monit
 
 # parse args
 for dec in "$@"; do

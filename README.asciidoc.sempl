@@ -16,22 +16,15 @@ by dropping them in your `$PATH` and making them executable.
 
 == Requirements
 
-* i3blocks-monit: bash, monit
-* i3blocks-pickdate: bash, pickdate
-* i3move: perl, xrandr, xdotool
-* i3scratchmark: bash, jq
-* pickdate: rofi, cal, awk
-* rofi-blezz: bash, rofi, rofi-blezz, sed
+{!grep '^# requires' bin/* | sed 's|bin/|* |; s/# requires//'}
 
-=== Description
+== Description
 
-== i3move
+=== i3move
 
 Move a floating i3 window.
 
 Demo: https://i.imgur.com/IVnZ9fS.mp4
-
-Requirements: perl, xrandr, xdotool
 
 Documentation: https://dmbuce.github.io/i3b/i3move.1.html
 
@@ -41,8 +34,6 @@ Quick Start: https://dmbuce.github.io/i3b/i3move.1.html#EXAMPLES
 
 Manage i3 scratchpad windows with marks.
 
-Requirements: bash, jq
-
 Documentation: https://github.com/DMBuce/i3b/blob/master/doc/i3scratchmark.1.txt
 
 == pickdate
@@ -51,15 +42,11 @@ A simple rofi date picker.
 
 !link:https://i.imgur.com/TCnCXKU.png[Screenshot]
 
-Requirements: rofi, cal, awk
-
 Documentation: https://github.com/DMBuce/i3b/blob/master/doc/pickdate.1.txt
 
 == i3blocks-pickdate
 
 Use `pickdate` as a dropdown calendar in i3blocks.
-
-Requirements: bash, pickdate
 
 Documentation: https://github.com/DMBuce/i3b/blob/master/doc/i3blocks-pickdate.1.txt
 
@@ -69,8 +56,6 @@ Run link:https://github.com/davatorium/rofi-blezz[rofi's blezz module]
 with a different starting menu.
 Similar to link:https://github.com/Blezzing/blezz[blezz's] `-d` option,
 this is a workaround for rofi's blezz module not having such functionality.
-
-Requirements: bash, rofi, rofi-blezz, sed
 
 Documentation: https://github.com/DMBuce/i3b/blob/master/doc/rofi-blezz.1.txt
 
@@ -83,8 +68,6 @@ Default Look: https://i.imgur.com/1pK873k.png
 Custom Labels: https://i.imgur.com/HuStDiw.png
 
 Minimal: https://i.imgur.com/Ki0SCD5.png
-
-Requirements: bash, monit
 
 Documentation: https://github.com/DMBuce/i3b/blob/master/doc/i3blocks-monit.1.txt
 

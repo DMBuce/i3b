@@ -45,12 +45,18 @@ doc: $(DOCFILES)
 
 %.1: %.1.txt
 	asciidoctor -b manpage $<
-	# TODO: remove this when everything is converted to asciidoc
+	@# TODO: remove this when everything is converted to asciidoc
 	rm -f $@.1
 
 %.html: %.txt
 	asciidoc $<
 	dos2unix $@
+
+%.asciidoc: %.asciidoc.sempl
+	sempl $< $@
+
+doc/index.txt: README.asciidoc
+	cp $< $@
 
 .PHONY: install
 install: all installdirs $(INSTALL_FILES)

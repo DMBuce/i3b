@@ -1,4 +1,5 @@
 #!/bin/bash
+# requires bash, jq
 
 # lists the name of each scratchpad window
 list_hidden_scratchpad_windows() {

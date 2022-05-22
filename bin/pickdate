@@ -1,5 +1,7 @@
 #!/bin/bash
 # rofi date picker
+#
+# requires rofi, cal, awk
 
 # defaults
 default_command='echo "$REPLY"'

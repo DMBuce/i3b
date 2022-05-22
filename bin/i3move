@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+# requires perl, xrandr, xdotool
 
 use strict;
 use warnings;

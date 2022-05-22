@@ -1,4 +1,5 @@
 #!/bin/bash
+# requires bash, rofi, rofi-blezz, sed
 
 # parse args
 section="${1-Main}"

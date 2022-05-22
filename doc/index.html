@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 10.1.1" />
+<title>i3b</title>
+<link rel="stylesheet" href="./asciidoc.css" type="text/css" />
+
+
+<link rel="stylesheet" href="./style.css" type="text/css" />
+<script type="text/javascript" src="./asciidoc.js"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+asciidoc.install(2);
+/*]]>*/
+</script>
+</head>
+<body class="article">
+<div id="header">
+<h1>i3b</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>Buce&#8217;s window manager scripts and configs.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_install">Install</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>There&#8217;s an <a href="https://aur.archlinux.org/packages/i3b">AUR package</a> for Arch Linux
+and a Makefile for other distros.
+In addition, many of the scripts can be installed standalone
+by dropping them in your <code>$PATH</code> and making them executable.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_requirements">Requirements</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+i3blocks-monit: bash, monit
+</p>
+</li>
+<li>
+<p>
+i3blocks-pickdate: bash, pickdate
+</p>
+</li>
+<li>
+<p>
+i3move: perl, xrandr, xdotool
+</p>
+</li>
+<li>
+<p>
+i3scratchmark: bash, jq
+</p>
+</li>
+<li>
+<p>
+pickdate: rofi, cal, awk
+</p>
+</li>
+<li>
+<p>
+rofi-blezz: bash, rofi, rofi-blezz, sed
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_description">Description</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_i3move">i3move</h3>
+<div class="paragraph"><p>Move a floating i3 window.</p></div>
+<div class="paragraph"><p>Demo: <a href="https://i.imgur.com/IVnZ9fS.mp4">https://i.imgur.com/IVnZ9fS.mp4</a></p></div>
+<div class="paragraph"><p>Documentation: <a href="https://dmbuce.github.io/i3b/i3move.1.html">https://dmbuce.github.io/i3b/i3move.1.html</a></p></div>
+<div class="paragraph"><p>Quick Start: <a href="https://dmbuce.github.io/i3b/i3move.1.html#EXAMPLES">https://dmbuce.github.io/i3b/i3move.1.html#EXAMPLES</a></p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_i3scratchmark">i3scratchmark</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Manage i3 scratchpad windows with marks.</p></div>
+<div class="paragraph"><p>Documentation: <a href="https://github.com/DMBuce/i3b/blob/master/doc/i3scratchmark.1.txt">https://github.com/DMBuce/i3b/blob/master/doc/i3scratchmark.1.txt</a></p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_pickdate">pickdate</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>A simple rofi date picker.</p></div>
+<div class="paragraph"><p>!<a href="https://i.imgur.com/TCnCXKU.png">Screenshot</a></p></div>
+<div class="paragraph"><p>Documentation: <a href="https://github.com/DMBuce/i3b/blob/master/doc/pickdate.1.txt">https://github.com/DMBuce/i3b/blob/master/doc/pickdate.1.txt</a></p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_i3blocks_pickdate">i3blocks-pickdate</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Use <code>pickdate</code> as a dropdown calendar in i3blocks.</p></div>
+<div class="paragraph"><p>Documentation: <a href="https://github.com/DMBuce/i3b/blob/master/doc/i3blocks-pickdate.1.txt">https://github.com/DMBuce/i3b/blob/master/doc/i3blocks-pickdate.1.txt</a></p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rofi_blezz">rofi-blezz</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Run <a href="https://github.com/davatorium/rofi-blezz">rofi&#8217;s blezz module</a>
+with a different starting menu.
+Similar to <a href="https://github.com/Blezzing/blezz">blezz&#8217;s</a> <code>-d</code> option,
+this is a workaround for rofi&#8217;s blezz module not having such functionality.</p></div>
+<div class="paragraph"><p>Documentation: <a href="https://github.com/DMBuce/i3b/blob/master/doc/rofi-blezz.1.txt">https://github.com/DMBuce/i3b/blob/master/doc/rofi-blezz.1.txt</a></p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_i3blocks_monit">i3blocks-monit</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Add <a href="https://mmonit.com/monit/">monit</a> services summary to i3blocks.</p></div>
+<div class="paragraph"><p>Default Look: <a href="https://i.imgur.com/1pK873k.png">https://i.imgur.com/1pK873k.png</a></p></div>
+<div class="paragraph"><p>Custom Labels: <a href="https://i.imgur.com/HuStDiw.png">https://i.imgur.com/HuStDiw.png</a></p></div>
+<div class="paragraph"><p>Minimal: <a href="https://i.imgur.com/Ki0SCD5.png">https://i.imgur.com/Ki0SCD5.png</a></p></div>
+<div class="paragraph"><p>Documentation: <a href="https://github.com/DMBuce/i3b/blob/master/doc/i3blocks-monit.1.txt">https://github.com/DMBuce/i3b/blob/master/doc/i3blocks-monit.1.txt</a></p></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated
+ 2022-05-22 12:22:50 CDT
+</div>
+</div>
+</body>
+</html>
