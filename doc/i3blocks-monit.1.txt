@@ -26,30 +26,31 @@ specified as environment variables or on the command line as 'OPTION=value'.
 Options
 -------
 
-**STYLE_UP**::
+**STYLE_UP**=attributes::
 	The link:https://docs.gtk.org/Pango/pango_markup.html#the-span-attributes[span attributes]
 	to apply to the number of up services.
 
-**STYLE_UMON**::
+**STYLE_UMON**=attributes::
 	The link:https://docs.gtk.org/Pango/pango_markup.html#the-span-attributes[span attributes]
 	to apply to the number of unmonitored services.
 
-**STYLE_DOWN**::
+**STYLE_DOWN**=attributes::
 	The link:https://docs.gtk.org/Pango/pango_markup.html#the-span-attributes[span attributes]
 	to apply to the number of down services.
 
-**STYLE_INIT**::
+**STYLE_INIT**=attributes::
 	The link:https://docs.gtk.org/Pango/pango_markup.html#the-span-attributes[span attributes]
 	to apply to the number of initialising services.
 
-**LABEL_UP**:: The label to use for up services.
-**LABEL_UMON**:: The label to use for unmonitored services.
-**LABEL_DOWN**:: The label to use for down services.
-**LABEL_INIT**:: The label to use for initialising services.
-**ORDER**::
-	The order to display up, unmonitored, down, and initialising services in.
-**SHOW_LABELS**:: `1` to show labels, `0` to suppress labels.
-**SHOW_ZEROS**:: `1` to show states with 0 total services, `0` to suppress them.
+**LABEL_UP**=label:: The label to use for up services.
+**LABEL_UMON**=label:: The label to use for unmonitored services.
+**LABEL_DOWN**=label:: The label to use for down services.
+**LABEL_INIT**=label:: The label to use for initialising services.
+**ORDER**=list::
+	A space-delimited list indicating the order in which to display
+	`up`, `unmonitored`, `down`, and `initialising` services.
+**SHOW_LABELS**=boolean:: `1` to show labels, `0` to suppress labels.
+**SHOW_ZEROS**=boolean:: `1` to show states with 0 total services, `0` to suppress them.
 
 Examples
 --------

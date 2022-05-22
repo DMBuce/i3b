@@ -39,65 +39,66 @@ suitable for i3blocks(1). Options can be
 specified as environment variables or on the command line as \fIOPTION=value\fP.
 .SH "OPTIONS"
 .sp
-\fBSTYLE_UP\fP
+\fBSTYLE_UP\fP=attributes
 .RS 4
 The \c
 .URL "https://docs.gtk.org/Pango/pango_markup.html#the\-span\-attributes" "span attributes"
 to apply to the number of up services.
 .RE
 .sp
-\fBSTYLE_UMON\fP
+\fBSTYLE_UMON\fP=attributes
 .RS 4
 The \c
 .URL "https://docs.gtk.org/Pango/pango_markup.html#the\-span\-attributes" "span attributes"
 to apply to the number of unmonitored services.
 .RE
 .sp
-\fBSTYLE_DOWN\fP
+\fBSTYLE_DOWN\fP=attributes
 .RS 4
 The \c
 .URL "https://docs.gtk.org/Pango/pango_markup.html#the\-span\-attributes" "span attributes"
 to apply to the number of down services.
 .RE
 .sp
-\fBSTYLE_INIT\fP
+\fBSTYLE_INIT\fP=attributes
 .RS 4
 The \c
 .URL "https://docs.gtk.org/Pango/pango_markup.html#the\-span\-attributes" "span attributes"
 to apply to the number of initialising services.
 .RE
 .sp
-\fBLABEL_UP\fP
+\fBLABEL_UP\fP=label
 .RS 4
 The label to use for up services.
 .RE
 .sp
-\fBLABEL_UMON\fP
+\fBLABEL_UMON\fP=label
 .RS 4
 The label to use for unmonitored services.
 .RE
 .sp
-\fBLABEL_DOWN\fP
+\fBLABEL_DOWN\fP=label
 .RS 4
 The label to use for down services.
 .RE
 .sp
-\fBLABEL_INIT\fP
+\fBLABEL_INIT\fP=label
 .RS 4
 The label to use for initialising services.
 .RE
 .sp
-\fBORDER\fP
+\fBORDER\fP=list
 .RS 4
-The order to display up, unmonitored, down, and initialising services in.
+A space\-delimited list indicating the order in which to display
+\f(CRup\fP, \f(CRunmonitored\fP, \f(CRdown\fP, and \f(CRinitialising\fP services.
 .RE
 .sp
-\fBSHOW_LABELS\fP
+\fBSHOW_LABELS\fP=boolean
 .RS 4
 \f(CR1\fP to show labels, \f(CR0\fP to suppress labels.
 .RE
 .sp
-\fBSHOW_ZEROS\fP
+\fBSHOW_ZEROS\fP=boolean
 .RS 4
 \f(CR1\fP to show states with 0 total services, \f(CR0\fP to suppress them.
 .RE

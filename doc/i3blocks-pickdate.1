@@ -1,0 +1,114 @@
+'\" t
+.\"     Title: i3blocks-monit
+.\"    Author: [see the "AUTHOR(S)" section]
+.\" Generator: Asciidoctor 2.0.17
+.\"      Date: 2022-05-22
+.\"    Manual: \ \&
+.\"    Source: \ \&
+.\"  Language: English
+.\"
+.TH "I3BLOCKS\-PICKDATE" "1" "2022-05-22" "\ \&" "\ \&"
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.ss \n[.ss] 0
+.nh
+.ad l
+.de URL
+\fI\\$2\fP <\\$1>\\$3
+..
+.als MTO URL
+.if \n[.g] \{\
+.  mso www.tmac
+.  am URL
+.    ad l
+.  .
+.  am MTO
+.    ad l
+.  .
+.  LINKSTYLE blue R < >
+.\}
+.SH "NAME"
+i3blocks-pickdate \- Dropdown datepicker for i3blocks.
+.SH "SYNOPSIS"
+.sp
+\fIi3blocks\-pickdate\fP [OPTION=value] [...]
+.SH "DESCRIPTION"
+.sp
+Shows the date in i3blocks and runs \fIpickdate\fP when clicked on.
+Options can be specified as environment variables or on
+the command line as \fIOPTION=value\fP.
+.SH "OPTIONS"
+.sp
+\fBBAR_POS\fP=position
+.RS 4
+The position of i3blocks. Valid values are \f(CRtop\fP or \f(CRbottom\fP.
+.RE
+.sp
+\fBOPTIONS\fP=options
+.RS 4
+The options to pass to pickdate(1).
+.RE
+.sp
+\fBDISPLAY_FORMAT\fP=datefmt
+.RS 4
+A date(1) compatible format used to display the date in i3bar.
+.RE
+.sp
+\fBCMD\fP=command
+.RS 4
+Used to set \f(CR\(rs$PICKDATE_CMD\fP for pickdate(1).
+.RE
+.sp
+\fBFMT\fP=datefmt
+.RS 4
+Used to set \f(CR\(rs$PICKDATE_FMT\fP for pickdate(1).
+.RE
+.sp
+\fBCAL\fP=command
+.RS 4
+Used to set \f(CR\(rs$PICKDATE_CAL\fP for pickdate(1).
+.RE
+.sp
+\fBBUTTONS\fP=list
+.RS 4
+Used to set \f(CR\(rs$PICKDATE_BUTTONS\fP for pickdate(1).
+.RE
+.sp
+\fBSPANATTRS\fP=attributes
+.RS 4
+Used to set \f(CR\(rs$PICKDATE_SPANATTRS\fP for pickdate(1).
+.RE
+.sp
+\fBTHEMESTR\fP=theme_string
+.RS 4
+Used to set \f(CR\(rs$PICKDATE_THEMESTR\fP for pickdate(1).
+.RE
+.SH "EXAMPLE"
+.sp
+Copy the selected date to the clipboard with \fIxclip\fP:
+.sp
+.if n .RS 4
+.nf
+.fam C
+[pickdate]
+command=/usr/bin/i3blocks\-pickdate
+BAR_POS=top
+OPTIONS=
+DISPLAY_FORMAT=%a %Y\-%m\-%d %H:%M
+CMD=echo \-n "$REPLY" | xclip \-selection primary
+FMT=%a, %b %\-d
+CAL=cal
+BUTTONS= <:<<: .:>>: >
+SPANATTRS=weight="bold"
+interval=5
+.fam
+.fi
+.if n .RE
+.SH "AUTHORS"
+.sp
+i3move was written by
+.URL "https://github.com/DMBuce" "DMBuce" "."
+.SH "DISTRIBUTION"
+.sp
+The latest version of i3move can be downloaded from
+.URL "https://github.com/DMBuce/i3b" "the i3b project" "."

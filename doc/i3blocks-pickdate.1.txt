@@ -1,20 +1,75 @@
-Usage: i3blocks-pickdate [OPTION=value] [...]
+:linkcss:
+//:copycss:
+:stylesheet: style.css
+:toc:
 
-    Shows the date in i3blocks and runs 'pickdate' when clicked on.
-    Options for i3blocks can be provided as environment variables or on
-    the command line.
+i3blocks-monit(1)
+=================
 
-Example Config:
+Name
+----
 
-    [pickdate]
-    command=/usr/bin/i3blocks-pickdate
-    BAR_POS=top
-    OPTIONS=
-    DISPLAY_FORMAT=%a %Y-%m-%d %H:%M
-    CMD=echo -n "$REPLY" | xclip -selection primary
-    FMT=%a, %b %-d
-    CAL=cal
-    BUTTONS= <:<<: .:>>: >
-    SPANATTRS=weight="bold"
-    interval=5
+i3blocks-pickdate - Dropdown datepicker for i3blocks.
 
+Synopsis
+--------
+
+'i3blocks-pickdate' [OPTION=value] [...]
+
+Description
+-----------
+
+Shows the date in i3blocks and runs 'pickdate' when clicked on.
+Options can be specified as environment variables or on
+the command line as 'OPTION=value'.
+
+Options
+-------
+
+**BAR_POS**=position::
+	The position of i3blocks. Valid values are `top` or `bottom`.
+**OPTIONS**=options::
+	The options to pass to pickdate(1).
+**DISPLAY_FORMAT**=datefmt::
+	A date(1) compatible format used to display the date in i3bar.
+**CMD**=command::
+	Used to set `\$PICKDATE_CMD` for pickdate(1).
+**FMT**=datefmt::
+	Used to set `\$PICKDATE_FMT` for pickdate(1).
+**CAL**=command::
+	Used to set `\$PICKDATE_CAL` for pickdate(1).
+**BUTTONS**=list::
+	Used to set `\$PICKDATE_BUTTONS` for pickdate(1).
+**SPANATTRS**=attributes::
+	Used to set `\$PICKDATE_SPANATTRS` for pickdate(1).
+**THEMESTR**=theme_string::
+	Used to set `\$PICKDATE_THEMESTR` for pickdate(1).
+
+Example
+-------
+
+Copy the selected date to the clipboard with 'xclip':
+
+ [pickdate]
+ command=/usr/bin/i3blocks-pickdate
+ BAR_POS=top
+ OPTIONS=
+ DISPLAY_FORMAT=%a %Y-%m-%d %H:%M
+ CMD=echo -n "$REPLY" | xclip -selection primary
+ FMT=%a, %b %-d
+ CAL=cal
+ BUTTONS= <:<<: .:>>: >
+ SPANATTRS=weight="bold"
+ interval=5
+
+Authors
+-------
+i3move was written by
+link:https://github.com/DMBuce[DMBuce].
+
+Distribution
+------------
+The latest version of i3move can be downloaded from
+link:https://github.com/DMBuce/i3b[the i3b project].
+
+// vim: set syntax=asciidoc:

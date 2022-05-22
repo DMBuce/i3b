@@ -51,7 +51,7 @@ specified as environment variables or on the command line as <em>OPTION=value</e
 <div class="sectionbody">
 <div class="dlist"><dl>
 <dt class="hdlist1">
-<strong>STYLE_UP</strong>
+<strong>STYLE_UP</strong>=attributes
 </dt>
 <dd>
 <p>
@@ -60,7 +60,7 @@ specified as environment variables or on the command line as <em>OPTION=value</e
 </p>
 </dd>
 <dt class="hdlist1">
-<strong>STYLE_UMON</strong>
+<strong>STYLE_UMON</strong>=attributes
 </dt>
 <dd>
 <p>
@@ -69,7 +69,7 @@ specified as environment variables or on the command line as <em>OPTION=value</e
 </p>
 </dd>
 <dt class="hdlist1">
-<strong>STYLE_DOWN</strong>
+<strong>STYLE_DOWN</strong>=attributes
 </dt>
 <dd>
 <p>
@@ -78,7 +78,7 @@ specified as environment variables or on the command line as <em>OPTION=value</e
 </p>
 </dd>
 <dt class="hdlist1">
-<strong>STYLE_INIT</strong>
+<strong>STYLE_INIT</strong>=attributes
 </dt>
 <dd>
 <p>
@@ -87,7 +87,7 @@ specified as environment variables or on the command line as <em>OPTION=value</e
 </p>
 </dd>
 <dt class="hdlist1">
-<strong>LABEL_UP</strong>
+<strong>LABEL_UP</strong>=label
 </dt>
 <dd>
 <p>
@@ -95,7 +95,7 @@ The label to use for up services.
 </p>
 </dd>
 <dt class="hdlist1">
-<strong>LABEL_UMON</strong>
+<strong>LABEL_UMON</strong>=label
 </dt>
 <dd>
 <p>
@@ -103,7 +103,7 @@ The label to use for unmonitored services.
 </p>
 </dd>
 <dt class="hdlist1">
-<strong>LABEL_DOWN</strong>
+<strong>LABEL_DOWN</strong>=label
 </dt>
 <dd>
 <p>
@@ -111,7 +111,7 @@ The label to use for down services.
 </p>
 </dd>
 <dt class="hdlist1">
-<strong>LABEL_INIT</strong>
+<strong>LABEL_INIT</strong>=label
 </dt>
 <dd>
 <p>
@@ -119,15 +119,16 @@ The label to use for initialising services.
 </p>
 </dd>
 <dt class="hdlist1">
-<strong>ORDER</strong>
+<strong>ORDER</strong>=list
 </dt>
 <dd>
 <p>
-        The order to display up, unmonitored, down, and initialising services in.
+        A space-delimited list indicating the order in which to display
+        <code>up</code>, <code>unmonitored</code>, <code>down</code>, and <code>initialising</code> services.
 </p>
 </dd>
 <dt class="hdlist1">
-<strong>SHOW_LABELS</strong>
+<strong>SHOW_LABELS</strong>=boolean
 </dt>
 <dd>
 <p>
@@ -135,7 +136,7 @@ The label to use for initialising services.
 </p>
 </dd>
 <dt class="hdlist1">
-<strong>SHOW_ZEROS</strong>
+<strong>SHOW_ZEROS</strong>=boolean
 </dt>
 <dd>
 <p>
@@ -210,7 +211,7 @@ SHOW_ZEROS=0</code></pre>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2022-05-22 09:45:32 CDT
+ 2022-05-22 10:01:57 CDT
 </div>
 </div>
 </body>
