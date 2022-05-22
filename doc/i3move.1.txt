@@ -15,21 +15,6 @@ Synopsis
 --------
 
 'i3move' [options] <direction>
-//[verse]
-//options:
-//    [-t|--title <size>] [-b|--border <size>]
-//    [-m|--margins <top> [bottom] [left] [right]]
-//    [-i|--inside-distance \<|\>|w|'N'[px|%|%%]]
-//    [-o|--outside-distance \<|\>|w|'N'[px|%|%%]]
-//    [-s|--small-distance \<|\>|'N'[px|%|%%]]
-//    [-l|--large-distance \<|\>|'N'[px|%|%%]] [-T|--threshold 'N'[px|%%]]
-//    [-C|--clamp|--no-clamp] [-S|--snap|--no-snap] [-H|--hide|--no-hide]
-//    [-P|--passthru|--no-passthru] [-g|--gen] [--man] [--help]
-
-//directions:
-//
-//    up|down|left|right
-//    top|bottom|port|starboard or north|south|east|west
 
 Description
 -----------

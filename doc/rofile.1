@@ -1,0 +1,80 @@
+'\" t
+.\"     Title: rofile
+.\"    Author: [see the "AUTHOR(S)" section]
+.\" Generator: Asciidoctor 2.0.17
+.\"      Date: 2022-05-22
+.\"    Manual: \ \&
+.\"    Source: \ \&
+.\"  Language: English
+.\"
+.TH "ROFILE" "1" "2022-05-22" "\ \&" "\ \&"
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.ss \n[.ss] 0
+.nh
+.ad l
+.de URL
+\fI\\$2\fP <\\$1>\\$3
+..
+.als MTO URL
+.if \n[.g] \{\
+.  mso www.tmac
+.  am URL
+.    ad l
+.  .
+.  am MTO
+.    ad l
+.  .
+.  LINKSTYLE blue R < >
+.\}
+.SH "NAME"
+rofile \- Use environment variables as rofi configuration.
+.SH "SYNOPSIS"
+.sp
+\fIrofile\fP <profile> [args]
+.SH "DESCRIPTION"
+.sp
+Runs rofi with arguments taken from \fIprofile\(cqs\fP environment variables.
+Any additional \fIargs\fP are also passed to rofi.
+.sp
+When invoked as \fIrofile foo bar baz\fP, rofile runs
+.sp
+.if n .RS 4
+.nf
+.fam C
+rofi \-theme\-str "$ROFI_FOO_THEMESTR" $ROFI_FOO_ARGS bar baz
+.fam
+.fi
+.if n .RE
+.SH "EXAMPLES"
+.sp
+.if n .RS 4
+.nf
+.fam C
+ROFI_BLEZZ_ARGS=\*(Aq\-show blezz \-modi blezz \-auto\-select \-matching normal \-blezz\-config\*(Aq
+ROFI_BLEZZ_THEMESTR=\*(Aqentry {placeholder:"Press hotkey";}\*(Aq
+export ROFI_BLEZZ_ARGS ROFI_BLEZZ_THEMESTR
+rofile blezz ~/.config/blezz/content
+.fam
+.fi
+.if n .RE
+.sp
+^ This is the same as
+.sp
+.if n .RS 4
+.nf
+.fam C
+rofi \-theme\-str \*(Aqentry {placeholder:"Press hotkey";}\*(Aq \(rs
+     \-show blezz \-modi blezz \-auto\-select \-matching normal \-blezz\-config \(rs
+     ~/.config/blezz/content
+.fam
+.fi
+.if n .RE
+.SH "AUTHORS"
+.sp
+rofile was written by
+.URL "https://github.com/DMBuce" "DMBuce" "."
+.SH "DISTRIBUTION"
+.sp
+The latest version of rofile can be downloaded from
+.URL "https://github.com/DMBuce/i3b" "the i3b project" "."

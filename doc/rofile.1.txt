@@ -1,21 +1,52 @@
-Usage: rofile PROFILE [ARGS]
+:linkcss:
+//:copycss:
+:stylesheet: style.css
+:toc:
 
-    Run rofi with arguments taken from PROFILE's environment variables.
-    Any additional ARGS are passed to rofi as well.
+rofile(1)
+=========
 
-    When invoked as 'rofile foo bar baz', rofile runs
+Name
+----
 
-        rofi -theme-str "$ROFI_FOO_THEMESTR" $ROFI_FOO_ARGS bar baz
+rofile - Use environment variables as rofi configuration.
 
-Example
+Synopsis
+--------
 
-    ROFI_BLEZZ_ARGS='-show blezz -modi blezz -auto-select -matching normal -blezz-config'
-    ROFI_BLEZZ_THEMESTR='entry {placeholder:"Press hotkey";}'
-    export ROFI_BLEZZ_ARGS ROFI_BLEZZ_THEMESTR
-    rofile blezz ~/.config/blezz/content
-    #^this is the same as:
-    #
-    # rofi -theme-str 'entry {placeholder:"Press hotkey";}' \
-    #      -show blezz -modi blezz -auto-select -matching normal -blezz-config \
-    #      ~/.config/blezz/content
+'rofile' <profile> [args]
 
+Description
+-----------
+Runs rofi with arguments taken from 'profile's' environment variables.
+Any additional 'args' are also passed to rofi.
+
+When invoked as 'rofile foo bar baz', rofile runs
+
+ rofi -theme-str "$ROFI_FOO_THEMESTR" $ROFI_FOO_ARGS bar baz
+
+Examples
+--------
+
+ ROFI_BLEZZ_ARGS='-show blezz -modi blezz -auto-select -matching normal -blezz-config'
+ ROFI_BLEZZ_THEMESTR='entry {placeholder:"Press hotkey";}'
+ export ROFI_BLEZZ_ARGS ROFI_BLEZZ_THEMESTR
+ rofile blezz ~/.config/blezz/content
+
+^ This is the same as
+
+ rofi -theme-str 'entry {placeholder:"Press hotkey";}' \
+      -show blezz -modi blezz -auto-select -matching normal -blezz-config \
+      ~/.config/blezz/content
+
+Authors
+-------
+rofile was written by
+link:https://github.com/DMBuce[DMBuce].
+
+Distribution
+------------
+The latest version of rofile can be downloaded from
+link:https://github.com/DMBuce/i3b[the i3b project].
+
+// vim: set syntax=asciidoc:

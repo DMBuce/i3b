@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# check args
+prog="${0##*/}"
+usage="Usage: ${0##*/} PROFILE [ARGS]
+
+    Run rofi with arguments taken from PROFILE's environment variables.
+    Any additional ARGS are passed to rofi as well.
+
+    When invoked as '$prog foo bar baz', $prog runs
+
+        rofi -theme-str \"\$ROFI_FOO_THEMESTR\" \$ROFI_FOO_ARGS bar baz
+"
+if [[ "$*" == *--help* ]]; then
+	echo "$usage" >&2
+	exit
+elif [[ -z "$1" ]]; then
+	echo "$usage" >&2
+	exit 1
+fi
+
+# parse args
+profile="$1"
+shift
+
+# look up environment variables based on profile
+profile="${profile^^}"
+profile="${profile//[^A-Za-z0-9_]/_}"
+args="ROFI_${profile}_ARGS"
+themestr="ROFI_${profile}_THEMESTR"
+
+# run rofi command
+exec rofi -theme-str "${!themestr}" ${!args} "$@"
+
