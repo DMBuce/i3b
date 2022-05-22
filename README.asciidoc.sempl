@@ -1,13 +1,9 @@
 :linkcss:
 //:copycss:
 :stylesheet: style.css
-:toc: macro
+:toc:
 
-= i3b
-
-Buce's window manager scripts and configs.
-
-toc::[]
+= i3b - Buce's window manager scripts and configs
 
 == Install
 
