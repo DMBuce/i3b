@@ -1,7 +1,7 @@
 :linkcss:
 //:copycss:
 :stylesheet: style.css
-:toc:
+:toc: macro
 
 = i3b
 
