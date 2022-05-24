@@ -29,7 +29,7 @@ asciidoc.install(2);
 <div class="sect1">
 <h2 id="_name">Name</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>rofile - Use environment variables as rofi configuration.</p></div>
+<div class="paragraph"><p>rofile - Configurable rofi profiles.</p></div>
 </div>
 </div>
 <div class="sect1">
@@ -41,9 +41,11 @@ asciidoc.install(2);
 <div class="sect1">
 <h2 id="_description">Description</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Runs rofi with arguments taken from <em>profile&#8217;s</em> environment variables.
+<div class="paragraph"><p>Runs rofi with arguments determined by <em>profile</em>.
 Any additional <em>args</em> are also passed to rofi.</p></div>
-<div class="paragraph"><p>When invoked as <em>rofile foo bar baz</em>, rofile runs</p></div>
+<div class="paragraph"><p>Profile arguments are read from environment variables and from
+~/.config/rofi/profile.conf .
+When invoked as <em>$prog foo bar baz</em>, rofile runs</p></div>
 <div class="literalblock">
 <div class="content">
 <pre><code>rofi -theme-str "$ROFI_FOO_THEMESTR" $ROFI_FOO_ARGS bar baz</code></pre>
@@ -53,24 +55,23 @@ Any additional <em>args</em> are also passed to rofi.</p></div>
 <div class="sect1">
 <h2 id="_examples">Examples</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>If you have these environment variables:</p></div>
+<div class="paragraph"><p>If you have these variables defined in ~/.config/rofi/profile.conf</p></div>
 <div class="literalblock">
 <div class="content">
-<pre><code>ROFI_BLEZZ_ARGS='-show blezz -modi blezz -auto-select -matching normal -blezz-config'
-ROFI_BLEZZ_THEMESTR='entry {placeholder:"Press hotkey";}'
-export ROFI_BLEZZ_ARGS ROFI_BLEZZ_THEMESTR</code></pre>
+<pre><code>ROFI_BLEZZ_ARGS='-show blezz -modi blezz -auto-select -matching normal -blezz-directory'
+ROFI_BLEZZ_THEMESTR='entry {placeholder:"Press hotkey";}'</code></pre>
 </div></div>
 <div class="paragraph"><p>Then this:</p></div>
 <div class="literalblock">
 <div class="content">
-<pre><code>rofile blezz ~/.config/blezz/content</code></pre>
+<pre><code>rofile blezz Macro</code></pre>
 </div></div>
 <div class="paragraph"><p>is the same as this:</p></div>
 <div class="literalblock">
 <div class="content">
 <pre><code>rofi -theme-str 'entry {placeholder:"Press hotkey";}' \
-     -show blezz -modi blezz -auto-select -matching normal -blezz-config \
-     ~/.config/blezz/content</code></pre>
+     -show blezz -modi blezz -auto-select -matching normal -blezz-directory \
+     Macro</code></pre>
 </div></div>
 </div>
 </div>
@@ -93,7 +94,7 @@ export ROFI_BLEZZ_ARGS ROFI_BLEZZ_THEMESTR</code></pre>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2022-05-22 13:42:19 CDT
+ 2022-05-23 19:18:09 CDT
 </div>
 </div>
 </body>

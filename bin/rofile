@@ -3,12 +3,14 @@
 
 # check args
 prog="${0##*/}"
-usage="Usage: ${0##*/} PROFILE [ARGS]
+usage="Usage: ${0##*/} <profile> [args]
 
-    Run rofi with arguments taken from PROFILE's environment variables.
-    Any additional ARGS are passed to rofi as well.
+    Run rofi with arguments determined by <profile>. Any additional <args>
+    are also passed to rofi.
 
-    When invoked as '$prog foo bar baz', $prog runs
+    Profile arguments are taken from environment variables and from
+    ~/.config/rofi/profile.conf . When invoked as '$prog foo bar baz',
+    $prog runs
 
         rofi -theme-str \"\$ROFI_FOO_THEMESTR\" \$ROFI_FOO_ARGS bar baz
 "
@@ -23,6 +25,10 @@ fi
 # parse args
 profile="$1"
 shift
+
+# read config
+config="${XDG_CONFIG_HOME-$HOME/.config}/rofi/profile.conf"
+[[ -f "$config" ]] && . "$config"
 
 # look up environment variables based on profile
 profile="${profile^^}"

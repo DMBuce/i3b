@@ -2,12 +2,12 @@
 .\"     Title: rofile
 .\"    Author: [see the "AUTHOR(S)" section]
 .\" Generator: Asciidoctor 2.0.17
-.\"      Date: 2022-05-22
+.\"      Date: 2022-05-23
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "ROFILE" "1" "2022-05-22" "\ \&" "\ \&"
+.TH "ROFILE" "1" "2022-05-23" "\ \&" "\ \&"
 .ie \n(.g .ds Aq \(aq
 .el       .ds Aq '
 .ss \n[.ss] 0
@@ -28,16 +28,18 @@
 .  LINKSTYLE blue R < >
 .\}
 .SH "NAME"
-rofile \- Use environment variables as rofi configuration.
+rofile \- Configurable rofi profiles.
 .SH "SYNOPSIS"
 .sp
 \fIrofile\fP <profile> [args]
 .SH "DESCRIPTION"
 .sp
-Runs rofi with arguments taken from \fIprofile\(cqs\fP environment variables.
+Runs rofi with arguments determined by \fIprofile\fP.
 Any additional \fIargs\fP are also passed to rofi.
 .sp
-When invoked as \fIrofile foo bar baz\fP, rofile runs
+Profile arguments are read from environment variables and from
+~/.config/rofi/profile.conf .
+When invoked as \fI$prog foo bar baz\fP, rofile runs
 .sp
 .if n .RS 4
 .nf
@@ -48,14 +50,13 @@ rofi \-theme\-str "$ROFI_FOO_THEMESTR" $ROFI_FOO_ARGS bar baz
 .if n .RE
 .SH "EXAMPLES"
 .sp
-If you have these environment variables:
+If you have these variables defined in ~/.config/rofi/profile.conf
 .sp
 .if n .RS 4
 .nf
 .fam C
-ROFI_BLEZZ_ARGS=\*(Aq\-show blezz \-modi blezz \-auto\-select \-matching normal \-blezz\-config\*(Aq
+ROFI_BLEZZ_ARGS=\*(Aq\-show blezz \-modi blezz \-auto\-select \-matching normal \-blezz\-directory\*(Aq
 ROFI_BLEZZ_THEMESTR=\*(Aqentry {placeholder:"Press hotkey";}\*(Aq
-export ROFI_BLEZZ_ARGS ROFI_BLEZZ_THEMESTR
 .fam
 .fi
 .if n .RE
@@ -65,7 +66,7 @@ Then this:
 .if n .RS 4
 .nf
 .fam C
-rofile blezz ~/.config/blezz/content
+rofile blezz Macro
 .fam
 .fi
 .if n .RE
@@ -76,8 +77,8 @@ is the same as this:
 .nf
 .fam C
 rofi \-theme\-str \*(Aqentry {placeholder:"Press hotkey";}\*(Aq \(rs
-     \-show blezz \-modi blezz \-auto\-select \-matching normal \-blezz\-config \(rs
-     ~/.config/blezz/content
+     \-show blezz \-modi blezz \-auto\-select \-matching normal \-blezz\-directory \(rs
+     Macro
 .fam
 .fi
 .if n .RE

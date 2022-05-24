@@ -9,7 +9,7 @@ rofile(1)
 Name
 ----
 
-rofile - Use environment variables as rofi configuration.
+rofile - Configurable rofi profiles.
 
 Synopsis
 --------
@@ -18,31 +18,32 @@ Synopsis
 
 Description
 -----------
-Runs rofi with arguments taken from 'profile's' environment variables.
+Runs rofi with arguments determined by 'profile'.
 Any additional 'args' are also passed to rofi.
 
-When invoked as 'rofile foo bar baz', rofile runs
+Profile arguments are read from environment variables and from
+~/.config/rofi/profile.conf .
+When invoked as '$prog foo bar baz', rofile runs
 
  rofi -theme-str "$ROFI_FOO_THEMESTR" $ROFI_FOO_ARGS bar baz
 
 Examples
 --------
 
-If you have these environment variables:
+If you have these variables defined in ~/.config/rofi/profile.conf
 
- ROFI_BLEZZ_ARGS='-show blezz -modi blezz -auto-select -matching normal -blezz-config'
+ ROFI_BLEZZ_ARGS='-show blezz -modi blezz -auto-select -matching normal -blezz-directory'
  ROFI_BLEZZ_THEMESTR='entry {placeholder:"Press hotkey";}'
- export ROFI_BLEZZ_ARGS ROFI_BLEZZ_THEMESTR
 
 Then this:
 
- rofile blezz ~/.config/blezz/content
+ rofile blezz Macro
 
 is the same as this:
 
  rofi -theme-str 'entry {placeholder:"Press hotkey";}' \
-      -show blezz -modi blezz -auto-select -matching normal -blezz-config \
-      ~/.config/blezz/content
+      -show blezz -modi blezz -auto-select -matching normal -blezz-directory \
+      Macro
 
 Authors
 -------
