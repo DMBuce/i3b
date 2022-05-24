@@ -23,7 +23,6 @@ by dropping them in your `$PATH` and making them executable.
 * i3move: perl, xrandr, xdotool
 * i3scratchmark: bash, jq
 * pickdate: rofi, cal, awk
-* rofi-blezz: bash, rofi, rofi-blezz, sed
 * rofile: bash, rofi
 
 == Utilities
@@ -67,13 +66,6 @@ Default Look: https://i.imgur.com/1pK873k.png
 Minimal Look: https://i.imgur.com/Ki0SCD5.png
 
 Example usage: https://dmbuce.github.io/i3b/i3blocks-monit.1.html#_examples
-
-=== https://dmbuce.github.io/i3b/rofi-blezz.1.html[rofi-blezz]
-
-Run link:https://github.com/davatorium/rofi-blezz[rofi's blezz module]
-with a different starting menu.
-Similar to link:https://github.com/Blezzing/blezz[blezz's] `-d` option,
-this is a workaround for rofi's blezz module not having such functionality.
 
 === https://dmbuce.github.io/i3b/rofile.1.html[rofile]
 
