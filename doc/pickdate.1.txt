@@ -73,33 +73,32 @@ Environment Variables
 	See https://docs.gtk.org/Pango/pango_markup.html#the-span-attributes
 	for the available attributes.
 
-**PICKDATE_THEMESTR**=themestring {nbsp} {nbsp} (default: see below)::
-	Theme string used to override config.rasi .
-	The default is:
+**PICKDATE_THEMESTR**=themestring {nbsp} {nbsp} (default: `''`)::
+	Theme string used to override config.rasi .  This environment
+	variable can be used to override the following theme properties
+	that 'pickdate' sets:
 
- PICKDATE_THEMESTR='* { font: "mono 16"; }
+ * { font: "mono 16"; }
  configuration {
- 	kb-custom-1: "p";
- 	kb-custom-2: "n";
- 	kb-custom-3: "P,less";
- 	kb-custom-4: "N,greater";
- 	kb-custom-5: "period";
- 	kb-move-char-back: "h,Left,Control+b";
- 	kb-move-char-forward: "l,Right,Control+f";
- 	kb-row-up: "k,Up,Control+p,ISO_Left_Tab";
- 	kb-row-down: "j,Down,Control+n";
- }'
+     kb-custom-1: "p";
+     kb-custom-2: "n";
+     kb-custom-3: "P,less";
+     kb-custom-4: "N,greater";
+     kb-custom-5: "period";
+     kb-move-char-back: "h,Left,Control+b";
+     kb-move-char-forward: "l,Right,Control+f";
+     kb-row-up: "k,Up,Control+p,ISO_Left_Tab";
+     kb-row-down: "j,Down,Control+n";
+ }
 +
-Setting this environment variable to `''` (an empty string) has no effect on
-custom keybindings (`kb-custom-*`), but restores the other properties to their
-defaults. Custom keybindings can be overriden by explicitly defining them in
-`$PICKDATE_THEMESTR`.
-+
-The following properties are always set and can't be overridden. `<num>` is
-computed dynamically at runtime.
+The following properties are always set and can't be overridden.
 
- window { width: <num>ch; }
- listview { columns: 7; lines: <num>; scrollbar: false; }
+ window { width: <width>ch; }
+ listview {
+     columns: 7;
+     lines: <lines>;
+     scrollbar: false;
+ }
  inputbar { children: [prompt]; }
 
 **TMPDIR**=directory {nbsp} {nbsp} (default: `/tmp`)::

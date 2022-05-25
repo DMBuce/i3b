@@ -2,12 +2,12 @@
 .\"     Title: pickdate
 .\"    Author: [see the "AUTHOR(S)" section]
 .\" Generator: Asciidoctor 2.0.17
-.\"      Date: 2022-05-22
+.\"      Date: 2022-05-25
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "PICKDATE" "1" "2022-05-22" "\ \&" "\ \&"
+.TH "PICKDATE" "1" "2022-05-25" "\ \&" "\ \&"
 .ie \n(.g .ds Aq \(aq
 .el       .ds Aq '
 .ss \n[.ss] 0
@@ -144,47 +144,49 @@ See \c
 for the available attributes.
 .RE
 .sp
-\fBPICKDATE_THEMESTR\fP=themestring \~ \~ (default: see below)
+\fBPICKDATE_THEMESTR\fP=themestring \~ \~ (default: \f(CR\*(Aq\*(Aq\fP)
 .RS 4
-Theme string used to override config.rasi .
-The default is:
+Theme string used to override config.rasi .  This environment
+variable can be used to override the following theme properties
+that \fIpickdate\fP sets:
 .sp
-.if n .RS 4
-.nf
-.fam C
-PICKDATE_THEMESTR=\*(Aq* { font: "mono 16"; }
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.  sp -1
+.  IP \(bu 2.3
+.\}
+{ font: "mono 16"; }
 configuration {
-        kb\-custom\-1: "p";
-        kb\-custom\-2: "n";
-        kb\-custom\-3: "P,less";
-        kb\-custom\-4: "N,greater";
-        kb\-custom\-5: "period";
-        kb\-move\-char\-back: "h,Left,Control+b";
-        kb\-move\-char\-forward: "l,Right,Control+f";
-        kb\-row\-up: "k,Up,Control+p,ISO_Left_Tab";
-        kb\-row\-down: "j,Down,Control+n";
-}\*(Aq
-.fam
-.fi
-.if n .RE
+kb\-custom\-1: "p";
+kb\-custom\-2: "n";
+kb\-custom\-3: "P,less";
+kb\-custom\-4: "N,greater";
+kb\-custom\-5: "period";
+kb\-move\-char\-back: "h,Left,Control+b";
+kb\-move\-char\-forward: "l,Right,Control+f";
+kb\-row\-up: "k,Up,Control+p,ISO_Left_Tab";
+kb\-row\-down: "j,Down,Control+n";
+}
 .sp
-Setting this environment variable to \f(CR\*(Aq\*(Aq\fP (an empty string) has no effect on
-custom keybindings (\f(CRkb\-custom\-*\fP), but restores the other properties to their
-defaults. Custom keybindings can be overriden by explicitly defining them in
-\f(CR$PICKDATE_THEMESTR\fP.
-.sp
-The following properties are always set and can\(cqt be overridden. \f(CR<num>\fP is
-computed dynamically at runtime.
+The following properties are always set and can\(cqt be overridden.
 .sp
 .if n .RS 4
 .nf
 .fam C
-window { width: <num>ch; }
-listview { columns: 7; lines: <num>; scrollbar: false; }
+window { width: <width>ch; }
+listview {
+    columns: 7;
+    lines: <lines>;
+    scrollbar: false;
+}
 inputbar { children: [prompt]; }
 .fam
 .fi
 .if n .RE
+.RE
 .RE
 .sp
 \fBTMPDIR\fP=directory \~ \~ (default: \f(CR/tmp\fP)

@@ -168,40 +168,43 @@ Vim-like movement keys (default movement bindings also work): h, j, k, l
 </p>
 </dd>
 <dt class="hdlist1">
-<strong>PICKDATE_THEMESTR</strong>=themestring &#160; &#160; (default: see below)
+<strong>PICKDATE_THEMESTR</strong>=themestring &#160; &#160; (default: <code>''</code>)
 </dt>
 <dd>
 <p>
-        Theme string used to override config.rasi .
-        The default is:
+        Theme string used to override config.rasi .  This environment
+        variable can be used to override the following theme properties
+        that <em>pickdate</em> sets:
 </p>
+<div class="ulist"><ul>
+<li>
+<p>
+{ font: "mono 16"; }
+ configuration {
+     kb-custom-1: "p";
+     kb-custom-2: "n";
+     kb-custom-3: "P,less";
+     kb-custom-4: "N,greater";
+     kb-custom-5: "period";
+     kb-move-char-back: "h,Left,Control+b";
+     kb-move-char-forward: "l,Right,Control+f";
+     kb-row-up: "k,Up,Control+p,ISO_Left_Tab";
+     kb-row-down: "j,Down,Control+n";
+ }
+</p>
+<div class="paragraph"><p>The following properties are always set and can&#8217;t be overridden.</p></div>
 <div class="literalblock">
 <div class="content">
-<pre><code>PICKDATE_THEMESTR='* { font: "mono 16"; }
-configuration {
-       kb-custom-1: "p";
-       kb-custom-2: "n";
-       kb-custom-3: "P,less";
-       kb-custom-4: "N,greater";
-       kb-custom-5: "period";
-       kb-move-char-back: "h,Left,Control+b";
-       kb-move-char-forward: "l,Right,Control+f";
-       kb-row-up: "k,Up,Control+p,ISO_Left_Tab";
-       kb-row-down: "j,Down,Control+n";
-}'</code></pre>
-</div></div>
-<div class="paragraph"><p>Setting this environment variable to <code>''</code> (an empty string) has no effect on
-custom keybindings (<code>kb-custom-*</code>), but restores the other properties to their
-defaults. Custom keybindings can be overriden by explicitly defining them in
-<code>$PICKDATE_THEMESTR</code>.</p></div>
-<div class="paragraph"><p>The following properties are always set and can&#8217;t be overridden. <code>&lt;num&gt;</code> is
-computed dynamically at runtime.</p></div>
-<div class="literalblock">
-<div class="content">
-<pre><code>window { width: &lt;num&gt;ch; }
-listview { columns: 7; lines: &lt;num&gt;; scrollbar: false; }
+<pre><code>window { width: &lt;width&gt;ch; }
+listview {
+    columns: 7;
+    lines: &lt;lines&gt;;
+    scrollbar: false;
+}
 inputbar { children: [prompt]; }</code></pre>
 </div></div>
+</li>
+</ul></div>
 </dd>
 <dt class="hdlist1">
 <strong>TMPDIR</strong>=directory &#160; &#160; (default: <code>/tmp</code>)
@@ -239,7 +242,7 @@ inputbar { children: [prompt]; }</code></pre>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2022-05-22 11:57:35 CDT
+ 2022-05-25 11:58:24 CDT
 </div>
 </div>
 </body>

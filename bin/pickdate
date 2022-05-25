@@ -9,19 +9,7 @@ default_format='%F'
 default_cal='cal'
 default_buttons=' <:<<: .:>>: >'
 default_attrs='weight="bold"'
-custom_keybinds='
-	kb-custom-1: "p";
-	kb-custom-2: "n";
-	kb-custom-3: "P,less";
-	kb-custom-4: "N,greater";
-	kb-custom-5: "period";'
-default_themestr="* { font: \"mono 16\"; }
-configuration {$custom_keybinds"'
-	kb-move-char-back: "h,Left,Control+b";
-	kb-move-char-forward: "l,Right,Control+f";
-	kb-row-up: "k,Up,Control+p,ISO_Left_Tab";
-	kb-row-down: "j,Down,Control+n";
-}'
+default_themestr=''
 
 # environment variables
 export PICKDATE_CMD="${PICKDATE_CMD-$default_command}"
@@ -169,12 +157,25 @@ case "$ROFI_RETV" in
 "") # script called directly
 
 	# set styling
-	themestr="configuration {
-		$custom_keybinds
-	}
+	themestr='* { font: "mono 16"; }
+	configuration {
+		kb-custom-1: "p";
+		kb-custom-2: "n";
+		kb-custom-3: "P,less";
+		kb-custom-4: "N,greater";
+		kb-custom-5: "period";
+		kb-move-char-back: "h,Left,Control+b";
+		kb-move-char-forward: "l,Right,Control+f";
+		kb-row-up: "k,Up,Control+p,ISO_Left_Tab";
+		kb-row-down: "j,Down,Control+n";
+	}'"
 	$PICKDATE_THEMESTR
 	window { width: $((${#weekdays}+1))ch; }
-	listview { columns:7; lines:$(( $(wc -l <<< "$days") + (${#b[@]}?1:0) )); scrollbar: false; }
+	listview {
+		columns: 7;
+		lines: $(( $(wc -l <<< "$days") + (${#b[@]}?1:0) ));
+		scrollbar: false;
+	}
 	inputbar { children: [prompt]; }
 	"
 
