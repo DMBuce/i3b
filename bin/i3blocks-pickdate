@@ -36,23 +36,53 @@ done
 
 # defaults
 BAR_POS="${BAR_POS-top}"
-OPTIONS="${OPTIONS}${BAR_POS+ -m $BAR_POS}"
 DISPLAY_FORMAT="${DISPLAY_FORMAT-%a %Y-%m-%d %H:%M}"
 
-# figure out environment to use
-env=
-for var in CMD FMT CAL BUTTONS SPANATTRS THEMESTR; do
-	# escape double quotes for 'i3-msg exec'
-	if [[ -v $var ]]; then
-		env+=" PICKDATE_$var='${!var//\"/\\\"}'"
-	elif var=PICKDATE_$var; [[ -v $var ]]; then
-		env+=" $var='${!var//\"/\\\"}'"
-	fi
-done
+# launch pickdate if we were clicked on
+if [[ -n "$BLOCK_BUTTON$button" ]]; then
+	# draw relative to the mouse if we don't have the variables we need
+	mouse=0
+	for var in x y relative_{x,y} width height; do
+		if [[ -z "${!var}" ]]; then
+			mouse=1
+			OPTIONS="${OPTIONS}${BAR_POS+ -m $BAR_POS}"
+			break
+		fi
+	done
 
-# launch rofi when clicked on
-[[ -n "$BLOCK_BUTTON$button" ]] && \
+	# draw next to the bar
+	if (( mouse == 0 )); then
+		# get inner right corner of block
+		x_offset=$(( x - relative_x + width ))
+		y_offset=$(( y - relative_y + height ))
+		anchor=northeast
+		if [[ $BAR_POS == bottom ]]; then
+			y_offset=$(( y - relative_y ))
+			anchor=southwest
+		fi
+
+		export PICKDATE_THEMESTR="$PICKDATE_THEMESTR
+		window {
+			location: northwest;
+			anchor: $anchor;
+			x-offset: $x_offset;
+			y-offset: $y_offset;
+		}"
+	fi
+
+	# figure out environment to use
+	env=
+	for var in CMD FMT CAL BUTTONS SPANATTRS THEMESTR; do
+		# escape double quotes for 'i3-msg exec'
+		if [[ -v $var ]]; then
+			env+=" PICKDATE_$var='${!var//\"/\\\"}'"
+		elif var=PICKDATE_$var; [[ -v $var ]]; then
+			env+=" $var='${!var//\"/\\\"}'"
+		fi
+	done
+
 	i3-msg -q exec -- "\"$env $(dirname "$0")/pickdate $OPTIONS\""
+fi
 
 # print i3blocks output and exit
 date +"${DISPLAY_FORMAT#+}"
