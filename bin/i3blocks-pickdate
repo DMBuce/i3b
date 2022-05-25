@@ -3,28 +3,6 @@
 #
 # requires bash, pickdate
 
-# parse args
-for dec in "$@"; do
-	[[ $dec == --help ]] && continue
-	declare "$dec" || exit
-done
-
-# defaults
-BAR_POS="${BAR_POS-top}"
-OPTIONS="${OPTIONS}${BAR_POS+ -m $BAR_POS}"
-DISPLAY_FORMAT="${DISPLAY_FORMAT-%a %Y-%m-%d %H:%M}"
-
-# figure out environment to use
-env=
-for var in CMD FMT CAL BUTTONS SPANATTRS THEMESTR; do
-	# escape double quotes for 'i3-msg exec'
-	if [[ -v $var ]]; then
-		env+=" PICKDATE_$var='${!var//\"/\\\"}'"
-	elif var=PICKDATE_$var; [[ -v $var ]]; then
-		env+=" $var='${!var//\"/\\\"}'"
-	fi
-done
-
 # print help output
 usage="Usage: i3blocks-pickdate [OPTION=value] [...]
 
@@ -50,6 +28,27 @@ if [[ "$*" == *--help* ]]; then
 	echo "$usage" >&2
 	exit
 fi
+
+# parse args
+for dec in "$@"; do
+	declare "$dec" || exit
+done
+
+# defaults
+BAR_POS="${BAR_POS-top}"
+OPTIONS="${OPTIONS}${BAR_POS+ -m $BAR_POS}"
+DISPLAY_FORMAT="${DISPLAY_FORMAT-%a %Y-%m-%d %H:%M}"
+
+# figure out environment to use
+env=
+for var in CMD FMT CAL BUTTONS SPANATTRS THEMESTR; do
+	# escape double quotes for 'i3-msg exec'
+	if [[ -v $var ]]; then
+		env+=" PICKDATE_$var='${!var//\"/\\\"}'"
+	elif var=PICKDATE_$var; [[ -v $var ]]; then
+		env+=" $var='${!var//\"/\\\"}'"
+	fi
+done
 
 # launch rofi when clicked on
 [[ -n "$BLOCK_BUTTON$button" ]] && \
