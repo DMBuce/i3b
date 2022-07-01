@@ -180,7 +180,7 @@ case "$ROFI_RETV" in
 	"
 
 	# run rofi
-	selected="$(selections "$days" $cellwidth | cat -n | awk "/\S\s*$day\s*$/ {print \$1 - 1}")"
+	selected="$(selections "$days" $cellwidth | cat -n | awk "/\S\s+$day\s*$/ {print \$1 - 1; exit}")"
 	trap 'rm -f "$_PICKDATE_TMP"' EXIT
 	export _PICKDATE_TMP="$(mktemp --tmpdir "$prog.XXXXXXXXXX")" || exit 1
 	rofi $rofiargs -show pickdate -modi "pickdate:$0" \
