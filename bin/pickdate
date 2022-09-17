@@ -166,7 +166,7 @@ case "$ROFI_RETV" in
 		kb-custom-5: "period";
 		kb-move-char-back: "h,Left,Control+b";
 		kb-move-char-forward: "l,Right,Control+f";
-		kb-row-up: "k,Up,Control+p,ISO_Left_Tab";
+		kb-row-up: "k,Up,Control+p";
 		kb-row-down: "j,Down,Control+n";
 	}'"
 	$PICKDATE_THEMESTR
